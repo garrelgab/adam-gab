@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddReservation from './AddReservation'
+import axios from 'axios';
 
 const CustomerCalendar = (props) => {
 
@@ -28,6 +29,12 @@ const CustomerCalendar = (props) => {
   }
 
   const localizer = momentLocalizer(moment);
+
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/api/events")
+  }, []);
 
   return (
     <div className='mx-[50px] mt-[30px] text-black z-10'>

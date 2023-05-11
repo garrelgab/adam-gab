@@ -127,6 +127,12 @@ app.post("/api/reservation", (req, res) => {
 
 app.get("/api/events", (req, res) => {
   const fetchEvents = "select * from tbl_reservation where status = 'Pending'";
+  connection.query(fetchEvents, (err, result) => {
+    if(err){
+      res.send(err)
+    }
+    res.send(result)
+  });
 });
 
 module.exports = connection;
