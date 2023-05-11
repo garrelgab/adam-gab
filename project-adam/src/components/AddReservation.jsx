@@ -12,12 +12,22 @@ const AddReservation = (props) => {
 
   const eightAM = dayjs().set('hour', 8).startOf('hour');
   const eightPM = dayjs().set('hour', 20).startOf('hour');
-
-  const [myDate, setMyDate] = useState(props.myDate);
-
+  
+  const [name, setName] = useState('');
   const [startTime, setStartTime] = useState(eightAM);
   const [endTime, setEndTime] = useState(eightPM);
-  const [name, setName] = useState('');
+  const myDate = props.myDate;
+  const status = 'Pending';
+
+//   const timeFromDB = result.time; // assuming the format is HH:MM:SS
+
+// // Format the time using dayjs
+// const formattedTime = dayjs(timeFromDB, 'HH:mm:ss').format('hh:mm A');
+// console.log(formattedTime);
+
+  const startTimeFormat = startTime.format('HH:mm:ss');
+  const endTimeFormat = endTime.format('HH:mm:ss');
+
   const handleStartTimeChange = (timeStart) => {
     setStartTime(timeStart);
   };
@@ -25,11 +35,6 @@ const AddReservation = (props) => {
     setEndTime(timeEnd);
   };
 
-  const handleTry = () => {
-    console.log(startTime);
-    console.log(endTime);
-    console.log(myDate);
-  }
   const handleSaveReservation = () => {
     if(!name) {
       alert('Field required.');
@@ -37,9 +42,10 @@ const AddReservation = (props) => {
     }
     axios.post("http://localhost:3001/api/reservation", {
       customerName: name,
-      customerStartTime: startTime,
-      customerEndTime: endTime,
+      customerStartTime: startTimeFormat,
+      customerEndTime: endTimeFormat,
       customerDate: myDate,
+      customerStatus: status,
     })
     .then(response => {
       alert('Reservation saved.', response.data);

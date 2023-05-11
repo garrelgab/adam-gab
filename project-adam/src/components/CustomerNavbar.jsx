@@ -1,18 +1,20 @@
 import React, {useState} from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { Link as LinkRouter } from 'react-router-dom';
+// import moment from 'moment';
 const CustomerNavbar = () => {
     const [nav, setNav] = useState(false);
     const handleNav = () => {
         setNav(!nav)
     }
+
   return (
     <div className=' w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500'>
         <div className='blocked  text-white flex justify-between'>
             <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
             <div className='md:flex text-lg font-light hidden'>
-                <h1 className='border-r border-gray-500 px-5'>Time</h1>
-                <h1 className='px-5'>Date</h1>
+                <h1 className='border-r border-gray-500 px-5'>time</h1>
+                <h1 className='px-5'>date</h1>
             </div>
         </div>
         <div className={nav ? 'fixed  top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] text-center text-xl z-50 text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>

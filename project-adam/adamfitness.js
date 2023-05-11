@@ -117,11 +117,16 @@ app.post("/api/reservation", (req, res) => {
   const customerStartTime = req.body.customerStartTime;
   const customerEndTime = req.body.customerEndTime;
   const customerDate = req.body.customerDate;
+  const customerStatus = req.body.customerStatus;
 
-  const sqlInsert = "insert into tbl_reservation (name, time_start, time_end, customer_date) values (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'))";
-  connection.query(sqlInsert, [customerName, customerStartTime, customerEndTime, customerDate], (err, result) => {
+  const sqlInsert = "insert into tbl_reservation (name, time_start, time_end, customer_date, status) values (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
+  connection.query(sqlInsert, [customerName, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
     res.send(result);
   });
+});
+
+app.get("/api/events", (req, res) => {
+  const fetchEvents = "select * from tbl_reservation where status = 'Pending'";
 });
 
 module.exports = connection;
