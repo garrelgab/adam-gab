@@ -46,11 +46,6 @@ const Login = (props) => {
         setEmail('');
         setPword('');
     };
-    // useEffect(() => {
-    //     Axios.get("http://localhost:3001/api/login").then(response => {
-    //         //setLoginStatus(response.data.user[0].fname)
-    //     })
-    // }, []);
 
   return (props.trigger) ? (
     <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal'>

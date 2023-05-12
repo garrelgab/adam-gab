@@ -34,7 +34,7 @@ const DashboardReservation = () => {
     .catch((err) => {
       console.log('Error fetching events:', err);
     });
-  }, []);
+  }, [events]);
   
   
   return (
