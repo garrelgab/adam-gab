@@ -28,7 +28,7 @@ const Login = (props) => {
             userPword: pword,
         })
         .then((response) => {
-            console.log(response.data.message)
+            //console.log(response.data.message)
             if(response.data.message) {
                 setLoginStatus(response.data.message);
             } else{

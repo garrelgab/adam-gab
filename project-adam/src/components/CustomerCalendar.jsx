@@ -4,15 +4,17 @@ import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddReservation from './AddReservation'
 import axios from 'axios';
+import CustomerReservationDetails from './CustomerReservationDetails';
 // import { response } from 'express';
 
 const CustomerCalendar = (props) => {
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenDetails, setModalOpenDetails] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDate1, setSelectedDate1] = useState(null);
-  const [status, setStatus] = useState('');
   const handleSelectSlot = (slotInfo) => {
+    setModalOpen(true);
     if (moment(slotInfo.start).isBefore(moment(), "day")) {
       // Slot is in the past
       setSelectedDate(null);
@@ -33,42 +35,60 @@ const CustomerCalendar = (props) => {
 
   const [events, setEvents] = useState([]);
 
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEventStart, setSelectedEventStart] = useState(null);
+  const [selectedEventEnd, setSelectedEventEnd] = useState(null);
+  // const [reservationID, setReservationID] = useState(null);
+
+  const handleSelectedEvent = (events) => {
+    setModalOpenDetails(true);
+    setSelectedEvent(events.title);
+    setSelectedEventStart(events.start);
+    setSelectedEventEnd(events.end);
+    // setReservationID(events.id);
+  }
+
   useEffect(() => {
-    axios.get("http://localhost:3001/api/events")
+    axios.get("http://localhost:3001/api/events/approved")
     .then((response) => {
       setEvents(response.data);
     })
     .catch((err) => {
       console.log('Error fetching events:', err);
     });
-
-    // const fetchEvents = async () => {
-    //   try{
-    //     const res = await axios.get("http://localhost:3001/api/events");
-    //     setEvents(res.data);
-    //   }catch (err){
-    //     console.log('Error fetching events:', err);
-    //   }
-    // };
-    // fetchEvents();
   }, []);
 
   return (
     <div className='mx-[50px] mt-[30px] text-black z-10'>
       <h1 className='text-[30px] text-white font-light'>Calendar</h1>
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg shadow-2xl'>
-        <Calendar
+        
+        {events.length ? (
+          <Calendar
           className='bg-white font-light rounded-lg'
           localizer={localizer}
           style={{ height: 700 }}
           min={new Date()}
           selectable
           events={events}
-          onSelectEvent={[]}
           selected={selectedDate}
+          onSelectEvent={handleSelectedEvent}
+          />
+        ) : (
+          <Calendar
+          className='bg-white font-light rounded-lg'
+          localizer={localizer}
+          style={{ height: 700 }}
+          min={new Date()}
+          selectable
+          selected={selectedDate}
+          onSelectEvent={[]}
           onSelectSlot={handleSelectSlot}
-        />
-        {selectedDate && <AddReservation className='z-50' date1={selectedDate} myDate={selectedDate1} onClose={handleCloseModal} />}
+          />
+        )}
+        {modalOpen && <AddReservation className='z-50' date1={selectedDate} myDate={selectedDate1} onClose={handleCloseModal} />}
+        {modalOpenDetails && <CustomerReservationDetails eventTitle={selectedEvent} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpenDetails(false)}/>}
+
       </div>
     </div>
   )

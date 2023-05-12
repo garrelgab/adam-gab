@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+// const moment = require('moment')
 const app = express();
 const port = process.env.PORT || 3001
 
@@ -17,9 +18,10 @@ const connection = mysql.createPool({
 app.use(express.json())
 app.use(cors({
   origin: ["http://localhost:3000"],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PUT"],
   credentials: true,
 }));
+
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true}))
 
@@ -126,7 +128,7 @@ app.post("/api/reservation", (req, res) => {
 });
 
 app.get("/api/events", (req, res) => {
-  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%Y-%m-%d') as start, time_start, time_end from tbl_reservation where status = 'Pending'";
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation";
   connection.query(fetchEvents, (err, result) => {
     if(err){
       console.log("Error fetching events:", err);
@@ -136,13 +138,63 @@ app.get("/api/events", (req, res) => {
       const events = result.map((event) => ({
         id: event.reservation_id,
         title: `${event.name} - ${event.status}`,
-        start: `${event.start}T${event.time_start}`,
-        end: `${event.start}T${event.time_end}`,
+        start: `${event.start} ${event.time_start_formatted}`,
+        end: `${event.start} ${event.time_end_formatted}`,
         backgroundColor: event.status === 'Pending' ? 'red' : 'green'
       }));
       res.json(events);
     }
-    // res.send(result)
+  });
+});
+
+app.get("/api/events/approved", (req, res) => {
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation where status = 'Approved'";
+  connection.query(fetchEvents, (err, result) => {
+    if(err){
+      console.log("Error fetching events:", err);
+      res.send(err)
+    }
+    else{
+      const events = result.map((event) => ({
+        id: event.reservation_id,
+        title: `${event.name} - ${event.status}`,
+        start: `${event.start} ${event.time_start_formatted}`,
+        end: `${event.start} ${event.time_end_formatted}`,
+      }));
+      res.json(events);
+    }
+  });
+});
+
+app.get("/api/events/pending", (req, res) => {
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation where status = 'Pending'";
+  connection.query(fetchEvents, (err, result) => {
+    if(err){
+      console.log("Error fetching events:", err);
+      res.send(err)
+    }
+    else{
+      const events = result.map((event) => ({
+        id: event.reservation_id,
+        title: `${event.name} - ${event.status}`,
+        start: `${event.start} ${event.time_start_formatted}`,
+        end: `${event.start} ${event.time_end_formatted}`,
+      }));
+      res.json(events);
+    }
+  });
+});
+
+app.put('/api/approved', (req, res) => {
+  const reservationID = req.body.id;
+  const reservationStatus = req.body.status;
+  const approvedReservation = "update tbl_reservation set status = ? where reservation_id = ?";
+  connection.query(approvedReservation, [reservationStatus, reservationID], (err, result) => {
+    if (err) {
+      console.log("Error updating event:", err);
+    } else {
+      res.send("Event updated successfully");
+    }
   });
 });
 
