@@ -29,11 +29,10 @@ const DashboardNavbar = () => {
                 <LinkRouter to="/dashboard/reservation" onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Reservation</li>
                 </LinkRouter>
-                <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>History</li>
                 <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Announcement</li>
             </ul>
             <LinkRouter to='/'>
-                <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0'>Logout</h1>
+                <h1 className='blocked p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0'>Logout</h1>
             </LinkRouter>
         </div>
     </div>

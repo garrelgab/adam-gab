@@ -179,6 +179,7 @@ app.get("/api/events/pending", (req, res) => {
         title: `${event.name} - ${event.status}`,
         start: `${event.start} ${event.time_start_formatted}`,
         end: `${event.start} ${event.time_end_formatted}`,
+        
       }));
       res.json(events);
     }
@@ -195,6 +196,33 @@ app.put('/api/approved', (req, res) => {
     } else {
       res.send("Event updated successfully");
     }
+  });
+});
+
+app.get('/api/members-count', (req, res) => {
+  const countMembers = "select count(account_info_id) as count from tbl_account_info where role = 'customer'";
+  connection.query(countMembers, (err, result, fields) => {
+    if(err) throw err;
+    const count = result[0].count;
+    res.send({count});
+  });
+});
+
+app.get('/api/pending-count', (req, res) => {
+  const countPending = "select count(reservation_id) as count from tbl_reservation where status = 'Pending'";
+  connection.query(countPending, (err, result, fields) => {
+    if(err) throw err;
+    const count = result[0].count;
+    res.send({count});
+  });
+});
+
+app.get('/api/event-count', (req, res) => {
+  const countEvent = "select count(reservation_id) as count from tbl_reservation";
+  connection.query(countEvent, (err, result, fields) => {
+    if(err) throw err;
+    const count = result[0].count;
+    res.send({count});
   });
 });
 

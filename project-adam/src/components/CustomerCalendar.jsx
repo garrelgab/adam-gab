@@ -14,7 +14,7 @@ const CustomerCalendar = (props) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDate1, setSelectedDate1] = useState(null);
   const handleSelectSlot = (slotInfo) => {
-    setModalOpen(true);
+    // setModalOpen(true);
     if (moment(slotInfo.start).isBefore(moment(), "day")) {
       // Slot is in the past
       setSelectedDate(null);
@@ -38,14 +38,12 @@ const CustomerCalendar = (props) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedEventStart, setSelectedEventStart] = useState(null);
   const [selectedEventEnd, setSelectedEventEnd] = useState(null);
-  // const [reservationID, setReservationID] = useState(null);
 
   const handleSelectedEvent = (events) => {
     setModalOpenDetails(true);
     setSelectedEvent(events.title);
     setSelectedEventStart(events.start);
     setSelectedEventEnd(events.end);
-    // setReservationID(events.id);
   }
 
   useEffect(() => {
@@ -73,6 +71,7 @@ const CustomerCalendar = (props) => {
           events={events}
           selected={selectedDate}
           onSelectEvent={handleSelectedEvent}
+          onSelectSlot={handleSelectSlot}
           />
         ) : (
           <Calendar
@@ -86,7 +85,7 @@ const CustomerCalendar = (props) => {
           onSelectSlot={handleSelectSlot}
           />
         )}
-        {modalOpen && <AddReservation className='z-50' date1={selectedDate} myDate={selectedDate1} onClose={handleCloseModal} />}
+        {selectedDate && <AddReservation className='z-50' date1={selectedDate} myDate={selectedDate1} onClose={handleCloseModal} />}
         {modalOpenDetails && <CustomerReservationDetails eventTitle={selectedEvent} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpenDetails(false)}/>}
 
       </div>

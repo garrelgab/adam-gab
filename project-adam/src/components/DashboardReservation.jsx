@@ -25,7 +25,7 @@ const DashboardReservation = () => {
     setSelectedEventEnd(events.end);
     setReservationID(events.id);
   }
-  
+
   useEffect(() => {
     axios.get("http://localhost:3001/api/events/pending")
     .then((response) => {
@@ -35,6 +35,7 @@ const DashboardReservation = () => {
       console.log('Error fetching events:', err);
     });
   }, []);
+  
   
   return (
     <div className='mx-[50px] mt-[30px] text-black'>
@@ -58,8 +59,6 @@ const DashboardReservation = () => {
           style={{ height: 700 }}
           min={new Date()}
           selectable
-          // events={events}
-          // onSelectEvent={handleSelectedEvent}
           />
         )}
         {modalOpen && <UpdateReservation eventTitle={selectedEvent} reserveID={reservationID} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpen(false)}/>}
