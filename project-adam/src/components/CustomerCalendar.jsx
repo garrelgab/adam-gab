@@ -4,6 +4,7 @@ import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddReservation from './AddReservation'
 import axios from 'axios';
+// import { response } from 'express';
 
 const CustomerCalendar = (props) => {
 
@@ -34,6 +35,22 @@ const CustomerCalendar = (props) => {
 
   useEffect(() => {
     axios.get("http://localhost:3001/api/events")
+    .then((response) => {
+      setEvents(response.data);
+    })
+    .catch((err) => {
+      console.log('Error fetching events:', err);
+    });
+
+    // const fetchEvents = async () => {
+    //   try{
+    //     const res = await axios.get("http://localhost:3001/api/events");
+    //     setEvents(res.data);
+    //   }catch (err){
+    //     console.log('Error fetching events:', err);
+    //   }
+    // };
+    // fetchEvents();
   }, []);
 
   return (
@@ -46,7 +63,7 @@ const CustomerCalendar = (props) => {
           style={{ height: 700 }}
           min={new Date()}
           selectable
-          events={[]}
+          events={events}
           onSelectEvent={[]}
           selected={selectedDate}
           onSelectSlot={handleSelectSlot}

@@ -126,12 +126,23 @@ app.post("/api/reservation", (req, res) => {
 });
 
 app.get("/api/events", (req, res) => {
-  const fetchEvents = "select * from tbl_reservation where status = 'Pending'";
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%Y-%m-%d') as start, time_start, time_end from tbl_reservation where status = 'Pending'";
   connection.query(fetchEvents, (err, result) => {
     if(err){
+      console.log("Error fetching events:", err);
       res.send(err)
     }
-    res.send(result)
+    else{
+      const events = result.map((event) => ({
+        id: event.reservation_id,
+        title: `${event.name} - ${event.status}`,
+        start: `${event.start}T${event.time_start}`,
+        end: `${event.start}T${event.time_end}`,
+        backgroundColor: event.status === 'Pending' ? 'red' : 'green'
+      }));
+      res.json(events);
+    }
+    // res.send(result)
   });
 });
 
