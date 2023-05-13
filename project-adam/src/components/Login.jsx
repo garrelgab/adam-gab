@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
-import { Link as LinkRouter } from 'react-router-dom'
+import { Link as LinkRouter, useLocation } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Axios from 'axios'
 
 const Login = (props) => {
 
     let navigate = useNavigate();
+    // const location = useLocation();
 
     Axios.defaults.withCredentials = true;
 
     const [email, setEmail] = useState('');
     const [pword, setPword] = useState('');
     const [loginStatus, setLoginStatus] = useState('');
+    // const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     const userLogin = () => {
 
         if(!email){
@@ -28,17 +31,21 @@ const Login = (props) => {
             userPword: pword,
         })
         .then((response) => {
-            //console.log(response.data.message)
             if(response.data.message) {
                 setLoginStatus(response.data.message);
             } else{
                 if(response.data[0].role === 'admin'){
-                    setLoginStatus(response.data[0].fname);
-                    navigate('/dashboard', { replace: true});
+                    // setIsLoggedIn(true);
+                    const id = response.data[0].account_info_id;
+                    console.log(id);
+                    navigate('/dashboard', { replace: true, state: id});
                     props.setTrigger(false);
                 }
                 else{
-                    navigate('/customer', { replace: true});
+                    // setIsLoggedIn(true);
+                    const id = response.data[0].account_info_id;
+                    console.log(id);
+                    navigate('/customer', { replace: true, state: id});
                     props.setTrigger(false);
                 }
             }
@@ -48,6 +55,13 @@ const Login = (props) => {
     };
 
   return (props.trigger) ? (
+    // <>
+    //     {isLoggedIn ? (
+    //         <p>Logged in</p>
+    //     ) : (
+            
+    //     )};
+    // </>
     <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal'>
         <div className='relative text-black md:text-black bg-[#93F4D3] max-h-[700px] md:max-h-[750px] w-[400px] md:w-[500px] rounded-xl'>
             <div className='text-black'>

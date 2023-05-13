@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
+import { useLocation } from 'react-router';
 import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import AddReservation from './AddReservation'
@@ -8,6 +9,8 @@ import CustomerReservationDetails from './CustomerReservationDetails';
 // import { response } from 'express';
 
 const CustomerCalendar = (props) => {
+  const location = useLocation();
+  const id = location.state;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenDetails, setModalOpenDetails] = useState(false);

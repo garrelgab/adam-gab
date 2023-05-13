@@ -23,6 +23,7 @@ app.use(cors({
 }));
 
 app.use(cookieParser())
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
 
 
@@ -34,11 +35,11 @@ app.use(session({
   cookie: {
     expires: 60 * 60
   }
-}))
+}));
 
 app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
-})
+});
 
 app.post("/api/insert", (req, res) => {
   
@@ -76,18 +77,16 @@ app.post("/api/login", (req, res) => {
         //req.session.user = result
         res.send(result);
         //res.send({ message: 'Login successfully.'});
-        
+
       } else {
         res.send({ message: 'Incorrect username/password.'});
         
       }
-      return(()=>{
-
-      });
     }
-    
   );
 });
+
+
 
 app.get("/api/members", (req, res) => {
   // const members = "select * from tbl_account_info where role = 'customer'";
@@ -225,5 +224,47 @@ app.get('/api/event-count', (req, res) => {
     res.send({count});
   });
 });
+
+app.put('/api/customer-info', (req, res) => {
+  const customerFname = req.body.customerFname;
+  const customerLname = req.body.customerLname;
+  const customerID = req.body.customerID;
+  const updateInfo = "update tbl_account_info set fname = ?, lname = ? where account_info_id = ?";
+  connection.query(updateInfo, [customerFname, customerLname, customerID], (err, result) => {
+    if (err) {
+      console.log("Error updating personal information:", err);
+    } else {
+      res.send("Personal Information Updated Successfully!");
+    }
+  });
+});
+
+app.get('/api/get-info', (req, res) => {
+  const customerID = req.query.customerID;
+  const getCustomerInfo = "select fname, lname from tbl_account_info where account_info_id = ?";
+  connection.query(getCustomerInfo, [customerID], (err, result) => {
+    if (err) {
+      console.log("Error fetching personal information:", err);
+    } else {
+      res.send(result);
+    }
+  })
+});
+
+app.put('/api/customer-pass', (req, res) => {
+  const customerPword = req.query.customerPword;
+  const customerCPword = req.query.customerCPword;
+  const customerID = req.query.customerID;
+  const updatePass = "update tbl_account_info set pword = ?, cpword = ? where account_info_id = ?";
+  connection.query(updatePass, [customerPword, customerCPword, customerID], (err, result) => {
+    if (err) {
+      console.log("Error updating password:", err);
+    } else {
+      res.send(result);
+      console.log(customerID);
+    }
+  });
+});
+
 
 module.exports = connection;
