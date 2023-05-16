@@ -30,6 +30,9 @@ const DashboardNavbar = (props) => {
                 <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Reservation</li>
                 </LinkRouter>
+                <LinkRouter to='/dashboard/settings' state={userID} onClick={handleNav}>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Settings</li>
+                </LinkRouter>                
                 <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Announcement</li>
             </ul>
             <LinkRouter to='/'>

@@ -22,7 +22,7 @@ const BackToTopButton = () => {
 
   return <div>
     {isVisible && (
-        <button className="text-black fixed left-[90%] md:left-[93%] bottom-[50px] shadow-lg" onClick={scrollUp}>
+        <button className="text-black fixed left-[90%] md:left-[93%] bottom-[100px] shadow-lg" onClick={scrollUp}>
             <HiOutlineChevronUp size={30} className=' h-[40px] w-[40px] rounded-full bg-white'> </HiOutlineChevronUp>
         </button>
     )}

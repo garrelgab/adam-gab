@@ -7,8 +7,8 @@ const Footer = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   return (
-    <div className='py-[50px]'>
-        <div className='max-w-[840px] mx-auto flex flex-cols-3 justify-center text-white'>
+    <div className='py-[50px] flex flex-col-2 justify-between mx-[100px]'>
+        <div className='max-w-[840px] flex flex-cols-3 justify-center text-white'>
             <div className='px-0 md:px-0'>
                 <h1 className='text-2xl font-bold mb-4 text-[#93F4D3]'>Company</h1>
                 <ul>
@@ -39,6 +39,9 @@ const Footer = () => {
                     <a href='https://www.facebook.com/people/ADAM-FitnessCenter/100066718838043/' target='_blank' rel='noreferrer'><li className='hover:text-[#93F4D3]'>Facebook</li></a>
                 </ul>
             </div>
+        </div>
+        <div className='bg-white mx-[40px] top-0 left-0'>
+            <h1 className='bg-green-500 top-[90%]'>ADAM Fitness Center, M. L. Quezon Avenue, Antipolo, Rizal</h1>
         </div>
     </div>
   )
