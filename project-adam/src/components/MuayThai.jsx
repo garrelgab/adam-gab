@@ -2,7 +2,7 @@ import React from 'react'
 import muayThai from '../imgs/muayThai.jpg'
 const MuayThai = () => {
   return (
-    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[20px]' id='muayThai'>
+    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[20px] text-justify' id='muayThai'>
         <div className='hidden md:grid md:grid-cols-2 max-w-[1240px] mx-auto md:justify-center'>
             <div className='mx-10'>
                 <h1 className='text-[#93F4D3] font-extrabold text-[40px]'>Muay Thai</h1>

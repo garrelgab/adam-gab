@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import CreateAccount from './CreateAccount'
 import Login from './Login'
 import Navbar from './Navbar'
+import Footer from './Footer'
 const Signup = (props) => {
   const [showLogin, setShowLogin] = useState(false)
 
@@ -12,6 +13,7 @@ const Signup = (props) => {
     <>
         <Navbar onLogin={show}/>
         <CreateAccount/>
+        <Footer/>
         {showLogin && <Login trigger={showLogin} setTrigger={setShowLogin}/>}
     </>
   )

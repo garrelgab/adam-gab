@@ -252,9 +252,9 @@ app.get('/api/get-info', (req, res) => {
 });
 
 app.put('/api/customer-pass', (req, res) => {
-  const customerPword = req.query.customerPword;
-  const customerCPword = req.query.customerCPword;
-  const customerID = req.query.customerID;
+  const customerPword = req.body.customerPword;
+  const customerCPword = req.body.customerCPword;
+  const customerID = req.body.customerID;
   const updatePass = "update tbl_account_info set pword = ?, cpword = ? where account_info_id = ?";
   connection.query(updatePass, [customerPword, customerCPword, customerID], (err, result) => {
     if (err) {

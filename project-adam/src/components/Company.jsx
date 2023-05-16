@@ -2,7 +2,7 @@ import React from 'react'
 import Sample1 from '../imgs/sample1.png'
 const Company = () => {
   return (
-    <div className='bg-[#2a2a2a] py-[50px] md:py-[100px] text-white md:drop-shadow-md' id='company'>
+    <div className='bg-[#2a2a2a] py-[50px] md:py-[100px] text-justify text-white md:drop-shadow-md' id='company'>
         <div className='max-w-[1240px] mx-auto p-5 grid md:grid-cols-2 justify-center rounded-2xl'>
             <div className=''>
                 <img src={Sample1} alt='' className='rounded-2xl'/>

@@ -5,16 +5,24 @@ const CustomerChangePassword = (props) => {
 
   const [pword, setPword] = useState('');
   const [cpword, setCPword] = useState('');
-  
+
   const handleUpdateCustomerPassword = () => {
+    if(pword !== cpword){
+      alert('Password and Confirm Password must match!');
+      setPword('');
+      setCPword('');
+      return;
+    }
+
     axios.put('http://localhost:3001/api/customer-pass', {
       customerPword: pword,
       customerCPword: cpword,
       customerID: props.id,
     })
     .then((response) => {
-        console.log(response.data.message);
+        console.log(response.data[0]);
         alert('Customer Password Updated Successfully!');
+
     })
     .catch((error) => {
         console.log('Error',error);

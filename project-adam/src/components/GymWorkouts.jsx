@@ -3,7 +3,7 @@ import gymWorkout from '../imgs/gymWorkout.jpg'
 
 const GymWorkouts = () => {
   return (
-    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[20px]' id='gymWorkouts'>
+    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[20px] text-justify' id='gymWorkouts'>
         <div className='hidden md:grid md:grid-cols-2 max-w-[1240px] mx-auto md:justify-center'>
             <div className='flex justify-center m-[5px]'>
                 <img src={gymWorkout} alt='' className='rounded-2xl drop-shadow-md'/>

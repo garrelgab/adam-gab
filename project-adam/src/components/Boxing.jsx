@@ -2,7 +2,7 @@ import React from 'react'
 import boxing from '../imgs/boxing.jpg'
 const Boxing = () => {
   return (
-    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[0px]' id='boxing'>
+    <div className='bg-[#2a2a2a] md:pt-[20px] md:pb-[0px] text-justify' id='boxing'>
         <div className='hidden md:grid md:grid-cols-2 max-w-[1240px] mx-auto md:justify-center'>
             <div className='h-[80%] flex justify-center m-[5px]'>
                 <img src={boxing} alt='' className='rounded-2xl drop-shadow-md'/>
