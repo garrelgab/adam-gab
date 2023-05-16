@@ -19,9 +19,14 @@ const CreateAccount = (props) => {
     const [email, setEmail] = useState('');
     const [pword, setPword] = useState('');
     const [cpword, setCPword] = useState('');
-    const [role, setRole] = useState('customer');
-
+    //const [role, setRole] = useState('customer');
+    const role = 'customer';
+    
     const btnCreateAccount = () => {
+        if(age < 18){
+            alert('18 years old below is not allowed to create account. Waiver Required.');
+            return;
+        }
         if(!selectedGender){
             alert('Please fill out the empty field.');
             return;
@@ -38,6 +43,7 @@ const CreateAccount = (props) => {
             alert('Please fill out the empty field.');
             return;
         }
+
         if(!email){
             alert('Please fill out the empty field.');
             return;
@@ -92,7 +98,7 @@ const CreateAccount = (props) => {
         setSelectedDate(date);
         setShowCalendar(false);
     };
-    
+
   return (
     <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#93F4D3] w-[100%] h-[100%] bg-login'>
         <div className='text-white md:text-black md:max-w-[1240px] md:mx-auto md:max-h-[830px] w-[400px] md:w-[100%]'>

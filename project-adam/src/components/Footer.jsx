@@ -41,6 +41,7 @@ const Footer = () => {
             </div>
         </div>
         <div className='bg-white mx-[40px] top-0 left-0'>
+            <h1 className='bg-green-500 top-[90%]'>Store Hours: 8 AM to 9 PM</h1>
             <h1 className='bg-green-500 top-[90%]'>ADAM Fitness Center, M. L. Quezon Avenue, Antipolo, Rizal</h1>
         </div>
     </div>

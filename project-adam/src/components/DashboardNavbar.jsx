@@ -6,6 +6,12 @@ const DashboardNavbar = (props) => {
     const handleNav = () => {
         setNav(!nav)
     }
+
+    const [navSettings, setNavSettings] = useState(false);
+
+    const handleNavSettings = () => {
+        setNavSettings(!navSettings)
+    }
     const userID = props.id;
   return (
     <div className='w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500'>
@@ -39,6 +45,8 @@ const DashboardNavbar = (props) => {
                 <h1 className='blocked p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0'>Logout</h1>
             </LinkRouter>
         </div>
+
+        
     </div>
   )
 }
