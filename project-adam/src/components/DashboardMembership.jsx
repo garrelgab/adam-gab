@@ -41,7 +41,7 @@ const DashboardMembership = () => {
     <div className='flex justify-center mx-[50px] mt-[30px] text-black'>
       
       <div className='w-[1560px] rounded-lg shadow-2xl text-center'>
-        <h1 className='text-[30px] text-white font-light'>Members</h1>
+        <h1 className='text-[30px] text-[#93F4D3] font-light'>Members</h1>
         <div className='bg-white rounded-lg shadow-2xl mt-[30px]'>
           <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>

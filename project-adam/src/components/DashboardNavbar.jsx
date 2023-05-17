@@ -28,21 +28,21 @@ const DashboardNavbar = (props) => {
             </div>
             <ul className=''>
                 <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Dashboard</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Dashboard</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Membership</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Membership</li>
                 </LinkRouter>
                 <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Reservation</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Reservation</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/settings' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Settings</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Settings</li>
                 </LinkRouter>                
-                <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] '>Announcement</li>
+                <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Announcement</li>
             </ul>
             <LinkRouter to='/'>
-                <h1 className='blocked p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0'>Logout</h1>
+                <h1 className='blocked p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0 ease-in-out duration-300'>Logout</h1>
             </LinkRouter>
         </div>
 

@@ -81,10 +81,10 @@ const Login = (props) => {
                 <input type="password"className="shadow-lg block w-[350px] p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:outline-none" value={pword} placeholder='Password' onChange={(e) => setPword(e.target.value)}/>
             </div>
             <div className='mt-[50px] md:mt-[100px] text-center'>
-                <button className='shadow-lg w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white' onClick={userLogin}>Login</button>
+                <button className='shadow-lg w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white ease-in-out duration-300' onClick={userLogin}>Login</button>
                 <h1 className="block mb-1 text-l md:text-l text-center font-light text-blue-500 md:text-blue-500 mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-black">Forget Password?</h1>
                 <LinkRouter to="/signup" onClick={() => props.setTrigger(false)}>
-                    <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white md:mb-[50px]'>Create Account</button>
+                    <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white md:mb-[50px] ease-in-out duration-300'>Create Account</button>
                 </LinkRouter>
             </div>
         </div>
