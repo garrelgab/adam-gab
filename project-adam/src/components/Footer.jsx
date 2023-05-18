@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link as LinkScroll } from 'react-scroll/modules';
 import { Link as LinkRouter } from 'react-router-dom';
-
+import LocationADAM from '../imgs/LocationADAM.png';
+import ADAMLocation from '../imgs/ADAMLocation.png'
 const Footer = () => {
     const handleClick = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -43,6 +44,7 @@ const Footer = () => {
         <div className='bg-white mx-[40px] top-0 left-0'>
             <h1 className='bg-green-500 top-[90%]'>Store Hours: 8 AM to 9 PM</h1>
             <h1 className='bg-green-500 top-[90%]'>ADAM Fitness Center, M. L. Quezon Avenue, Antipolo, Rizal</h1>
+            {/* <img src={ADAMLocation} className='h-60 w-full'/> */}
         </div>
     </div>
   )

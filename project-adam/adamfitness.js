@@ -45,6 +45,7 @@ app.get('/', (req, res)=>{
 
 app.post("/api/insert", (req, res) => {
   
+  const currentDate = new Date().toISOString().slice(0, 10);
   const userFname = req.body.userFname
   const userLname = req.body.userLname
   const userAge = req.body.userAge
@@ -54,7 +55,7 @@ app.post("/api/insert", (req, res) => {
   const userPword = req.body.userPword
   const userCPword = req.body.userCPword
   const userRole = req.body.userRole
-  const sqlInsert = "insert into tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role) values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  const sqlInsert = `insert into tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}')`;
   connection.query(sqlInsert, [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole], (err, result) => {
     console.log(result);
   });
@@ -91,7 +92,7 @@ app.post("/api/login", (req, res) => {
 
 app.get("/api/members", (req, res) => {
   // const members = "select * from tbl_account_info where role = 'customer'";
-  connection.query("select * from tbl_account_info where role = 'customer'", (err, result) => {
+  connection.query("select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'customer'", (err, result) => {
     if(err){
       res.send({err: err})
     }

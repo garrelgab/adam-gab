@@ -27,6 +27,12 @@ const CreateAccount = (props) => {
             alert('18 years old below is not allowed to create account. Waiver Required.');
             return;
         }
+        if(pword !== cpword){
+            alert('Password and Confirm Password must match!');
+            setPword('');
+            setCPword('');
+            return;
+          }
         if(!selectedGender){
             alert('Please fill out the empty field.');
             return;
@@ -73,7 +79,7 @@ const CreateAccount = (props) => {
         .catch((error) => {
             console.error('Failed to Create account', error);
         })
-
+        alert('Welcome to Adam Fitness Center!');
         setFname('');
         setLname('');
         setAge('');
@@ -95,9 +101,19 @@ const CreateAccount = (props) => {
     };
 
     const handleDateChange = (date) => {
+        // if (date instanceof Date && !isNaN(date)) {
+        //     const formattedDate = date.toISOString().slice(0, 10);
+        //     setSelectedDate(formattedDate);
+        // }
         setSelectedDate(date);
         setShowCalendar(false);
     };
+
+    // const handleButtonClick = () => {
+    //     const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : null;
+    //     // Perform further operations with the formattedDate
+    //     console.log(formattedDate);
+    //   };
 
   return (
     <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#93F4D3] w-[100%] h-[100%] bg-login'>
@@ -127,7 +143,7 @@ const CreateAccount = (props) => {
 
                     <label className="block text-md md:text-lg mx-auto text-left font-light">Birthday</label>
                     <button onClick={handleButtonClick} className='font-light shadow-lg w-[350px] text-left bg-gray-50 p-4 rounded-lg text-black focus:outline-none' value={bday} onChange={(e) => setBday(e.target.value)} required>
-                        {selectedDate ? selectedDate.toLocaleDateString() : 'Select Date'}
+                        {selectedDate ? selectedDate.toLocaleDateString('en-US') : 'Select Date'}
                     </button>
                     {showCalendar && (
                         <div className='relative z-10'>
