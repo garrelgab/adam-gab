@@ -84,7 +84,7 @@ const DashboardSettings = () => {
         setSettingsUpdateAbout(!settingsUpdateAbout);
     }
   return (
-    <div className='mx-[50px] mt-[30px] text-white'>
+    <div className='mx-[50px] mt-[90px] text-white'>
         <h1 className='text-[30px] md:text-[35px] font-light text-[#93F4D3]'>Settings</h1>
 
         <div className='rounded-md md:ml-[50px] mt-[50px]'>

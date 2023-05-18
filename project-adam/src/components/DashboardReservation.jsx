@@ -38,7 +38,7 @@ const DashboardReservation = () => {
   
   
   return (
-    <div className='mx-[50px] mt-[30px] text-black'>
+    <div className='mx-[50px] mt-[90px] text-black'>
       <h1 className='text-[30px] font-light text-[#93F4D3]'>Reservation Management</h1>
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg shadow-2xl'>
         

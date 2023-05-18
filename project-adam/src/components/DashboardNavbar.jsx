@@ -14,7 +14,7 @@ const DashboardNavbar = (props) => {
     }
     const userID = props.id;
   return (
-    <div className='w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500'>
+    <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500 z-50'>
         <div className='blocked text-white flex justify-between'>
             <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
             <div className='md:flex text-lg font-light hidden'>

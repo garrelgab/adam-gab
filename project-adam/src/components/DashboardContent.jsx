@@ -61,7 +61,7 @@ const DashboardContent = () => {
   }, []);
 
   return (
-    <div className='mx-[50px] my-[30px] text-black'>
+    <div className='mx-[50px] my-[90px] text-black'>
       <h1 className='text-[30px] text-[#93F4D3] font-light'>Dashboard</h1>
       <div className='blocked flex md:justify-between  mt-[20px] mx-[0px]'>
         <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
