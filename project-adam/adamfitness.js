@@ -22,6 +22,8 @@ app.use(cors({
   credentials: true,
 }));
 
+// app.use(cors());
+
 app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
@@ -265,6 +267,52 @@ app.put('/api/customer-pass', (req, res) => {
     }
   });
 });
+
+app.post('/api/add-faq', (req, res) => {
+  const addFaq = req.body.addFaq;
+  const addDescription = req.body.addDescription;
+  const addStatus = req.body.addStatus;
+  const insertFaq = "insert into tbl_faq (name, description, status) values (?, ?, ?)";
+  connection.query(insertFaq, [addFaq, addDescription, addStatus], (err, result) => {
+    if(err) {
+      console.log("Failed to insert FAQ's", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/option-faq', (req, res) => {
+  const optionFaq = "select faq_id, name from tbl_faq";
+  connection.query(optionFaq, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.faq_id,
+        label: options.name,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/desc-faq', (req, res) => {
+  const descFaqName = req.query.descFaqName;
+  const descFaq = "select description from tbl_faq where name = ?";
+  connection.query(descFaq, [descFaqName], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result[0].description);
+      console.log(result[0]);
+    }
+  });
+});
+
 
 
 module.exports = connection;

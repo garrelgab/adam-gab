@@ -1,6 +1,4 @@
 import React, {useState} from 'react'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import FAQs from './FAQs';
 import SettingsPrivacyPolicy from './SettingsPrivacyPolicy';
 import SettingsTermsConditions from './SettingsTermsConditions';
@@ -18,7 +16,6 @@ const DashboardSettings = () => {
         setAddModal(!Modal);
     }
 
-    const [editorContent, setEditorContent] = useState('');
     const [settingsFaqNav, setSettingsFaqNav] = useState(false);
     const [settingsPrivacyPolicyNav, setSettingsPrivacyPolicyNav] = useState(false);
     const [settingsTermsCondtionNav, setSettingsTermsConditionNav] = useState(false);
