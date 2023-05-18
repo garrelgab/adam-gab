@@ -11,10 +11,7 @@ import SettingsAddAbout from './SettingsAddAbout';
 const DashboardSettings = () => {
 
 
-    const [Modal, setAddModal] = useState(false);
-    const handleAddModal = () => {
-        setAddModal(!Modal);
-    }
+    
 
     const [settingsFaqNav, setSettingsFaqNav] = useState(false);
     const [settingsPrivacyPolicyNav, setSettingsPrivacyPolicyNav] = useState(false);
@@ -65,7 +62,15 @@ const DashboardSettings = () => {
     const [settingsUpdatePrivacyPolicy, setSettingsUpdatePrivacyPolicy] = useState(false);
     const [settingsUpdateTerms, setSettingsUpdateTerms] = useState(false);
     const [settingsUpdateAbout, setSettingsUpdateAbout] = useState(false);
+    const [Modal, setAddModal] = useState(false);
 
+    const handleAddModal = () => {
+        setAddModal(!Modal);
+        setSettingsUpdateFaq(false);
+        setSettingsUpdatePrivacyPolicy(false);
+        setSettingsUpdateTerms(false);
+        setSettingsUpdateAbout(false);
+    }
     const handleUpdateFaq = () => {
         setSettingsUpdateFaq(!settingsUpdateFaq);
     }
@@ -105,7 +110,7 @@ const DashboardSettings = () => {
                     </div>
                 </div>
                 }
-                { settingsUpdateFaq && <FAQs/>}
+                { settingsUpdateFaq && <FAQs/> }
             </div>
             <div>
                 <div className='blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handlePrivacyPolicyNav}>

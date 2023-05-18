@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
-import { Link as LinkRouter, useLocation } from 'react-router-dom'
+import { Link as LinkRouter } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import Axios from 'axios'
 

@@ -29,15 +29,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
 
 
-app.use(session({
-  key: 'account_id',
-  secret: 'hey',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    expires: 60 * 60
-  }
-}));
+// app.use(session({
+//   key: 'account_id',
+//   secret: 'hey',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     expires: 60 * 60
+//   }
+// }));
 
 app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
@@ -79,7 +79,6 @@ app.post("/api/login", (req, res) => {
         //req.session.user = result
         res.send(result);
         //res.send({ message: 'Login successfully.'});
-
       } else {
         res.send({ message: 'Incorrect username/password.'});
         
@@ -102,14 +101,14 @@ app.get("/api/members", (req, res) => {
   })
 });
 
-app.get("/api/login", (req, res) => {
-  if(req.session.user) {
-    res.send({loggedIn: true, user: req.session.user})
-  }
-  else{
-    res.send({loggedIn: false})
-  }
-});
+// app.get("/api/login", (req, res) => {
+//   if(req.session.user) {
+//     res.send({loggedIn: true, user: req.session.user})
+//   }
+//   else{
+//     res.send({loggedIn: false})
+//   }
+// });
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -268,6 +267,7 @@ app.put('/api/customer-pass', (req, res) => {
   });
 });
 
+//FAQ Section
 app.post('/api/add-faq', (req, res) => {
   const addFaq = req.body.addFaq;
   const addDescription = req.body.addDescription;
@@ -300,19 +300,90 @@ app.get('/api/option-faq', (req, res) => {
 });
 
 app.get('/api/desc-faq', (req, res) => {
-  const descFaqName = req.query.descFaqName;
-  const descFaq = "select description from tbl_faq where name = ?";
-  connection.query(descFaq, [descFaqName], (err, result) => {
+  const descFaqID = req.query.descFaqID;
+  const descFaq = "select description from tbl_faq where faq_id = ?";
+  connection.query(descFaq, [descFaqID], (err, result) => {
     if(err){
       console.log("Failed to get description", err);
     }
     else{
-      res.send(result[0].description);
-      console.log(result[0]);
+      res.send(result);
     }
   });
 });
 
+app.put('/api/update-desc-faq', (req, res) => {
+  const FaqDescription = req.body.FaqDescription;
+  const FaqID = req.body.FaqID;
+  const updateFaqDesc = "update tbl_faq set description = ? where faq_id = ?";
+  connection.query(updateFaqDesc, [FaqDescription, FaqID], (err, result) => {
+    if(err){
+      console.log("Failed to update description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 
+//Privacy Policy Section
+app.post('/api/add-privacy', (req, res) => {
+  const addPrivacy = req.body.addPrivacy;
+  const addDescription = req.body.addDescription;
+  const addStatus = req.body.addStatus;
+  const insertFaq = "insert into tbl_privacy (name, description, status) values (?, ?, ?)";
+  connection.query(insertFaq, [addPrivacy, addDescription, addStatus], (err, result) => {
+    if(err) {
+      console.log("Failed to insert FAQ's", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 
+app.get('/api/option-privacy', (req, res) => {
+  const optionFaq = "select privacy_id, name from tbl_privacy";
+  connection.query(optionFaq, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.privacy_id,
+        label: options.name,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/desc-privacy', (req, res) => {
+  const descPrivacyID = req.query.descPrivacyID;
+  const descPrivacy = "select description from tbl_privacy where privacy_id = ?";
+  connection.query(descPrivacy, [descPrivacyID], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-desc-privacy', (req, res) => {
+  const PrivacyDescription = req.body.PrivacyDescription;
+  const PrivacyID = req.body.PrivacyID;
+  const updatePrivacyDesc = "update tbl_privacy set description = ? where privacy_id = ?";
+  connection.query(updatePrivacyDesc, [PrivacyDescription, PrivacyID], (err, result) => {
+    if(err){
+      console.log("Failed to update description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+//Terms and Condition Section
 module.exports = connection;

@@ -39,7 +39,7 @@ const SettingsAddFAQ = (props) => {
             </button>
             <div className=' mx-[30px]'>
                 <h1 className='md:text-[25px] font-bold'>Add FAQ's</h1>
-                <input type="text" className="shadow-lg block w-full my-[30px] p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Title' value={name} onChange={(e) => setName(e.target.value)} required/>
+                <input type="text" className="shadow-lg block w-full my-[30px] p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Question' value={name} onChange={(e) => setName(e.target.value)} required/>
                 <div className='bg-white h-[240px]'>
                     <ReactQuill className=' h-[200px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
                 </div>

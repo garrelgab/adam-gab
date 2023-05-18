@@ -7,9 +7,12 @@ import axios from 'axios';
 
 const FAQs = () => {
 
-  const [description, setDescription] = useState('');
+  axios.defaults.withCredentials = true;
+
+  const [description, setDescription] = useState(null);
   const [options, setOptions] = useState([]);
   const [selectOption, setSelectedOption] = useState(null);
+  const [selectOptionName, setSelectedOptionName] = useState(null);
   
   useEffect(() => {
     axios.get('http://localhost:3001/api/option-faq')
@@ -22,37 +25,62 @@ const FAQs = () => {
   },[]);
 
   const handleChange = (selectedOption) => {
-    setSelectedOption(selectedOption.label);
-
-    // console.log();
+    setSelectedOption(selectedOption.value);
+    setSelectedOptionName(selectedOption.label);
 
     if(selectedOption) {
       axios.get('http://localhost:3001/api/desc-faq', {
         params: {
-          descFaqName: selectOption,
+          descFaqID: selectedOption.value,
         }
       })
-      .then((response) => {
+      .then(response => {
         setDescription(response.data[0].description);
-        console.log(response);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       })
     }
-    else{
-      // setDescription('');
+  };
+
+  const handleUpdateFaq = () =>{
+    if(!selectOption){
+      alert('Please fill out the empty field.');
+      return;
     }
+    axios.put('http://localhost:3001/api/update-desc-faq', {
+      FaqDescription: description,
+      FaqID: selectOption,
+    })
+    .then(response => {
+      axios.get('http://localhost:3001/api/desc-faq', {
+        params: {
+          descFaqID: selectOption,
+        }
+      })
+      .then(response => {
+        setDescription(response.data[0].description);
+        alert(` ${selectOptionName}: Description Updated Successfully.`);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    })
+    .catch(error => {
+      console.log(error);
+    })
   };
   return (
     <div>
-      <h1 className='md:text-[25px] font-light text-[#93F4D3]'>{selectOption}</h1>
-      <Select className='bg-white text-black mt-[20px]' options={options} onChange={handleChange} placeholder="Select an option"/>
-      <div className='bg-white h-[390px] mt-[20px]'>
+      <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Update FAQ's</h1>
+      <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Questions</h1>
+      <Select className='bg-white text-black mt-[5px]' options={options} onChange={handleChange} placeholder="Select question"/>
+      <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
+      <div className='bg-white h-[390px] mt-[5px]'>
           <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
       </div>
       <div className='flex justify-end mt-[30px]'>
-          <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300'>Confirm</button>
+          <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleUpdateFaq}>Confirm</button>
       </div>
     </div>
   )
