@@ -2,10 +2,37 @@ import React, { useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import axios from 'axios';
 
 const SettingsAddAbout = (props) => {
+    axios.defaults.withCredentials = true;
+    
     const [name, setName] = useState('');
     const [editorContent, setEditorContent] = useState('');
+    const status = 'Active';
+
+    const handleAddAbout = () => {
+        if(!name){
+            alert('Please fill up the empty field');
+        }
+        if(!editorContent){
+            alert('Please fill up the empty field');
+        }
+        axios.post('http://localhost:3001/api/add-about', {
+            addAbout: name,
+            addDescription: editorContent,
+            addStatus: status,
+        })
+        .then((response) => {
+            alert(`${name} Successfully Added.`);
+        })
+        .catch((error) => {
+            console.error('Error saving data.', error)
+        })
+        setName('');
+        setEditorContent('');
+        props.onClose(false);
+    }
 
   return (
     <div className='fixed flex align-middle justify-center pt-[50px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
@@ -20,7 +47,7 @@ const SettingsAddAbout = (props) => {
                     <ReactQuill className=' h-[200px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
                 </div>
                 <div className='flex justify-end mt-[30px]'>
-                    <button className='w-[150px] p-2 text-lg font-light rounded-md bg-gray-600 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl ease-in-out duration-300'>Add</button>
+                    <button className='w-[150px] p-2 text-lg font-light rounded-md bg-gray-600 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleAddAbout}>Add</button>
                 </div>
             </div>
         </div>

@@ -331,10 +331,10 @@ app.post('/api/add-privacy', (req, res) => {
   const addPrivacy = req.body.addPrivacy;
   const addDescription = req.body.addDescription;
   const addStatus = req.body.addStatus;
-  const insertFaq = "insert into tbl_privacy (name, description, status) values (?, ?, ?)";
-  connection.query(insertFaq, [addPrivacy, addDescription, addStatus], (err, result) => {
+  const insertPrivacy = "insert into tbl_privacy (name, description, status) values (?, ?, ?)";
+  connection.query(insertPrivacy, [addPrivacy, addDescription, addStatus], (err, result) => {
     if(err) {
-      console.log("Failed to insert FAQ's", err);
+      console.log("Failed to insert privacy policy", err);
     }
     else{
       res.send(result);
@@ -343,8 +343,8 @@ app.post('/api/add-privacy', (req, res) => {
 });
 
 app.get('/api/option-privacy', (req, res) => {
-  const optionFaq = "select privacy_id, name from tbl_privacy";
-  connection.query(optionFaq, (err, results) => {
+  const optionPrivacy = "select privacy_id, name from tbl_privacy";
+  connection.query(optionPrivacy, (err, results) => {
     if(err) {
       console.log("Failed to get option", err);
     }
@@ -386,4 +386,120 @@ app.put('/api/update-desc-privacy', (req, res) => {
 });
 
 //Terms and Condition Section
+app.post('/api/add-terms', (req, res) => {
+  const addTerms = req.body.addTerms;
+  const addDescription = req.body.addDescription;
+  const addStatus = req.body.addStatus;
+  const insertTerms = "insert into tbl_terms (name, description, status) values (?, ?, ?)";
+  connection.query(insertTerms, [addTerms, addDescription, addStatus], (err, result) => {
+    if(err) {
+      console.log("Failed to insert FAQ's", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/option-terms', (req, res) => {
+  const optionTerms = "select terms_id, name from tbl_terms";
+  connection.query(optionTerms, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.terms_id,
+        label: options.name,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/desc-terms', (req, res) => {
+  const descTermsID = req.query.descTermsID;
+  const descTerms = "select description from tbl_terms where terms_id = ?";
+  connection.query(descTerms, [descTermsID], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-desc-terms', (req, res) => {
+  const TermsDescription = req.body.TermsDescription;
+  const TermsID = req.body.TermsID;
+  const updateTermsDesc = "update tbl_terms set description = ? where terms_id = ?";
+  connection.query(updateTermsDesc, [TermsDescription, TermsID], (err, result) => {
+    if(err){
+      console.log("Failed to update description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+//About Us (Gym Info) Section
+app.post('/api/add-about', (req, res) => {
+  const addAbout = req.body.addAbout;
+  const addDescription = req.body.addDescription;
+  const addStatus = req.body.addStatus;
+  const insertAbout = "insert into tbl_about (name, description, status) values (?, ?, ?)";
+  connection.query(insertAbout, [addAbout, addDescription, addStatus], (err, result) => {
+    if(err) {
+      console.log("Failed to insert About Us", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/option-about', (req, res) => {
+  const optionAbout = "select about_id, name from tbl_about";
+  connection.query(optionAbout, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.about_id,
+        label: options.name,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/desc-about', (req, res) => {
+  const descAboutID = req.query.descAboutID;
+  const descAbout = "select description from tbl_about where about_id = ?";
+  connection.query(descAbout, [descAboutID], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-desc-about', (req, res) => {
+  const AboutDescription = req.body.AboutDescription;
+  const AboutID = req.body.AboutID;
+  const updateAboutDesc = "update tbl_about set description = ? where about_id = ?";
+  connection.query(updateAboutDesc, [AboutDescription, AboutID], (err, result) => {
+    if(err){
+      console.log("Failed to update description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 module.exports = connection;
