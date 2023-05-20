@@ -139,7 +139,7 @@ const InventoryUpdateProducts = () => {
             <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>
         {/* <div className='bg-white my-[50px] mx-auto md:hidden h-[800px] flex rounded-md justify-center items-center'>
-            <DataGrid rows={rows1} columns={columns1} className='text-center' disableExtendRowFullWidth/>
+            <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div> */}
     </div>
   )

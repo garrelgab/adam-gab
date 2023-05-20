@@ -125,9 +125,9 @@ const InventoryAddProducts = () => {
         <div className='bg-white my-[50px] mx-auto hidden md:flex rounded-md h-[800px] md:h-[600px] z-1 justify-center items-center'>
             <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>
-        <div className='bg-white my-[50px] mx-auto md:hidden flex rounded-md h-[800px] md:h-[600px] z-1 justify-center items-center'>
+        {/* <div className='bg-white my-[50px] mx-auto md:hidden flex rounded-md h-[800px] md:h-[600px] z-1 justify-center items-center'>
             <DataGrid rows={rows1} columns={columns1} className='text-center' disableExtendRowFullWidth/>
-        </div>
+        </div> */}
     </div>
   )
 }

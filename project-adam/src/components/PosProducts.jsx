@@ -5,8 +5,8 @@ import ProductModal from './ProductModal';
 const PosProducts = () => {
     const [rows, setRows] = useState([]);
     const columns = [
-        { field: 'id', headerName: 'ID', width: 100},
-        { field: 'name', headerName: 'Product Name', width: 600},
+        { field: 'id', headerName: 'ID', width: 60},
+        { field: 'name', headerName: 'Product Name', width: 300},
         { field: 'price', headerName: 'Price', width: 100},
         { field: 'qty', headerName: 'Quantity', width: 100},
     ]
@@ -44,7 +44,7 @@ const PosProducts = () => {
         <div>
           <h1 className='text-[20px] md:text-[25px] font-light text-[#93F4D3]'>Products</h1>
           <div className='text-center bg-white z-1 h-[600px] rounded-md'>
-            <DataGrid rows={rows} columns={columns} className='text-center' onRowClick={handleSelectedRow} disableExtendRowFullWidth/>
+            <DataGrid rows={rows} columns={columns}  pageSizeOptions={[]} hideFooterPagination={true} className='text-center' onRowClick={handleSelectedRow} disableExtendRowFullWidth/>
             { openModal &&  <ProductModal onClose={handleSelectedRow} productName={selectRow.name} productPrice={selectRow.price} productQty={selectRow.qty}/>}
           </div>
         </div>
