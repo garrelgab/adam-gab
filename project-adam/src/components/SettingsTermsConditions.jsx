@@ -71,9 +71,9 @@ const SettingsTermsConditions = () => {
   return (
     <div>
       <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Update Terms and Conditions</h1>
-            <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Terms and Conditions</h1>
+      <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Terms and Conditions</h1>
       <Select className='bg-white text-black mt-[5px]' options={options} onChange={handleChange} placeholder="Select an option"/>
-            <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
+      <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
       <div className='bg-white h-[390px] mt-[5px]'>
           <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
       </div>

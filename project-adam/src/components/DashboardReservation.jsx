@@ -36,7 +36,10 @@ const DashboardReservation = () => {
     });
   }, [events]);
   
-  
+  const views = {
+    month: true,
+    agenda: true,
+  }
   return (
     <div className='mx-[50px] mt-[90px] text-black'>
       <h1 className='text-[30px] font-light text-[#93F4D3]'>Reservation Management</h1>
@@ -48,6 +51,7 @@ const DashboardReservation = () => {
           localizer={localizer}
           style={{ height: 700 }}
           min={new Date()}
+          views={views}
           selectable
           events={events}
           onSelectEvent={handleSelectedEvent}
@@ -56,6 +60,7 @@ const DashboardReservation = () => {
           <Calendar
           className='bg-white font-light rounded-lg'
           localizer={localizer}
+          views={views}
           style={{ height: 700 }}
           min={new Date()}
           selectable

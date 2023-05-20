@@ -503,4 +503,96 @@ app.put('/api/update-desc-about', (req, res) => {
     }
   });
 });
+
+//Invetory Management
+app.get('/api/inventory', (req, res) => {
+  const products = "select product_id, product_name, price, stock from tbl_products";
+  connection.query(products, (err, result) => {
+    if(err){
+      console.log("Failed to fetch products", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.post('/api/product-check', (req, res) => {
+  const prodName = req.body.prodName;
+  const checkName = 'SELECT COUNT(*) as count FROM tbl_products WHERE product_name = ?';
+  connection.query(checkName, [prodName], (err, result) => {
+    if (err) {
+      console.log('Error executing MySQL query:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+      return;
+    }
+    const isTaken = result[0].count > 0;
+    res.json({ isTaken });
+  });
+});
+
+app.post('/api/add-products', (req, res) => {
+  const prodName = req.body.prodName;
+  const prodPrice = req.body.prodPrice;
+  const prodQuantity = req.body.prodQuantity;
+  const prodStatus = req.body.prodStatus;
+  const addProd = 'INSERT INTO tbl_products (product_name, price, stock, status) VALUES (?, ?, ?, ?)';
+  connection.query(addProd, [prodName, prodPrice, prodQuantity, prodStatus], (err, result) => {
+    if (err) {
+      console.log('Failed to add product:', err);
+      res.status(500).json({ error: 'Failed to add product' });
+    } else {
+      res.json({ success: true });
+    }
+  });
+});
+
+app.get('/api/option-inventory', (req, res) => {
+  // const prodID = req.query.prodID;
+  // const optionInventory = "select product_id, product_name, price from tbl_products where product_id = ?";
+  const optionInventory = "select product_id, product_name from tbl_products";
+  connection.query(optionInventory, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.product_id,
+        label: options.product_name,
+        // price: options.price,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/price-inventory', (req, res) => {
+  const prodID = req.query.prodID;
+  const prodPrice = "select price from tbl_products where product_id = ?";
+  connection.query(prodPrice, [prodID], (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      res.send(results);
+    }
+  });
+});
+
+
+app.put('/api/update-inventory', (req, res) => {
+  const prodID = req.body.prodID;
+  const newProdPrice = req.body.newProdPrice;
+  const newProdQty = req.body.newProdQty;
+  const prodUpdate = "update tbl_products set price = ?, stock = stock + ? where product_id = ?";
+  connection.query(prodUpdate, [newProdPrice, newProdQty, prodID], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
 module.exports = connection;

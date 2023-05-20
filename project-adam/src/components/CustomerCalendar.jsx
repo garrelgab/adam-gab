@@ -59,9 +59,13 @@ const CustomerCalendar = (props) => {
     });
   }, []);
 
+  const views = {
+    month: true,
+    agenda: true,
+  }
   return (
-    <div className='mx-[50px] mt-[30px] text-black z-10'>
-      <h1 className='text-[30px] text-white font-light'>Calendar</h1>
+    <div className='mx-[50px] mt-[90px] text-black z-10'>
+      <h1 className='text-[30px] text-[#93F4D3] font-light'>Calendar</h1>
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg shadow-2xl'>
         
         {events.length ? (
@@ -71,6 +75,7 @@ const CustomerCalendar = (props) => {
           style={{ height: 700 }}
           min={new Date()}
           selectable
+          views={views}
           events={events}
           selected={selectedDate}
           onSelectEvent={handleSelectedEvent}

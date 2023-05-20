@@ -33,7 +33,7 @@ const SettingsAddFAQ = (props) => {
   }
   return (
     <div className='fixed flex align-middle justify-center pt-[50px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
-        <div className='text-black w-[300px] md:w-[900px] h-[550px] mt-[50px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>
+        <div className='text-black w-[300px] md:w-[900px] h-[550px] mt-[10px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>
             <button className='md:ml-[95%] ml-[90%] mt-[2%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>

@@ -9,7 +9,7 @@ const CustomerNavbar = (props) => {
     }
     const userID = props.id;
   return (
-    <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500'>
+    <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500 z-50'>
         <div className='blocked  text-white flex justify-between'>
             <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
             <div className='md:flex text-lg font-light hidden'>
@@ -17,7 +17,7 @@ const CustomerNavbar = (props) => {
                 <h1 className='px-5'>date</h1>
             </div>
         </div>
-        <div className={nav ? 'fixed  top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] text-center text-xl z-50 text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
+        <div className={nav ? 'fixed  top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] text-center z-50 text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
             <div className='blocked md:py-[20px] py-[20px] border-b border-gray-800'>
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
@@ -34,7 +34,7 @@ const CustomerNavbar = (props) => {
                 <li className='p-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer'>Announcement</li>
             </ul>
             <LinkRouter to='/'>
-                <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0'>Logout</h1>
+                <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] font-bold left-0'>Logout</h1>
             </LinkRouter>
         </div>
     </div>

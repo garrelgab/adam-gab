@@ -39,7 +39,7 @@ const Navbar = (props) => {
                         <LinkScroll to='services' spy={true} smooth={true} offset={-150} duration={500}>
                             <li className='p-8 hover:text-[#93F4D3] cursor-pointer'>Services</li>
                         </LinkScroll>
-                        <LinkScroll to='/' spy={true} smooth={true} offset={50} duration={500}>
+                        <LinkScroll to='facilities' spy={true} smooth={true} offset={-150} duration={500}>
                             <li className='p-8 hover:text-[#93F4D3] cursor-pointer'>Facilities</li>
                         </LinkScroll>
                         <LinkScroll to='/' spy={true} smooth={true} offset={50} duration={500}>
@@ -65,7 +65,9 @@ const Navbar = (props) => {
                     <LinkScroll to='services' spy={true} smooth={true} offset={-150} duration={500} onClick={handleNav}>
                         <li className='p-4 border-b border-gray-500 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer'>Services</li>
                     </LinkScroll>
-                    <li className='p-4 border-b border-gray-500 hover:text-[#93F4D3] hover:bg-gray-500'>Facilities</li>
+                    <LinkScroll to='facilities' spy={true} smooth={true} offset={-150} duration={500} onClick={handleNav}>
+                        <li className='p-4 border-b border-gray-500 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer'>Facilities</li>
+                    </LinkScroll>
                     <li className='p-4 hover:text-[#93F4D3] hover:bg-gray-500'>Products Available</li>
                     </>
                 )}

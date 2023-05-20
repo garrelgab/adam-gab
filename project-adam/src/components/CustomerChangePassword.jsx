@@ -31,8 +31,8 @@ const CustomerChangePassword = (props) => {
   }
   return (
     <div className='flex justify-center text-white'>
-        <div className='py-[50px]'>
-            <h1 className=' text-[30px] font-light text-center mb-[50px]'>Change Password?</h1>
+        <div className='py-[90px]'>
+            <h1 className=' text-[30px] font-light text-center mb-[50px] text-[#93F4D3]'>Change Password?</h1>
             <div className=''>
                 <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Password</label>
                 <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Password' value={pword} onChange={(e) => setPword(e.target.value)}/>

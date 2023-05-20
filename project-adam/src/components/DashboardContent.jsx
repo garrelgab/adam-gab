@@ -60,6 +60,10 @@ const DashboardContent = () => {
       .catch(error => console.log(error));
   }, []);
 
+  const views = {
+    month: true,
+    agenda: true,
+  }
   return (
     <div className='mx-[50px] my-[90px] text-black'>
       <h1 className='text-[30px] text-[#93F4D3] font-light'>Dashboard</h1>
@@ -96,6 +100,7 @@ const DashboardContent = () => {
             localizer={localizer}
             style={{ height: 700 }}
             min={new Date()}
+            views={views}
             selectable
             events={events}
             onSelectEvent={handleSelectedEvent}
@@ -106,6 +111,7 @@ const DashboardContent = () => {
             localizer={localizer}
             style={{ height: 700 }}
             min={new Date()}
+            views={views}
             selectable
             />
           )}

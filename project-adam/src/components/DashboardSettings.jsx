@@ -93,7 +93,7 @@ const DashboardSettings = () => {
             onChange={setEditorContent}
             /> */}
             <div>
-                <div className='blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleFaqNav}>
+                <div className='cursor-pointer blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleFaqNav}>
                     <h1 className='text-extralight md:text-[25px] my-[20px] cursor-pointer py-[0px] pl-[70px]' >FAQ's</h1>
                     <div className='mr-[30px] md:mr-[70px]'>
                         {!settingsFaqNav ? <SlArrowDown className='md:text-[30px]'/> : <SlArrowUp className='md:text-[30px]'/>}
@@ -113,7 +113,7 @@ const DashboardSettings = () => {
                 { settingsUpdateFaq && <FAQs/> }
             </div>
             <div>
-                <div className='blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handlePrivacyPolicyNav}>
+                <div className='cursor-pointer blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handlePrivacyPolicyNav}>
                     <h1 className='text-extralight md:text-[25px] my-[20px] cursor-pointer py-[0px] pl-[70px]' >Privacy Policy</h1>
                     <div className='mr-[30px] md:mr-[70px]'>
                         {!settingsPrivacyPolicyNav ? <SlArrowDown className='md:text-[30px]'/> : <SlArrowUp className='md:text-[30px]'/>}
@@ -133,7 +133,7 @@ const DashboardSettings = () => {
                 { settingsUpdatePrivacyPolicy && <SettingsPrivacyPolicy/>}
             </div>
             <div>
-                <div className='blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleTermsConditionNav}>
+                <div className='cursor-pointer blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleTermsConditionNav}>
                     <h1 className='text-extralight md:text-[25px] my-[20px] cursor-pointer py-[0px] pl-[70px]' >Terms and Conditions</h1>
                     <div className='mr-[30px] md:mr-[70px]'>
                         {!settingsTermsCondtionNav ? <SlArrowDown className='md:text-[30px]'/> : <SlArrowUp className='md:text-[30px]'/>}
@@ -153,7 +153,7 @@ const DashboardSettings = () => {
                 { settingsUpdateTerms && <SettingsTermsConditions/>}
             </div>
             <div>
-                <div className='blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleAboutUsGymNav}>
+                <div className='cursor-pointer blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleAboutUsGymNav}>
                     <h1 className='text-extralight md:text-[25px] my-[20px] cursor-pointer py-[0px] pl-[70px]' >About Us (Gym Info)</h1>
                     <div className='mr-[30px] md:mr-[70px]'>
                         {!settingAboutUsGymNav ? <SlArrowDown className='md:text-[30px]'/> : <SlArrowUp className='md:text-[30px]'/>}

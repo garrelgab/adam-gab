@@ -7,11 +7,11 @@ const DashboardNavbar = (props) => {
         setNav(!nav)
     }
 
-    const [navSettings, setNavSettings] = useState(false);
+    // const [navSettings, setNavSettings] = useState(false);
 
-    const handleNavSettings = () => {
-        setNavSettings(!navSettings)
-    }
+    // const handleNavSettings = () => {
+    //     setNavSettings(!navSettings)
+    // }
     const userID = props.id;
   return (
     <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500 z-50'>
@@ -22,27 +22,33 @@ const DashboardNavbar = (props) => {
                 <h1 className='px-5'>Date</h1>
             </div>
         </div>
-        <div className={nav ? 'fixed top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] z-50 text-center text-xl text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
+        <div className={nav ? 'fixed top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] z-50 text-center text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
             <div className='blocked md:py-[20px] py-[20px] border-b border-gray-800'>
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
             <ul className=''>
                 <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Dashboard</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Dashboard</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Membership</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Membership</li>
                 </LinkRouter>
                 <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Reservation</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Reservation</li>
+                </LinkRouter>
+                <LinkRouter to='/dashboard/pos' state={userID} onClick={handleNav}>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Point of Sale</li>
+                </LinkRouter>
+                <LinkRouter to='/dashboard/inventory' state={userID} onClick={handleNav}>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Inventory Management</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/settings' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Settings</li>
-                </LinkRouter>                
-                <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer text-[15px] md:text-[20px] ease-in-out duration-300'>Announcement</li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Settings</li>
+                </LinkRouter>              
+                <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Announcement</li>
             </ul>
             <LinkRouter to='/'>
-                <h1 className='blocked p-6 hover:bg-gray-500 cursor-pointer hover:text-[#93F4D3] mt-[100%] left-0 ease-in-out duration-300'>Logout</h1>
+                <h1 className='p-6 hover:bg-gray-500 cursor-pointer font-bold hover:text-[#93F4D3] left-0 ease-in-out duration-300'>Logout</h1>
             </LinkRouter>
         </div>
 
