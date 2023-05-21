@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { Link as LinkRouter } from 'react-router-dom';
 const DashboardNavbar = (props) => {
@@ -7,19 +7,37 @@ const DashboardNavbar = (props) => {
         setNav(!nav)
     }
 
-    // const [navSettings, setNavSettings] = useState(false);
+    const [currentTime, setCurrentTime] = useState('');
+    const [currentDateTime, setCurrentDateTime] = useState('');
 
-    // const handleNavSettings = () => {
-    //     setNavSettings(!navSettings)
-    // }
+    useEffect(() => {
+        handleRunningDate();
+    }, []);
+
+    const handleRunningDate = () => {
+        const interval = setInterval(() => {
+        const now = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const date = now.toLocaleDateString('en-US', options);
+        const time = now.toLocaleTimeString('en-US', { hour12: true });
+    
+        setCurrentDateTime(`${date}`);
+        setCurrentTime(`${time}`);
+        }, 1000);
+    
+        return () => {
+        clearInterval(interval);
+        };
+      
+    }
     const userID = props.id;
   return (
     <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500 z-50'>
         <div className='blocked text-white flex justify-between'>
             <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
             <div className='md:flex text-lg font-light hidden'>
-                <h1 className='border-r border-gray-500 px-5'>{userID}</h1>
-                <h1 className='px-5'>Date</h1>
+                <h1 className='border-r border-gray-500 px-5'>{currentTime}</h1>
+                <h1 className='px-5'>{currentDateTime}</h1>
             </div>
         </div>
         <div className={nav ? 'fixed top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] z-50 text-center text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>

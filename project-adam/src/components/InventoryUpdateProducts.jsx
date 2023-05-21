@@ -26,6 +26,24 @@ const InventoryUpdateProducts = () => {
   // ]
 
   useEffect(() => {
+      const fetchData = () => {
+        axios.get("http://localhost:3001/api/inventory")
+        .then((response) => {
+            const rows = response.data.map(item => ({
+            id: item.product_id,
+            name: item.product_name,
+            price: formatPrice(item.price),
+            qty: item.stock,
+            }));
+            setRows(rows);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    };
+    const formatPrice = (price) => {
+        return Number(price).toFixed(2);
+    };
     fetchOptions();
     fetchData();
     // fetchData1();
@@ -37,7 +55,7 @@ const InventoryUpdateProducts = () => {
         const rows = response.data.map(item => ({
         id: item.product_id,
         name: item.product_name,
-        price: item.price,
+        price: formatPrice(item.price),
         qty: item.stock,
         }));
         setRows(rows);
@@ -45,6 +63,9 @@ const InventoryUpdateProducts = () => {
     .catch(error => {
         console.error(error);
     });
+  };
+  const formatPrice = (price) => {
+    return Number(price).toFixed(2);
   };
 
   // const fetchData1 = () => {
@@ -64,6 +85,10 @@ const InventoryUpdateProducts = () => {
   // };
   const handleUpdateProduct = () => {
     // alert(selectOptionName);
+    if(!productPrice){
+      alert('Please fill up the empty field.');
+      return;
+    }
     axios.put('http://localhost:3001/api/update-inventory', {
       prodID: selectOption,
         newProdPrice: productPrice,

@@ -26,8 +26,26 @@ const InventoryAddProducts = () => {
     
 
     useEffect(() => {
+        const fetchData = () => {
+            axios.get("http://localhost:3001/api/inventory")
+            .then((response) => {
+                const rows = response.data.map(item => ({
+                id: item.product_id,
+                name: item.product_name,
+                price: formatPrice(item.price),
+                qty: item.stock,
+                }));
+                setRows(rows);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        };
+        const formatPrice = (price) => {
+            return Number(price).toFixed(2);
+        };
+        
         fetchData();
-        // fetchData1();
     }, []);
 
     const fetchData = () => {
@@ -36,7 +54,7 @@ const InventoryAddProducts = () => {
             const rows = response.data.map(item => ({
             id: item.product_id,
             name: item.product_name,
-            price: item.price,
+            price: formatPrice(item.price),
             qty: item.stock,
             }));
             setRows(rows);
@@ -45,7 +63,11 @@ const InventoryAddProducts = () => {
             console.error(error);
         });
     };
-
+    const formatPrice = (price) => {
+        return Number(price).toFixed(2);
+    };
+    
+    
     // const fetchData1 = () => {
     //     axios.get("http://localhost:3001/api/inventory")
     //     .then((response) => {

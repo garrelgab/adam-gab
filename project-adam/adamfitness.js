@@ -534,10 +534,11 @@ app.post('/api/product-check', (req, res) => {
 app.post('/api/add-products', (req, res) => {
   const prodName = req.body.prodName;
   const prodPrice = req.body.prodPrice;
+  const formattedPrice = Number(prodPrice).toFixed(2);
   const prodQuantity = req.body.prodQuantity;
   const prodStatus = req.body.prodStatus;
   const addProd = 'INSERT INTO tbl_products (product_name, price, stock, status) VALUES (?, ?, ?, ?)';
-  connection.query(addProd, [prodName, prodPrice, prodQuantity, prodStatus], (err, result) => {
+  connection.query(addProd, [prodName, formattedPrice, prodQuantity, prodStatus], (err, result) => {
     if (err) {
       console.log('Failed to add product:', err);
       res.status(500).json({ error: 'Failed to add product' });
@@ -694,8 +695,9 @@ app.post('/api/add-sales', (req, res) => {
   const orderNum = req.body.orderNum;
   const currentDate = new Date().toISOString().slice(0, 10);
   const total = req.body.total;
-
-  const insertSales = `insert into tbl_sales_report (order_number, total, date) values (?, ?, '${currentDate}')`;
+  const currentTime = new Date();
+  const formattedTime = currentTime.toTimeString().slice(0, 8);
+  const insertSales = `insert into tbl_sales_report (order_number, total, date, time) values (?, ?, '${currentDate}', '${formattedTime}')`;
   connection.query(insertSales, [orderNum, total], (err, result) => {
     if(err){
       console.log('Failed to add sales report', err);      
@@ -720,7 +722,7 @@ app.delete('/api/clean-order-temp', (req, res) => {
 
 //Sales Report
 app.get('/api/sales-report', (req, res) => {
-  const viewSales = "select sales_report_id, order_number, total, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_sales_report";
+  const viewSales = "select sales_report_id, order_number, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report";
   connection.query(viewSales, (err, result) => {
     if(err){
       console.log('Failed to fetch sales report', err);
@@ -729,6 +731,38 @@ app.get('/api/sales-report', (req, res) => {
       res.send(result);
     }
   }); 
+});
+
+//Workouts
+app.post('/api/add-workout', (req, res) => {
+  const name = req.body.name;
+  const type = req.body.type;
+  const price = req.body.price;
+  const formattedPrice = Number(price).toFixed(2);
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date();
+  const formattedTime = currentTime.toTimeString().slice(0, 8);
+  const insertWorkout = `insert into tbl_workout (name, type, price, date, time) values ('${name}', '${type}', '${formattedPrice}', '${currentDate}', '${formattedTime}')`;
+  connection.query(insertWorkout, (err, result) => {
+    if(err){
+      console.log('Failed to add workout', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+
+app.get('/api/workouts', (req, res) => {
+  const workouts = "select workout_id, name, type, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_workout";
+  connection.query(workouts, (err, result) => {
+    if(err){
+      console.log('Failed to fetch Workouts ', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
 });
 
 module.exports = connection;

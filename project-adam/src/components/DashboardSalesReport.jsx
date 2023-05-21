@@ -7,6 +7,8 @@ const DashboardSalesReport = () => {
         { field: 'order_number', headerName: 'Order Number', width: 400},
         { field: 'total', headerName: 'Total', width: 300},
         { field: 'date', headerName: 'Date', width: 300},
+        { field: 'time', headerName: 'Time', width: 300},
+
     ]
     const[rows, setRows] = useState([]);
 
@@ -16,8 +18,9 @@ const DashboardSalesReport = () => {
           const rows = response.data.map(item => ({
             id: item.sales_report_id,
             order_number: item.order_number,
-            total: item.total,
+            total: formatPrice(item.total),
             date: item.date,
+            time: item.time,
             // add more columns as needed
           }));
           setRows(rows);
@@ -25,11 +28,15 @@ const DashboardSalesReport = () => {
         .catch(error => {
           console.error(error);
         });
+
       }, []);
+      const formatPrice = (price) => {
+        return Number(price).toFixed(2);
+      };
   return (
     <div className='mx-[50px] mt-[90px]'>
         <h1 className='text-[30px] font-light text-[#93F4D3]'>Sales Report</h1>
-        <div className='bg-white rounded-lg items-center justify-center w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] items-center justify-center w-[100%] shadow-2xl mt-[30px]'>
             <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>
     </div>
