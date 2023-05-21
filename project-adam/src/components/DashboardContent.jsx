@@ -76,7 +76,7 @@ const DashboardContent = () => {
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
           )}
         </div>
-        <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
+        <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[30px] md:my-0 md:shadow-lg'>
           <h1 className='p-[0px] md:text-xl text-center font-light mt-[-50px] mb-[0px]'>Total Pending Reservation</h1>
           {pendingCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{pendingCount}</h1>

@@ -31,16 +31,19 @@ const DashboardNavbar = (props) => {
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Dashboard</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Membership</li>
+                    <li className='hidden md:flex justify-center p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Membership</li>
                 </LinkRouter>
                 <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Reservation</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/pos' state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Point of Sale</li>
+                    <li className='hidden md:flex justify-center p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Point of Sale</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/inventory' state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Inventory Management</li>
+                </LinkRouter>
+                <LinkRouter to='/dashboard/salesreport' state={userID} onClick={handleNav}>
+                    <li className='hidden md:flex justify-center p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Sales Report</li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/settings' state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Settings</li>

@@ -718,4 +718,17 @@ app.delete('/api/clean-order-temp', (req, res) => {
   });
 });
 
+//Sales Report
+app.get('/api/sales-report', (req, res) => {
+  const viewSales = "select sales_report_id, order_number, total, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_sales_report";
+  connection.query(viewSales, (err, result) => {
+    if(err){
+      console.log('Failed to fetch sales report', err);
+    }
+    else{
+      res.send(result);
+    }
+  }); 
+});
+
 module.exports = connection;
