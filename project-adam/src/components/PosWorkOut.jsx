@@ -24,8 +24,6 @@ const PosWorkOut = () => {
     { field: 'price', headerName: 'Price', width: 100},
     { field: 'date', headerName: 'Date', width: 300},
     { field: 'time', headerName: 'Time', width: 300},
-
-
   ]
 
   useEffect(() => {

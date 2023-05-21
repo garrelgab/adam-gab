@@ -8,6 +8,7 @@ import DashboardSettings from './DashboardSettings'
 import DashboardPos from './DashboardPos'
 import DashboardInventory from './DashboardInventory'
 import DashboardSalesReport from './DashboardSalesReport'
+import DashboardExpenses from './DashboardExpenses'
 const Dashboard = () => {
   const location = useLocation();
   const id = location.state;
@@ -22,6 +23,8 @@ const Dashboard = () => {
           <Route path='/pos' element={<DashboardPos/>}/>
           <Route path='/inventory' element={<DashboardInventory/>}/>
           <Route path='/salesreport' element={<DashboardSalesReport/>}/>
+          <Route path='/expenses' element={<DashboardExpenses/>}/>
+
 
         </Routes>
     </>

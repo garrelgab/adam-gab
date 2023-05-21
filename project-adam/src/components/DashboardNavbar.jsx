@@ -60,6 +60,9 @@ const DashboardNavbar = (props) => {
                 <LinkRouter to='/dashboard/inventory' state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Inventory Management</li>
                 </LinkRouter>
+                <LinkRouter to='/dashboard/expenses' state={userID} onClick={handleNav}>
+                    <li className='hidden md:flex justify-center p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Expenses Management</li>
+                </LinkRouter>
                 <LinkRouter to='/dashboard/salesreport' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex justify-center p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Sales Report</li>
                 </LinkRouter>

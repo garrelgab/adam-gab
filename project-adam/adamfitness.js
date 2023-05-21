@@ -765,4 +765,35 @@ app.get('/api/workouts', (req, res) => {
   });
 });
 
+app.post('/api/add-expenses', (req, res) => {
+  const desc = req.body.desc;
+  const price = req.body.price;
+  const formattedPrice = Number(price).toFixed(2);
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date();
+  const formattedTime = currentTime.toTimeString().slice(0, 8);
+  const insertExpenses = `insert into tbl_expenses (description, price, date, time) values ('${desc}', '${formattedPrice}', '${currentDate}', '${formattedTime}')`;
+  connection.query(insertExpenses, (err, result) => {
+    if(err){
+      console.log('Failed to add expenses', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+
+app.get('/api/expenses', (req, res) => {
+  const workouts = "select expenses_id, description, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_expenses";
+  connection.query(workouts, (err, result) => {
+    if(err){
+      console.log('Failed to fetch Expenses ', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+
 module.exports = connection;
