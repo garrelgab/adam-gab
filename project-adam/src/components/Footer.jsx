@@ -7,7 +7,7 @@ const Footer = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   return (
-    <div className='bg-[#2a2a2a] md:bg-[#1a1a1a] py-[50px] flex flex-col items-center justify-center  md:py-[100px]'>
+    <div className='bg-[#2a2a2a] md:bg-[#1a1a1a] py-[30px] flex flex-col items-center justify-center '>
         <div className='max-w-[840px] flex flex-cols-3 justify-center text-white'>
             <div className='px-0 md:px-0'>
                 <h1 className='text-2xl font-bold mb-4 text-[#93F4D3]'>Company</h1>

@@ -1,9 +1,14 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 
 const ProductModal = (props) => {
+    // const [name, setName] = ();
+    
     const [qty, setQty] = useState('');
+    const id = props.prodID;
     const handleConfirm = () => {
+        //  alert(id);
         if(!qty){
             alert('Please fill out the empty field.');
             return;
@@ -12,12 +17,30 @@ const ProductModal = (props) => {
             alert('Not enough stocks');
             return;
         }
-        alert('Confirmed order');
-        props.onClose(false);
+        axios.post('http://localhost:3001/api/add-orders-temp', {
+            prodID: id,
+            prodName: props.productName,
+            prodPrice: props.productPrice * qty,
+            prodQty: qty,
+        })
+        .then(response => {
+            console.log(response.date);
+            props.onClose(true);
+        })
+        .catch(error => {
+            console.log(error);
+        })
     }
+    const handleChangeQty = (event) => {
+        const inputValue = event.target.value;
+        // Validate if the input is a non-negative number
+        if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+            setQty(inputValue);
+        }
+    };
   return (
     <div className='fixed flex align-middle items-center justify-center py-[50px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
-        <div className='text-black w-[300px] md:w-[400px] h-auto max-h-[600px] my-[10px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>
+        <div className='text-gray-800 w-[300px] md:w-[400px] h-auto max-h-[600px] my-[10px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>
             <button className='ml-[80%] mt-[5%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>
@@ -27,7 +50,7 @@ const ProductModal = (props) => {
                 <h1 className='font-bold'>Stock: {props.productQty}</h1>
                 <div className=''>
                     <label className="block mb-1 text-left font-bold">Quantity:</label>
-                    <input type="text" className="shadow-lg block w-auto md:w-[300px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Quantity' value={qty} onChange={(e) => setQty(e.target.value)} required/>
+                    <input type="text" className="shadow-lg block w-auto md:w-[300px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Quantity' value={qty} onChange={handleChangeQty} required/>
                 </div>
             </div>
             <div className='flex justify-center'>

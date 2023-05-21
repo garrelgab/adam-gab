@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import Calendar from 'react-calendar'
 import Axios  from 'axios'
 import 'react-calendar/dist/Calendar.css';
@@ -108,7 +108,13 @@ const CreateAccount = (props) => {
         setSelectedDate(date);
         setShowCalendar(false);
     };
-
+    const handleChangeAge = (event) => {
+        const inputValue = event.target.value;
+        // Validate if the input is a non-negative number
+        if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+          setAge(inputValue);
+        }
+      };
     // const handleButtonClick = () => {
     //     const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : null;
     //     // Perform further operations with the formattedDate
@@ -128,7 +134,7 @@ const CreateAccount = (props) => {
                     <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
                     <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={(e) => setLname(e.target.value)} required/>
                     <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label>
-                    <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Age' value={age} onChange={(e) => setAge(e.target.value)} maxLength={2} required/>
+                    <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Age' value={age} onChange={handleChangeAge} maxLength={2} required/>
                 </div>
 
                 <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>

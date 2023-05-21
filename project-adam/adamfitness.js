@@ -18,7 +18,7 @@ const connection = mysql.createPool({
 app.use(express.json())
 app.use(cors({
   origin: ["http://localhost:3000"],
-  methods: ["GET", "POST", "PUT"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
 
@@ -588,6 +588,129 @@ app.put('/api/update-inventory', (req, res) => {
   connection.query(prodUpdate, [newProdPrice, newProdQty, prodID], (err, result) => {
     if(err){
       console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+//POS
+app.get('/api/pos-inventory', (req, res) => {
+  const products = "select product_id, product_name, price, stock from tbl_products where stock > 5";
+  connection.query(products, (err, result) => {
+    if(err){
+      console.log("Failed to fetch products", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+app.post('/api/add-orders-temp', (req, res) => {
+  const prodID = req.body.prodID;
+  const prodName = req.body.prodName;
+  const prodPrice = req.body.prodPrice;
+  const prodQty = req.body.prodQty;
+  const addOrderTemp = "insert into tbl_orders_temp (product_id, product_name, price, qty) values (?, ?, ?, ?)";
+  connection.query(addOrderTemp, [prodID, prodName, prodPrice, prodQty], (err, result) => {
+    if(err){
+      console.log("Failed to add orders", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/orders-temp', (req, res) => {
+  const products = "select product_id, product_name, price, qty from tbl_orders_temp";
+  connection.query(products, (err, result) => {
+    if(err){
+      console.log("Failed to fetch products", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/sum-price', (req, res) => {
+  const query = 'SELECT SUM(price) AS total FROM tbl_orders_temp';
+  connection.query(query, (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      const total = results[0].total || 0;
+      res.json({ total });
+    }
+  });
+});
+
+app.put('/api/update-products', (req, res) => {
+
+  const prodIDs = req.body.prodID;
+  const quantities = req.body.prodQty;
+
+  const updateProductQty = "UPDATE tbl_products SET stock = stock - ? WHERE product_id = ?";
+
+  for (let i = 0; i < prodIDs.length; i++) {
+    connection.query(updateProductQty, [quantities[i], prodIDs[i]], (err, result) => {
+      if (err) {
+        console.log('Failed to update product with ID:', prodIDs[i]);
+        console.log(err);
+      } else {
+        console.log('Product with ID', prodIDs[i], 'updated successfully');
+      }
+    });
+  }
+  res.send('Products updated successfully');
+});
+
+app.post('/api/add-orders', (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const prodIDs = req.body.prodIDs;
+  const prodNames = req.body.prodNames;
+  const prodPrice = req.body.prodPrice;
+  const quantities = req.body.quantities;
+  const orderNum = req.body.orderNum;
+  const insertOrders = `insert into tbl_orders (product_name, price, qty, date, order_number) values (?, ?, ?, '${currentDate}', ${orderNum})`;
+
+  for (let i = 0; i < prodIDs.length; i++) {
+    connection.query(insertOrders, [prodNames[i], prodPrice[i], quantities[i]], (err, result) => {
+      if (err) {
+        console.log('Failed to update product with ID:', prodIDs[i]);
+        console.log(err);
+      } else {
+        console.log('Product with ID', prodIDs[i], 'updated successfully');
+      }
+    });
+  }
+  res.send('Products updated successfully');
+});
+
+app.post('/api/add-sales', (req, res) => {
+  const orderNum = req.body.orderNum;
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const total = req.body.total;
+
+  const insertSales = `insert into tbl_sales_report (order_number, total, date) values (?, ?, '${currentDate}')`;
+  connection.query(insertSales, [orderNum, total], (err, result) => {
+    if(err){
+      console.log('Failed to add sales report', err);      
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.delete('/api/clean-order-temp', (req, res) => {
+  const cleanTemp = "truncate table tbl_orders_temp";
+  connection.query(cleanTemp, (err, result) => {
+    if(err){
+      console.log('Failed to delete order temp', err);
     }
     else{
       res.send(result);
