@@ -7,7 +7,7 @@ const PosWorkOut = () => {
   const options = [
     { value: 'dailySession', label: 'Daily Session', price: '70.00' },
     { value: 'monthlySession', label: 'Monthly Session', price: '700.00' },
-    { value: 'danceStudio', label: 'Dance Studio / 3hrs / per head', price: '70.00' }
+    // { value: 'danceStudio', label: 'Dance Studio / 3hrs / per head', price: '70.00' }
   ];
   const [selectedOption, setSelectedOption] = useState(null);
   const [price, setPrice] = useState('');

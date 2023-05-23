@@ -1,53 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid'
+import Button from '@mui/material/Button';
 import axios from 'axios';
 import ProductModal from './ProductModal';
+import ProductUpdateModal from './ProductUpdateModal';
 const PosProducts = () => {
   const [rows, setRows] = useState([]);
   const columns = [
       { field: 'id', headerName: 'Product ID', width: 100},
-      { field: 'name', headerName: 'Product Name', width: 600},
+      { field: 'name', headerName: 'Product Name', width: 450},
+      { field: 'category', headerName: 'Category', width: 150},
       { field: 'price', headerName: 'Price', width: 100},
       { field: 'qty', headerName: 'Quantity', width: 100},
   ]
-  useEffect(() => {
-    
-    //Fetch Data Products
-    const fetchData = () => {
-      axios.get("http://localhost:3001/api/pos-inventory")
-      .then((response) => {
-          const rows = response.data.map(item => ({
-          id: item.product_id,
-          name: item.product_name,
-          price: formatPrice(item.price),
-          qty: item.stock,
-          }));
-          setRows(rows);
-      })
-      .catch(error => {
-          console.error(error);
-      });
-    };
-    const fetchOrder = () => {
-      axios.get("http://localhost:3001/api/orders-temp")
-      .then((response) => {
-        const rows1 = response.data.map(item => ({
-        id: item.product_id,
-        name: item.product_name,
-        price: formatPrice(item.price),
-        qty: item.qty,
-        }));
-        setRows1(rows1);
-      })
-      .catch(error => {
-          console.error(error);
-      });
-    };
-    fetchData();
-    fetchOrder();
-    fetchTotal();
-    generateRandomNumber();
-  }, []);
+  
 
   const fetchData = () => {
     axios.get("http://localhost:3001/api/pos-inventory")
@@ -55,6 +21,7 @@ const PosProducts = () => {
         const rows = response.data.map(item => ({
         id: item.product_id,
         name: item.product_name,
+        category: item.category,
         price: formatPrice(item.price),
         qty: item.stock,
         }));
@@ -81,19 +48,100 @@ const PosProducts = () => {
   //Cart
   const [rows1, setRows1] = useState([]);
   const columns1 = [
-      { field: 'id', headerName: 'Product ID', width: 100},
-      { field: 'name', headerName: 'Product Name', width: 500},
-      { field: 'price', headerName: 'Total Price', width: 100},
-      { field: 'qty', headerName: 'Quantity', width: 100},
-  ]
+    // { field: 'id', headerName: 'Product ID', width: 100},
+    // { field: 'id1', headerName: 'Product ID', width: 100},
+
+    { field: 'name', headerName: 'Product Name', width: 150},
+    { field: 'category', headerName: 'Category', width: 150},
+    { field: 'price', headerName: 'Total Price', width: 90},
+    { field: 'qty', headerName: 'Quantity', width: 90},
+    { field: 'date', headerName: 'Date', width: 110},
+    { field: 'time', headerName: 'Time', width: 110},
+    {
+      field: 'action',
+      headerName: 'Action',
+      headerAlign: 'left',
+      width: 120,
+      renderCell: (params) => (
+        <div className='flex flex-col'>
+          <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: 'white',
+            color: 'gray',
+            '&:hover': {
+              backgroundColor: 'gray',
+              color: 'white',
+            },
+            marginTop: '3px',
+            marginBottom: '3px',
+            width: '100px'
+          }}
+          onClick={() => handleEdit(params.row.id, params.row.id1, params.row.name, params.row.category)}
+          >
+            Edit
+          </Button>
+          <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            backgroundColor: 'white',
+            color: 'gray',
+            '&:hover': {
+              backgroundColor: 'gray',
+              color: 'white',
+            },
+            marginTop: '3px',
+            marginBottom: '3px',
+            width: '100px'
+          }}
+          onClick={() => handleDelete(params.row.id)}
+          >
+            Void
+          </Button>
+        </div>
+      ),
+    },
+  ];
+  const [prodUpdateID, setProdUpdateID] = useState('');
+  const [prodUpdateName, setProdUpdateName] = useState('');
+  const [prodUpdateCategory, setProdUpdateCategory] = useState('');
+  const [openProductUpdateModal, setOpenProductUpdateModal] = useState(false);
+  const handleEdit = (id, id1, name, category) => {
+    setOpenProductUpdateModal(!openProductUpdateModal);
+    fetchOrder();
+    fetchTotal();
+    setProdUpdateID(id1)
+    setProdUpdateName(name);
+    setProdUpdateCategory(category);
+  }
+  const handleDelete = (id) => {
+    axios.delete("http://localhost:3001/api/void", {
+      params: {
+        orderTempID: id,
+      }
+    })
+    .then(response => {
+      fetchOrder();
+      fetchTotal();
+    })
+    .catch(error => {
+      alert(error);
+    })
+  }
   const fetchOrder = () => {
     axios.get("http://localhost:3001/api/orders-temp")
     .then((response) => {
       const rows1 = response.data.map(item => ({
-      id: item.product_id,
+      id: item.order_temp_id,
+      id1: item.product_id,
       name: item.product_name,
+      category: item.category,
       price: formatPrice(item.price),
       qty: item.qty,
+      date: item.date,
+      time: item.time,
       }));
       setRows1(rows1);
     })
@@ -188,6 +236,51 @@ const PosProducts = () => {
     const newRandomNumber = Math.random().toString().substring(2, 10);
     setRandomNumbers(newRandomNumber);
   };
+  const rowHeight = 100;
+
+  useEffect(() => {
+    //Fetch Data Products
+    // const fetchData = () => {
+    //   axios.get("http://localhost:3001/api/pos-inventory")
+    //   .then((response) => {
+    //       const rows = response.data.map(item => ({
+    //       id: item.product_id,
+    //       name: item.product_name,
+    //       category: item.category,
+    //       price: formatPrice(item.price),
+    //       qty: item.stock,
+    //       }));
+    //       setRows(rows);
+    //   })
+    //   .catch(error => {
+    //       console.error(error);
+    //   });
+    // };
+    // const fetchOrder = () => {
+    //   axios.get("http://localhost:3001/api/orders-temp")
+    //   .then((response) => {
+    //     const rows1 = response.data.map(item => ({
+    //     id: item.product_id,
+    //     name: item.product_name,
+    //     category: item.category,
+    //     price: formatPrice(item.price),
+    //     qty: item.qty,
+    //     date: item.date,
+    //     time: item.time,
+    //     }));
+    //     setRows1(rows1);
+    //   })
+    //   .catch(error => {
+    //       console.error(error);
+    //   });
+    // };
+    fetchData();
+    fetchOrder();
+    fetchTotal();
+    generateRandomNumber();
+  }, []);
+  //Order Temp
+  
   return (
     <div>
       <div className='grid md:grid-cols-2'>
@@ -195,14 +288,15 @@ const PosProducts = () => {
           <h1 className='text-[20px] md:text-[25px] font-light text-[#93F4D3]'>Products</h1>
           <div className='mt-[30px] text-center bg-white z-1 h-[600px] w-[100%] rounded-md'>
             <DataGrid rows={rows} columns={columns}  pageSizeOptions={[]} hideFooterPagination={true} className='text-center' onRowClick={handleSelectedRow} disableExtendRowFullWidth/>
-            { openModal &&  <ProductModal onClose={handleSelectedRow} prodID={selectRow.id} productName={selectRow.name} productPrice={selectRow.price} productQty={selectRow.qty}/>}
+            { openModal &&  <ProductModal onClose={handleSelectedRow} prodID={selectRow.id} productName={selectRow.name} productCategory={selectRow.category} productPrice={selectRow.price} productQty={selectRow.qty}/>}
           </div>
         </div>
         <div className='md:ml-[50px] hidden md:flex md:flex-col'>
-          <h1 className='text-[20px] md:text-[25px] font-light flex justify-between text-[#93F4D3]'>Cart <p className='flex'>Order ID: <p className='ml-2 text-white'>{randomNumbers}</p></p></h1>
+          <h1 className='text-[20px] md:text-[25px] font-light flex justify-between text-[#93F4D3]'>Cart <p className='flex text-white'>Order ID: {randomNumbers}</p></h1>
 
           <div className='mt-[30px] bg-white rounded-md h-[600px] w-[100%]'>
-            <DataGrid rows={rows1} columns={columns1}  pageSizeOptions={[]} hideFooterPagination={true} className='text-center' autoPageSize onRowClick={handleSelectedRow} disableExtendRowFullWidth/>
+            <DataGrid rows={rows1} columns={columns1}  pageSizeOptions={[]} rowHeight={rowHeight} hideFooterPagination={true} className='text-center' autoPageSize disableExtendRowFullWidth/>
+            { openProductUpdateModal && <ProductUpdateModal onClose={handleEdit} prodID={prodUpdateID} productName={prodUpdateName} productCategory={prodUpdateCategory}/>}
           </div>
           <div className='justfiy-between mt-[30px]'>
             <h1 className='text-[20px] justify-start md:text-[25px] flex item text-[#93F4D3]'>Total: <p className='ml-5 text-white'>{formatPrice(total)}</p></h1>

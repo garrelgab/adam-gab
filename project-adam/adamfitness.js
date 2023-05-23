@@ -631,7 +631,7 @@ app.put('/api/update-prod-status', (req, res) => {
 });
 //POS
 app.get('/api/pos-inventory', (req, res) => {
-  const products = "select product_id, product_name, price, stock from tbl_products where stock > 5 and product_status = 'Show'";
+  const products = "select product_id, product_name, category, price, stock from tbl_products where stock > 5 and product_status = 'Show'";
   connection.query(products, (err, result) => {
     if(err){
       console.log("Failed to fetch products", err);
@@ -644,10 +644,14 @@ app.get('/api/pos-inventory', (req, res) => {
 app.post('/api/add-orders-temp', (req, res) => {
   const prodID = req.body.prodID;
   const prodName = req.body.prodName;
+  const prodCategory = req.body.prodCategory;
   const prodPrice = req.body.prodPrice;
   const prodQty = req.body.prodQty;
-  const addOrderTemp = "insert into tbl_orders_temp (product_id, product_name, price, qty) values (?, ?, ?, ?)";
-  connection.query(addOrderTemp, [prodID, prodName, prodPrice, prodQty], (err, result) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+
+  const addOrderTemp = `insert into tbl_orders_temp (product_id, product_name, category, price, qty, date, time) values (?, ?, ?, ?, ?, '${currentDate}', '${currentTime}')`;
+  connection.query(addOrderTemp, [prodID, prodName, prodCategory, prodPrice, prodQty], (err, result) => {
     if(err){
       console.log("Failed to add orders", err);
     }
@@ -658,7 +662,7 @@ app.post('/api/add-orders-temp', (req, res) => {
 });
 
 app.get('/api/orders-temp', (req, res) => {
-  const products = "select product_id, product_name, price, qty from tbl_orders_temp";
+  const products = "select order_temp_id, product_id, product_name, category, price, qty, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_orders_temp";
   connection.query(products, (err, result) => {
     if(err){
       console.log("Failed to fetch products", err);
@@ -753,6 +757,46 @@ app.delete('/api/clean-order-temp', (req, res) => {
   });
 });
 
+app.get('/api/product-stock', (req, res) => {
+  const prodID = req.query.prodID;
+  const stock = `select stock, price from tbl_products where product_id = ${prodID}`;
+  connection.query(stock, (err, result) => {
+    if(err){
+      console.log('Failed to fetch stock', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-order-qty', (req, res) => {
+  const prodID = req.body.prodID;
+  const prodPrice = req.body.prodPrice;
+  const prodQty = req.body.prodQty;
+  const stock = `update tbl_orders_temp set qty = ?, price = ?  where product_id = ${prodID}`;
+  connection.query(stock, [prodQty, prodPrice], (err, result) => {
+    if(err){
+      console.log('Failed to fetch stock', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.delete('/api/void', (req, res) => {
+  const orderTempID = req.query.orderTempID;
+  const voidItem = `delete from tbl_orders_temp where order_temp_id = '${orderTempID}'`;
+  connection.query(voidItem, (err, result) => {
+    if(err){
+      console.log('Failed to delete item', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 //Sales Report
 app.get('/api/sales-report', (req, res) => {
   const viewSales = "select sales_report_id, order_number, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report";

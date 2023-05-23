@@ -57,7 +57,7 @@ const DashboardNavbar = (props) => {
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Membership</h1></li>
                 </LinkRouter>
                 <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Reservation</h1></li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Reservation Management</h1></li>
                 </LinkRouter>
                 <LinkRouter to='/dashboard/pos' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Point of Sale</h1></li>

@@ -31,7 +31,7 @@ const InventoryUpdateProducts = () => {
     { field: 'status', headerName: 'Status', width: 100},
 
     {
-      field: 'proof',
+      field: 'action',
       headerName: 'Action',
       headerAlign: 'left',
       width: 150,
