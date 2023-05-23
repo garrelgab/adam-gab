@@ -7,8 +7,7 @@ const CreateAccount = (props) => {
     const genderOptions = [
         { label: 'Select Gender', value: '' },
         { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
-        
+        { label: 'Female', value: 'Female' }, 
     ];
 
     const [selectedGender, setSelectedGender] = useState('');
@@ -101,11 +100,20 @@ const CreateAccount = (props) => {
     };
 
     const handleDateChange = (date) => {
-        // if (date instanceof Date && !isNaN(date)) {
-        //     const formattedDate = date.toISOString().slice(0, 10);
-        //     setSelectedDate(formattedDate);
-        // }
+
         setSelectedDate(date);
+
+        const today = new Date();
+        const birthDate = new Date(date);
+        const yearsDiff = today.getFullYear() - birthDate.getFullYear();
+
+        // Check if the birthday hasn't occurred yet this year
+        const hasBirthdayPassed = today.getMonth() < birthDate.getMonth() ||
+        (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate());
+
+        const calculatedAge = hasBirthdayPassed ? yearsDiff - 1 : yearsDiff;
+        
+        setAge(calculatedAge);
         setShowCalendar(false);
     };
     const handleChangeAge = (event) => {
@@ -134,7 +142,7 @@ const CreateAccount = (props) => {
                     <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
                     <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={(e) => setLname(e.target.value)} required/>
                     <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label>
-                    <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Age' value={age} onChange={handleChangeAge} maxLength={2} required/>
+                    <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder={age ? age : 'Age'} value={age} onChange={handleChangeAge} maxLength={2} readOnly required/>
                 </div>
 
                 <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>

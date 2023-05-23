@@ -292,7 +292,11 @@ const PosProducts = () => {
           </div>
         </div>
         <div className='md:ml-[50px] hidden md:flex md:flex-col'>
-          <h1 className='text-[20px] md:text-[25px] font-light flex justify-between text-[#93F4D3]'>Cart <p className='flex text-white'>Order ID: {randomNumbers}</p></h1>
+          <div className='flex justify-between text-[20px] md:text-[25px] font-light'>
+            <h1 className='text-[#93F4D3]'>Cart</h1>
+            <h1 className='flex text-[#93F4D3]'>Order ID:<p className='ml-2 flex text-white'> {randomNumbers}</p></h1>
+
+          </div>
 
           <div className='mt-[30px] bg-white rounded-md h-[600px] w-[100%]'>
             <DataGrid rows={rows1} columns={columns1}  pageSizeOptions={[]} rowHeight={rowHeight} hideFooterPagination={true} className='text-center' autoPageSize disableExtendRowFullWidth/>
