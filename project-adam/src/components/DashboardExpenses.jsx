@@ -7,10 +7,10 @@ const DashboardExpenses = () => {
     const [rows, setRows] = useState([]);
     const columns = [
         { field: 'id', headerName: 'ID', width:100},
-        { field: 'description', headerName: 'Description', width: 500},
+        { field: 'description', headerName: 'Description', width: 600},
         { field: 'price', headerName: 'Price', width: 100},
-        { field: 'date', headerName: 'Date', width: 300},
-        { field: 'time', headerName: 'Time', width: 300},
+        { field: 'date', headerName: 'Date', width: 150},
+        { field: 'time', headerName: 'Time', width: 150},
       ]
     useEffect(() => {
         const fetchData = () => {
@@ -94,7 +94,7 @@ const DashboardExpenses = () => {
             </div>
         </div>
         <div className='hidden bg-white my-[50px] mx-auto md:h-[600px] md:flex rounded-md justify-center items-center'>
-            <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
+            <DataGrid rows={rows} columns={columns} className='w-full text-center' disableExtendRowFullWidth/>
         </div>
     </div>
   )

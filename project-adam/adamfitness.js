@@ -327,6 +327,18 @@ app.put('/api/update-desc-faq', (req, res) => {
   });
 });
 
+app.get('/api/faqs', (req, res) => {
+  const selectFaq = "select faq_id, name, description from tbl_faq";
+  connection.query(selectFaq, (err, result) => {
+    if(err){
+      console.log('Failed to fetch FAQ', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
 //Privacy Policy Section
 app.post('/api/add-privacy', (req, res) => {
   const addPrivacy = req.body.addPrivacy;
@@ -506,7 +518,7 @@ app.put('/api/update-desc-about', (req, res) => {
 
 //Invetory Management
 app.get('/api/inventory', (req, res) => {
-  const products = "select product_id, product_name, price, stock from tbl_products";
+  const products = "select product_id, product_name, product_desc, category, price, stock,  DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, product_status from tbl_products order by product_id desc";
   connection.query(products, (err, result) => {
     if(err){
       console.log("Failed to fetch products", err);
@@ -533,12 +545,16 @@ app.post('/api/product-check', (req, res) => {
 
 app.post('/api/add-products', (req, res) => {
   const prodName = req.body.prodName;
+  const prodDesc = req.body.prodDesc;
+  const prodCateg = req.body.prodCateg;
   const prodPrice = req.body.prodPrice;
   const formattedPrice = Number(prodPrice).toFixed(2);
   const prodQuantity = req.body.prodQuantity;
   const prodStatus = req.body.prodStatus;
-  const addProd = 'INSERT INTO tbl_products (product_name, price, stock, status) VALUES (?, ?, ?, ?)';
-  connection.query(addProd, [prodName, formattedPrice, prodQuantity, prodStatus], (err, result) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  const addProd = `INSERT INTO tbl_products (product_name, product_desc, category, price, stock, status, date, time, product_status) VALUES (?, ?, ?, ?, ?, ?, '${currentDate}', '${currentTime}', 'Show')`;
+  connection.query(addProd, [prodName, prodDesc, prodCateg, formattedPrice, prodQuantity, prodStatus], (err, result) => {
     if (err) {
       console.log('Failed to add product:', err);
       res.status(500).json({ error: 'Failed to add product' });
@@ -569,7 +585,7 @@ app.get('/api/option-inventory', (req, res) => {
 
 app.get('/api/price-inventory', (req, res) => {
   const prodID = req.query.prodID;
-  const prodPrice = "select price from tbl_products where product_id = ?";
+  const prodPrice = "select product_name, product_desc, category, price from tbl_products where product_id = ?";
   connection.query(prodPrice, [prodID], (err, results) => {
     if(err) {
       console.log("Failed to get option", err);
@@ -585,8 +601,11 @@ app.put('/api/update-inventory', (req, res) => {
   const prodID = req.body.prodID;
   const newProdPrice = req.body.newProdPrice;
   const newProdQty = req.body.newProdQty;
-  const prodUpdate = "update tbl_products set price = ?, stock = stock + ? where product_id = ?";
-  connection.query(prodUpdate, [newProdPrice, newProdQty, prodID], (err, result) => {
+  const newProdDesc = req.body.newProdDesc;
+  const newProdCat = req.body.newProdCat;
+
+  const prodUpdate = "update tbl_products set price = ?, stock = stock + ?, product_desc = ?, category = ? where product_id = ?";
+  connection.query(prodUpdate, [newProdPrice, newProdQty, newProdDesc, newProdCat, prodID], (err, result) => {
     if(err){
       console.log("Failed to get description", err);
     }
@@ -596,9 +615,23 @@ app.put('/api/update-inventory', (req, res) => {
   });
 });
 
+app.put('/api/update-prod-status', (req, res) => {
+  const prodID = req.body.prodID;
+  const newProdStatus = req.body.newProdStatus;
+
+  const updateProdStatus = `update tbl_products set product_status = '${newProdStatus}' where product_id = ${prodID}`;
+  connection.query(updateProdStatus, (err, result) => {
+    if(err){
+      console.log('Failed to update product status.', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 //POS
 app.get('/api/pos-inventory', (req, res) => {
-  const products = "select product_id, product_name, price, stock from tbl_products where stock > 5";
+  const products = "select product_id, product_name, price, stock from tbl_products where stock > 5 and product_status = 'Show'";
   connection.query(products, (err, result) => {
     if(err){
       console.log("Failed to fetch products", err);
@@ -662,7 +695,7 @@ app.put('/api/update-products', (req, res) => {
         console.log('Failed to update product with ID:', prodIDs[i]);
         console.log(err);
       } else {
-        console.log('Product with ID', prodIDs[i], 'updated successfully');
+        // console.log('Product with ID', prodIDs[i], 'updated successfully');
       }
     });
   }
@@ -695,9 +728,9 @@ app.post('/api/add-sales', (req, res) => {
   const orderNum = req.body.orderNum;
   const currentDate = new Date().toISOString().slice(0, 10);
   const total = req.body.total;
-  const currentTime = new Date();
-  const formattedTime = currentTime.toTimeString().slice(0, 8);
-  const insertSales = `insert into tbl_sales_report (order_number, total, date, time) values (?, ?, '${currentDate}', '${formattedTime}')`;
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  // const formattedTime = currentTime;
+  const insertSales = `insert into tbl_sales_report (order_number, total, date, time) values (?, ?, '${currentDate}', '${currentTime}')`;
   connection.query(insertSales, [orderNum, total], (err, result) => {
     if(err){
       console.log('Failed to add sales report', err);      

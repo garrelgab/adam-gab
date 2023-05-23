@@ -2,6 +2,7 @@ import React from 'react'
 import PosTabs from './PosTabs';
 import PosProducts from './PosProducts';
 import PosWorkOut from './PosWorkOut';
+import PosLocker from './PosLocker';
 
 const DashboardPos = () => {
   const tabs = [
@@ -14,8 +15,8 @@ const DashboardPos = () => {
       content: <PosWorkOut/>,
     },
     {
-      title: 'Membership Plan',
-      content: <div>Content for Tab 3</div>,
+      title: 'Locker Rent',
+      content: <PosLocker/>,
     },
   ];
   return (

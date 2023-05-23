@@ -1,50 +1,39 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
+import Select from 'react-select'
 const InventoryAddProducts = () => {
 
     const [productName, setProductName] = useState('');
     const [productPrice, setProductPrice] = useState('');
     const [productQty, setProductQty] = useState('');
+    const [productDesc, setProductDesc] = useState('');
     const productStatus = 'In-Stock';
+
+    const [selectedOption, setSelectedOption] = useState(null);
+    const options = [
+        { value: 'food', label: 'Food Supplements'},
+        { value: 'drinks', label: 'Energy Drinks'},
+    ];
+
+    const handleOptionChange = (selectedOption) => {
+        setSelectedOption(selectedOption.label);
+    };
     const [rows, setRows] = useState([]);
 
     const columns = [
         { field: 'id', headerName: 'ID', width:100},
-        { field: 'name', headerName: 'Product Name', width: 700},
+        { field: 'name', headerName: 'Product Name', width: 300},
+        { field: 'description', headerName: 'Product Description', width: 500},
+        { field: 'category', headerName: 'Category', width: 150},
         { field: 'price', headerName: 'Price', width: 100},
         { field: 'qty', headerName: 'Quantity', width: 100},
-    ]
-    // const [rows1, setRows1] = useState([]);
+        { field: 'date', headerName: 'Date', width: 150},
+        { field: 'time', headerName: 'Time', width: 150},
 
-    // const columns1 = [
-    //     { field: 'id', headerName: 'ID', width:50},
-    //     { field: 'name', headerName: 'Product Name', width: 200},
-    //     { field: 'price', headerName: 'Price', width: 60},
-    //     { field: 'qty', headerName: 'Qty', width: 60},
-    // ]
-    
+    ]
 
     useEffect(() => {
-        const fetchData = () => {
-            axios.get("http://localhost:3001/api/inventory")
-            .then((response) => {
-                const rows = response.data.map(item => ({
-                id: item.product_id,
-                name: item.product_name,
-                price: formatPrice(item.price),
-                qty: item.stock,
-                }));
-                setRows(rows);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        };
-        const formatPrice = (price) => {
-            return Number(price).toFixed(2);
-        };
-        
         fetchData();
     }, []);
 
@@ -54,8 +43,12 @@ const InventoryAddProducts = () => {
             const rows = response.data.map(item => ({
             id: item.product_id,
             name: item.product_name,
+            description: item.product_desc,
+            category: item.category,
             price: formatPrice(item.price),
             qty: item.stock,
+            date: item.date,
+            time: item.time,
             }));
             setRows(rows);
         })
@@ -66,26 +59,9 @@ const InventoryAddProducts = () => {
     const formatPrice = (price) => {
         return Number(price).toFixed(2);
     };
-    
-    
-    // const fetchData1 = () => {
-    //     axios.get("http://localhost:3001/api/inventory")
-    //     .then((response) => {
-    //         const rows1 = response.data.map(item1 => ({
-    //         id: item1.product_id,
-    //         name: item1.product_name,
-    //         price: item1.price,
-    //         qty: item1.stock,
-    //         }));
-    //         setRows1(rows1);
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
-    // };
 
     const handleAddProduct = () => {
-        if (!productName || !productPrice || !productQty) {
+        if (!productName || !productPrice || !productQty || !selectedOption) {
           alert('Please fill up all fields');
           return;
         }
@@ -99,6 +75,8 @@ const InventoryAddProducts = () => {
         } else {
             axios.post('http://localhost:3001/api/add-products', {
                 prodName: productName,
+                prodDesc: productDesc,
+                prodCateg: selectedOption,
                 prodPrice: productPrice,
                 prodQuantity: productQty,
                 prodStatus: productStatus,
@@ -117,6 +95,7 @@ const InventoryAddProducts = () => {
             console.log(error);
         });
         setProductName('');
+        setProductDesc('');
         setProductPrice('');
         setProductQty('');
     };
@@ -135,6 +114,7 @@ const InventoryAddProducts = () => {
           setProductPrice(inputValue);
         }
     };
+    
   return (
     <div>
         <h1 className='text-[20px] md:text-[25px] font-light text-[#93F4D3]'>Add Product</h1>
@@ -142,19 +122,23 @@ const InventoryAddProducts = () => {
             <div className='flex flex-col'>
                 <label className="block mb-1 text-md md:text-lg text-left font-light">Product Name</label>
                 <input type="text" className="shadow-lg block w-[350px] md:w-[600px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Product Name' value={productName} onChange={(e) => setProductName(e.target.value)} required/>
+                <label className="block mb-1 text-md md:text-lg text-left font-light">Product Description</label>
+                <input type="text" className="shadow-lg block w-[350px] md:w-[600px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Product Description' value={productDesc} onChange={(e) => setProductDesc(e.target.value)} required/>
 
             </div>
             <div className='flex flex-col mx-[30px]'>
                 <label className="block mb-1 text-md md:text-lg text-left font-light">Price</label>
                 <input type="text" className="shadow-lg block w-[350px] md:w-[300px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Price' value={productPrice} onChange={handleChangePrice} required/>
+                <label className="block mb-1 text-md md:text-lg text-left font-light">Category</label>
+                <Select className=' text-black font-light w-[350px] md:w-[300px]' value={selectedOption} options={options} onChange={handleOptionChange} placeholder={selectedOption ? selectedOption : 'Select category'}/>
 
             </div>
             <div className='flex flex-col'>
                 <label className="block mb-1 text-md md:text-lg text-left font-light">Quantity</label>
                 <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Quantity' value={productQty} onChange={handleChangeQty} required/>
+                <button className='py-2 justify-start px-[50px] mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleAddProduct}>Add Product</button>
             </div>
             <div>
-            <button className='py-2 px-[90px] mt-[30px] md:mt-[31px] md:mx-[30px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleAddProduct}>Add Product</button>
             </div>
         </div>
         <div className='bg-white my-[50px] mx-auto hidden md:flex rounded-md h-[800px] md:h-[600px] z-1 justify-center items-center'>

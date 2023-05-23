@@ -9,6 +9,8 @@ import DashboardPos from './DashboardPos'
 import DashboardInventory from './DashboardInventory'
 import DashboardSalesReport from './DashboardSalesReport'
 import DashboardExpenses from './DashboardExpenses'
+import DashboardGCash from './DashboardGCash'
+import FAQs from './FAQs'
 const Dashboard = () => {
   const location = useLocation();
   const id = location.state;
@@ -24,7 +26,8 @@ const Dashboard = () => {
           <Route path='/inventory' element={<DashboardInventory/>}/>
           <Route path='/salesreport' element={<DashboardSalesReport/>}/>
           <Route path='/expenses' element={<DashboardExpenses/>}/>
-
+          <Route path='/gcash' element={<DashboardGCash/>}/>
+          <Route path='/faq' element={<FAQs/>}/>
 
         </Routes>
     </>

@@ -41,8 +41,8 @@ const DashboardMembership = () => {
   return (
     <div className='flex justify-center flex-col mx-[50px] mt-[90px] text-black'>
       <h1 className='text-[30px] text-[#93F4D3] font-light'>Members</h1>
-      <div className='mx-auto rounded-lg shadow-2xl text-center'>
-        <div className='bg-white rounded-lg items-center justify-center shadow-2xl mt-[30px]'>
+      <div className='mx-auto rounded-lg w-[100%] shadow-2xl text-center'>
+        <div className='bg-white rounded-lg  items-center justify-center shadow-2xl mt-[30px]'>
           <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>
         {/* <h1 className='text-center text-[100px] py-[300px]'>Members</h1> */}

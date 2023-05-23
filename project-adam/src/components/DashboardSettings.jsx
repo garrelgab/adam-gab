@@ -86,12 +86,7 @@ const DashboardSettings = () => {
   return (
     <div className='mx-[50px] mt-[90px] text-white'>
         <h1 className='text-[30px] md:text-[35px] font-light text-[#93F4D3]'>Settings</h1>
-
         <div className='rounded-md md:ml-[50px] mt-[50px]'>
-            {/* <ReactQuill className='mt-[20px] bg-white text-black rounded-md'
-            value={editorContent}
-            onChange={setEditorContent}
-            /> */}
             <div>
                 <div className='cursor-pointer blocked justify-between bg-[#93F4D3] hover:bg-[#263f36] text-black hover:text-white flex items-center rounded-md my-[40px] ease-in-out duration-300' onClick={handleFaqNav}>
                     <h1 className='text-extralight md:text-[25px] my-[20px] cursor-pointer py-[0px] pl-[70px]' >FAQ's</h1>

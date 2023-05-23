@@ -20,34 +20,34 @@ const PosWorkOut = () => {
   const columns = [
     { field: 'id', headerName: 'ID', width:100},
     { field: 'name', headerName: 'Customer Name', width: 500},
-    { field: 'type', headerName: 'Type of Work-out', width: 400},
+    { field: 'type', headerName: 'Type of Work-out', width: 300},
     { field: 'price', headerName: 'Price', width: 100},
-    { field: 'date', headerName: 'Date', width: 300},
-    { field: 'time', headerName: 'Time', width: 300},
+    { field: 'date', headerName: 'Date', width: 150},
+    { field: 'time', headerName: 'Time', width: 150},
   ]
 
   useEffect(() => {
-    const fetchData = () => {
-      axios.get("http://localhost:3001/api/workouts")
-      .then((response) => {
-          const rows = response.data.map(item => ({
-          id: item.workout_id,
-          name: item.name,
-          type: item.type,
-          price: formatPrice(item.price),
-          date: item.date,
-          time: item.time,
-          }));
-          setRows(rows);
-      })
-      .catch(error => {
-          console.error(error);
-      });
-    };
+    // const fetchData = () => {
+    //   axios.get("http://localhost:3001/api/workouts")
+    //   .then((response) => {
+    //       const rows = response.data.map(item => ({
+    //       id: item.workout_id,
+    //       name: item.name,
+    //       type: item.type,
+    //       price: formatPrice(item.price),
+    //       date: item.date,
+    //       time: item.time,
+    //       }));
+    //       setRows(rows);
+    //   })
+    //   .catch(error => {
+    //       console.error(error);
+    //   });
+    // };
 
-    const formatPrice = (price) => {
-      return Number(price).toFixed(2);
-    };
+    // const formatPrice = (price) => {
+    //   return Number(price).toFixed(2);
+    // };
 
     fetchData();
   }, []);
@@ -106,15 +106,15 @@ const PosWorkOut = () => {
                 <Select className=' text-black w-[350px] z-50 md:w-[400px]' options={options} onChange={handleChange} placeholder="Select type of work-out"/>
             </div>
             <div className='flex flex-col'>
-                <label className="block mb-1 text-md md:text-lg text-left font-light">Price</label>
-                <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none cursor-default" placeholder='Price' value={price} readOnly required/>
+              <label className="block mb-1 text-md md:text-lg text-left font-light">Price</label>
+              <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none cursor-default" placeholder='Price' value={price} readOnly required/>
+              <button className='py-2 px-[30px] mt-[30px] md:mt-[31px] md:mx-[0px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
             </div>
             <div>
-            <button className='py-2 px-[90px] mt-[30px] md:mt-[31px] md:mx-[30px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
             </div>
         </div>
-        <div className='hidden bg-white my-[50px] mx-auto md:h-[600px] md:flex rounded-md justify-center items-center'>
-            <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
+        <div className='hidden bg-white my-[50px] mx-[0px] md:h-[600px] md:flex rounded-md justify-center items-center'>
+            <DataGrid rows={rows} columns={columns}  className='w-full text-center' disableExtendRowFullWidth/>
         </div>
     </div>
   )
