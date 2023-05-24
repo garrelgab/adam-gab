@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import Calendar from 'react-calendar'
 import Axios  from 'axios'
 import 'react-calendar/dist/Calendar.css';
+import moment from 'moment-timezone';
 const CreateAccount = (props) => {
 
     const genderOptions = [
@@ -123,12 +124,6 @@ const CreateAccount = (props) => {
           setAge(inputValue);
         }
       };
-    // const handleButtonClick = () => {
-    //     const formattedDate = selectedDate ? selectedDate.toISOString().slice(0, 10) : null;
-    //     // Perform further operations with the formattedDate
-    //     console.log(formattedDate);
-    //   };
-
   return (
     <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#93F4D3] w-[100%] h-[100%] bg-login'>
         <div className='text-white md:text-black md:max-w-[1240px] md:mx-auto md:max-h-[830px] w-[400px] md:w-[100%]'>
@@ -157,7 +152,7 @@ const CreateAccount = (props) => {
 
                     <label className="block text-md md:text-lg mx-auto text-left font-light">Birthday</label>
                     <button onClick={handleButtonClick} className='font-light shadow-lg w-[350px] text-left bg-gray-50 p-4 rounded-lg text-black focus:outline-none' value={bday} onChange={(e) => setBday(e.target.value)} required>
-                        {selectedDate ? selectedDate.toLocaleDateString('en-US') : 'Select Date'}
+                        {selectedDate ? moment(selectedDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
                     </button>
                     {showCalendar && (
                         <div className='relative z-10'>

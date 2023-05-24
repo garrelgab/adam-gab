@@ -36,14 +36,14 @@ const Login = (props) => {
             } else{
                 if(response.data[0].role === 'admin'){
                     // setIsLoggedIn(true);
-                    const id = response.data[0].account_info_id;
+                    const id = response.data[0].account_id;
                     console.log(id);
                     navigate('/dashboard', { replace: true, state: id});
                     props.setTrigger(false);
                 }
                 else{
                     // setIsLoggedIn(true);
-                    const id = response.data[0].account_info_id;
+                    const id = response.data[0].account_id;
                     console.log(id);
                     navigate('/customer', { replace: true, state: id});
                     props.setTrigger(false);

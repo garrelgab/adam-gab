@@ -11,6 +11,9 @@ import DashboardSalesReport from './DashboardSalesReport'
 import DashboardExpenses from './DashboardExpenses'
 import DashboardGCash from './DashboardGCash'
 import FAQs from './FAQs'
+import DashboardAttendance from './DashboardAttendance'
+import UserAccountEmployee from './UserAccountEmployee'
+import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
   const id = location.state;
@@ -28,6 +31,9 @@ const Dashboard = () => {
           <Route path='/expenses' element={<DashboardExpenses/>}/>
           <Route path='/gcash' element={<DashboardGCash/>}/>
           <Route path='/faq' element={<FAQs/>}/>
+          <Route path='/attendance' element={<DashboardAttendance/>}/>
+          <Route path='/employee' element={<UserAccountEmployee/>}/>
+          <Route path='/customer' element={<UserAccountCustomer/>}/>
 
         </Routes>
     </>

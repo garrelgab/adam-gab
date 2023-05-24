@@ -70,7 +70,7 @@ app.post("/api/login", (req, res) => {
   const userEmail = req.body.userEmail
   const userPword = req.body.userPword
   connection.query(
-    "select * from tbl_account_info where email = ? and pword = ?",
+    "select * from tbl_accounts where email = ? and password = ?",
     [userEmail, userPword],
     (err, result) => {
       if (err) {
@@ -872,5 +872,39 @@ app.get('/api/expenses', (req, res) => {
   });
 });
 
+//Locker
+app.post('/api/add-locker', (req, res) => {
+  const name = req.body.name;
+  const contact = req.body.contact;
+  const key = req.body.key;
+  const amount = req.body.amount;
+  const startdate = req.body.startdate;
+  const enddate = req.body.enddate;
+  //const totaldays = req.body.totaldays;
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+
+  const addLocker = `insert into tbl_locker (name, contact_no, key_no, amount, start_date, end_date, total_days, date, time) values ('${name}', '${contact}', '${key}', '${amount}', '${startdate}', '${enddate}', DATEDIFF('${enddate}', '${startdate}'), '${currentDate}', '${currentTime}')`;
+  connection.query(addLocker, (err, result) => {
+    if(err){
+      console.log('Failed to add locker', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/locker', (req, res) => {
+  const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker";
+  connection.query(getLocker, (err, result) => {
+    if(err){
+      console.log('Failed to fetch locker', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 
 module.exports = connection;

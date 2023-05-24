@@ -15,7 +15,9 @@ const Footer = () => {
                     <LinkScroll to='company' spy={true} smooth={true} offset={0} duration={500}>
                         <li className='hover:text-[#93F4D3] cursor-pointer'>About Us</li>
                     </LinkScroll>
-                    <li className='hover:text-[#93f4d3] pt-2'>FAQ's</li>
+                    <LinkRouter to='/faq' onClick={handleClick}>
+                        <li className='hover:text-[#93f4d3] pt-2 cursor-pointer'>FAQ's</li>
+                    </LinkRouter>
                     <li className='hover:text-[#93f4d3] pt-2 '>Terms and Conditions</li>
                     <LinkRouter to='/privacypolicy' onClick={handleClick}>
                         <li className='hover:text-[#93f4d3] pt-2'>Privacy Policy</li>

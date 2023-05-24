@@ -22,8 +22,8 @@ const Navbar = (props) => {
     useEffect(() => {
         const isSignupPage = location.pathname === '/signup';
         const isPrivacyPolicyPage = location.pathname === '/privacypolicy';
-
-        setIsListVisible(!isSignupPage && !isPrivacyPolicyPage);
+        const isFAQsPage = location.pathname === '/faq';
+        setIsListVisible(!isSignupPage && !isPrivacyPolicyPage && !isFAQsPage);
     }, [location.pathname]);
   return (
     <div className='flex justify-between items-center px-4 w-full mx-auto text-white border-b border-b-gray-500 md:grid-flow-col-3 p-1'>
