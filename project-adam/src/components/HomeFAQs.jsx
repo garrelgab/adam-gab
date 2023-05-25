@@ -8,9 +8,9 @@ import Navbar from './Navbar'
 const HomeFAQs = (props) => {
   const [showLogin, setShowLogin] = useState(false)
 
-    function show(){
-        setShowLogin(!showLogin);    
-    }
+  function show(){
+      setShowLogin(!showLogin);    
+  }
   return (
     <>
       <Navbar onLogin={show}/>

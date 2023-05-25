@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useState, useEffect} from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
@@ -46,6 +47,15 @@ const DashboardNavbar = (props) => {
         setNavSettings(false);
     }
 
+    const handleLogout = () => {
+        axios.put('http://localhost:3001/api/update-attendance')
+        .then(response => {
+
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    };
     const userID = props.id;
   return (
     <div className='fixed top-0 left-0 w-[100%] overflow-auto md:py-[20px] py-[20px] bg-[#1a1a1a] border-b border-gray-500 z-50'>
@@ -121,7 +131,7 @@ const DashboardNavbar = (props) => {
                 </LinkRouter>
                 <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
                 <LinkRouter to='/'>
-                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px] font-bold'>Logout</h1></li>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300' onClick={handleLogout}><h1 className='mx-[20px] font-bold'>Logout</h1></li>
                 </LinkRouter>
 
             </ul>

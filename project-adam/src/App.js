@@ -8,6 +8,7 @@ import Customer from './components/Customer';
 import PrivacyPolicy from './components/PrivacyPolicy';
 
 import HomeFAQs from './components/HomeFAQs';
+import TermsAndConditions from './components/TermsAndConditions';
 function App()  {
   return (
   <div>
@@ -18,6 +19,7 @@ function App()  {
         <Route path='/customer/*' element={<Customer/>}/>
         <Route path='/privacypolicy' element={<PrivacyPolicy/>}/>
         <Route path='/faq' element={<HomeFAQs/>}/>
+        <Route path='/terms-of-use' element={<TermsAndConditions/>}/>
     </Routes>
   </div>
   );

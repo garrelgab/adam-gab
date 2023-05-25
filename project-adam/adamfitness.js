@@ -43,50 +43,229 @@ app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
 });
 
-app.post("/api/insert", (req, res) => {
+// app.post("/api/insert", (req, res) => {
   
-  const currentDate = new Date().toISOString().slice(0, 10);
-  const userFname = req.body.userFname
-  const userLname = req.body.userLname
-  const userAge = req.body.userAge
-  const userGender = req.body.userGender
-  const userBday = req.body.userBday
-  const userEmail = req.body.userEmail
-  const userPword = req.body.userPword
-  const userCPword = req.body.userCPword
-  const userRole = req.body.userRole
-  const sqlInsert = `insert into tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created) values (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}')`;
-  connection.query(sqlInsert, [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole], (err, result) => {
-    console.log(result);
-  });
+//   const currentDate = new Date().toISOString().slice(0, 10);
+//   const userFname = req.body.userFname
+//   const userLname = req.body.userLname
+//   const userAge = req.body.userAge
+//   const userGender = req.body.userGender
+//   const userBday = req.body.userBday
+//   const userEmail = req.body.userEmail
+//   const userPword = req.body.userPword
+//   const userCPword = req.body.userCPword
+//   const userRole = req.body.userRole
+//   const sqlInsert = `insert into tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+//   connection.query(sqlInsert, [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole], (err, result) => {
+//     console.log(result);
+//   });
 
-  const sqlAccount = "insert into tbl_accounts (email, password, role) value (?, ?, ?)";
-  connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
-    console.log(result);
+//   const sqlAccount = "insert into tbl_accounts (email, password, role, status) value (?, ?, ?, 'Active')";
+//   connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
+//     console.log(result);
+//   });
+// });
+
+app.post("/api/insert", (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const userFname = req.body.userFname;
+  const userLname = req.body.userLname;
+  const userAge = req.body.userAge;
+  const userGender = req.body.userGender;
+  const userBday = req.body.userBday;
+  const userEmail = req.body.userEmail;
+  const userPword = req.body.userPword;
+  const userCPword = req.body.userCPword;
+  const userRole = req.body.userRole;
+
+  const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+  connection.query(checkEmailQuery, [userEmail], (err, results) => {
+    if (err) {
+      console.log('Failed to query email', err);
+      res.sendStatus(500);
+    } else if (results.length > 0) {
+      // Email already exists
+      res.status(400).json({ error: 'Email already exists' });
+    } else {
+      // Email does not exist, proceed with insertion
+      const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+      connection.query(
+        sqlInsert,
+        [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole],
+        (err, result) => {
+          if (err) {
+            console.log('Failed to add account info', err);
+            res.sendStatus(500);
+          } else {
+            const accountId = result.insertId;
+            console.log('Last Inserted Account ID:', accountId);
+            const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
+              if (err) {
+                console.log('Failed to add account', err);
+                res.sendStatus(500);
+              } else {
+                const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                connection.query(
+                  sqlHealth,
+                  [
+                    req.body.diabetes,
+                    req.body.chest,
+                    req.body.bones,
+                    req.body.heartmur,
+                    req.body.epilepsy,
+                    req.body.oedema,
+                    req.body.recent,
+                    req.body.highblood,
+                    req.body.asthma,
+                    req.body.fainting,
+                    req.body.heartdisease,
+                    req.body.shortbreath,
+                    req.body.allergies,
+                    req.body.pneumonia,
+                    req.body.tachy,
+                    req.body.heartattack,
+                    req.body.palpitation,
+                    req.body.lowblood,
+                    req.body.seizure,
+                    req.body.other,
+                    accountId,
+                  ],
+                  (err, result) => {
+                    if (err) {
+                      console.log('Failed to add health conditions', err);
+                      res.sendStatus(500);
+                    } else {
+                      res.sendStatus(200);
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
+    }
   });
 });
 
+
+
+// app.post("/api/login", (req, res) => {
+//   const userEmail = req.body.userEmail
+//   const userPword = req.body.userPword
+//   connection.query(
+//     "select * from tbl_accounts where email = ? and password = ? and status = 'Active'",
+//     [userEmail, userPword],
+//     (err, result) => {
+//       if (err) {
+//         res.send({err: err})
+//       }
+//       if(result.length > 0) {
+//         res.send(result);
+
+//       } else {
+//         res.send({ message: 'Incorrect username/password.'});
+        
+//       }
+//     }
+//   );
+// });
+
+// app.post("/api/login", (req, res) => {
+//   const userEmail = req.body.userEmail;
+//   const userPword = req.body.userPword;
+//   connection.query(
+//     "SELECT * FROM tbl_accounts WHERE email = ? AND password = ? AND status = 'Active'",
+//     [userEmail, userPword],
+//     (err, result) => {
+//       if (err) {
+//         res.send({ err: err });
+//       } else if (result.length > 0) {
+//         const accountId = result[0].account_id;
+//         connection.query(
+//           "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
+//           [accountId],
+//           (err, accountInfoResult) => {
+//             if (err) {
+//               res.send({ err: err });
+//             } else if (accountInfoResult.length > 0) {
+//               const firstName = accountInfoResult[0].fname;
+//               const role = accountInfoResult[0].role;
+//               // Insert fname into tbl_attendance
+//               const currentDate = new Date().toISOString().slice(0, 10);
+//               const currentTime = new Date().toTimeString().slice(0, 8);
+//               connection.query(
+//                 `INSERT INTO tbl_attendance (fname, status, time_in, time_out, date) VALUES (?, 'Active', '${currentTime}', '', '${currentDate}')`,
+//                 [firstName],
+//                 (err, insertionResult) => {
+//                   if (err) {
+//                     res.send({ err: err });
+//                   } else {
+//                     res.send({ message: "Attendance record inserted successfully.", role: role });
+//                   }
+//                 }
+//               );
+//             } else {
+//               res.send({ message: "Account info not found." });
+//             }
+//           }
+//         );
+//       } else {
+//         res.send({ message: "Incorrect username/password." });
+//       }
+//     }
+//   );
+// });
+
 app.post("/api/login", (req, res) => {
-  const userEmail = req.body.userEmail
-  const userPword = req.body.userPword
+  const userEmail = req.body.userEmail;
+  const userPword = req.body.userPword;
   connection.query(
-    "select * from tbl_accounts where email = ? and password = ?",
+    "SELECT * FROM tbl_accounts WHERE email = ? AND password = ? AND status = 'Active'",
     [userEmail, userPword],
     (err, result) => {
       if (err) {
-        res.send({err: err})
-      }
-      if(result.length > 0) {
-        //req.session.user = result
-        res.send(result);
-        //res.send({ message: 'Login successfully.'});
+        res.send({ err: err });
+      } else if (result.length > 0) {
+        const accountId = result[0].account_id;
+        connection.query(
+          "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
+          [accountId],
+          (err, accountInfoResult) => {
+            if (err) {
+              res.send({ err: err });
+            } else if (accountInfoResult.length > 0) {
+              const firstName = accountInfoResult[0].fname;
+              // Insert fname into tbl_attendance
+              const currentDate = new Date().toISOString().slice(0, 10);
+              const currentTime = new Date().toTimeString().slice(0, 8);
+              connection.query(
+                `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
+                [firstName, currentTime, currentDate],
+                (err, insertionResult) => {
+                  if (err) {
+                    res.send({ err: err });
+                  } else {
+                    const role = result[0].role; // Retrieve the role from tbl_accounts
+                    // res.send({ message: "Attendance record inserted successfully.", account_id: accountId, role: role });
+                    // res.send({ message: "Attendance record inserted successfully.", insertionResult });
+                    res.send(result);
+                  }
+                }
+              );
+            } else {
+              res.send({ message: "Account info not found." });
+            }
+          }
+        );
       } else {
-        res.send({ message: 'Incorrect username/password.'});
-        
+        res.send({ message: "Incorrect username/password." });
       }
     }
   );
 });
+
 
 
 
@@ -873,6 +1052,28 @@ app.get('/api/expenses', (req, res) => {
 });
 
 //Locker
+// app.post('/api/add-locker', (req, res) => {
+//   const name = req.body.name;
+//   const contact = req.body.contact;
+//   const key = req.body.key;
+//   const amount = req.body.amount;
+//   const startdate = req.body.startdate;
+//   const enddate = req.body.enddate;
+//   //const totaldays = req.body.totaldays;
+//   const currentDate = new Date().toISOString().slice(0, 10);
+//   const currentTime = new Date().toTimeString().slice(0, 8);
+
+//   const addLocker = `insert into tbl_locker (name, contact_no, key_no, amount, start_date, end_date, total_days, date, time) values ('${name}', '${contact}', '${key}', '${amount}', '${startdate}', '${enddate}', DATEDIFF('${enddate}', '${startdate}'), '${currentDate}', '${currentTime}')`;
+//   connection.query(addLocker, (err, result) => {
+//     if(err){
+//       console.log('Failed to add locker', err);
+//     }
+//     else{
+//       res.send(result);
+//     }
+//   });
+// });
+
 app.post('/api/add-locker', (req, res) => {
   const name = req.body.name;
   const contact = req.body.contact;
@@ -880,20 +1081,37 @@ app.post('/api/add-locker', (req, res) => {
   const amount = req.body.amount;
   const startdate = req.body.startdate;
   const enddate = req.body.enddate;
-  //const totaldays = req.body.totaldays;
-  const currentDate = new Date().toISOString().slice(0, 10);
-  const currentTime = new Date().toTimeString().slice(0, 8);
 
-  const addLocker = `insert into tbl_locker (name, contact_no, key_no, amount, start_date, end_date, total_days, date, time) values ('${name}', '${contact}', '${key}', '${amount}', '${startdate}', '${enddate}', DATEDIFF('${enddate}', '${startdate}'), '${currentDate}', '${currentTime}')`;
-  connection.query(addLocker, (err, result) => {
-    if(err){
-      console.log('Failed to add locker', err);
-    }
-    else{
-      res.send(result);
+  // Check if the key is already used
+  const checkKeyQuery = `SELECT * FROM tbl_locker WHERE key_no = '${key}' AND end_date >= '${enddate}'`;
+  connection.query(checkKeyQuery, (err, rows) => {
+    if (err) {
+      console.log('Error checking key:', err);
+      res.status(500).json({ error: 'Failed to check key' });
+    } else {
+      if (rows.length > 0) {
+        // The key is already used and not available until the end date
+        res.status(400).json({ error: 'The selected key is not available until the end date' });
+      } else {
+        // The key is available, proceed with adding the locker
+        const currentDate = new Date().toISOString().slice(0, 10);
+        const currentTime = new Date().toTimeString().slice(0, 8);
+
+        const addLocker = `INSERT INTO tbl_locker (name, contact_no, key_no, amount, start_date, end_date, total_days, date, time) VALUES ('${name}', '${contact}', '${key}', '${amount}', '${startdate}', '${enddate}', DATEDIFF('${enddate}', '${startdate}'), '${currentDate}', '${currentTime}')`;
+
+        connection.query(addLocker, (err, result) => {
+          if (err) {
+            console.log('Failed to add locker', err);
+            res.status(500).json({ error: 'Failed to add locker' });
+          } else {
+            res.status(200).json({ success: true });
+          }
+        });
+      }
     }
   });
 });
+
 
 app.get('/api/locker', (req, res) => {
   const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker";
@@ -907,4 +1125,39 @@ app.get('/api/locker', (req, res) => {
   });
 });
 
+// SELECT order_id, SUM(qty) as total_sold, product_name FROM `tbl_orders` group by product_name, order_id order by total_sold desc limit 3;
+
+app.get('/api/attendance', (req, res) => {
+  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(time_out, '%h:%i:%s %p') as time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance`;
+  connection.query(getAttendance, (err, result) => {
+    if(err){
+      console.log('Failed to fetch attendance', err);
+    }
+    res.send(result);
+  });
+});
+
+app.put('/api/update-attendance', (req, res) => {
+  const getLastInsertedId = 'SELECT attendance_id FROM tbl_attendance ORDER BY attendance_id DESC LIMIT 1';
+  connection.query(getLastInsertedId, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch last inserted ID', err);
+      res.sendStatus(500);
+    } else {
+      const attendanceId = result[0].attendance_id;
+      const currentTime = new Date().toTimeString().slice(0, 8);
+      // Update the last inserted attendance record
+      const updateAttendanceQuery = 'UPDATE tbl_attendance SET time_out = ? WHERE attendance_id = ?';
+      connection.query(updateAttendanceQuery, [currentTime, attendanceId], (err, updateResult) => {
+        if (err) {
+          console.log('Failed to update attendance', err);
+          res.sendStatus(500);
+        } else {
+          res.sendStatus(200);
+        }
+      });
+    }
+  });
+
+})
 module.exports = connection;

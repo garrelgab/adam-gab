@@ -16,43 +16,84 @@ const Login = (props) => {
     const [loginStatus, setLoginStatus] = useState('');
     // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const userLogin = () => {
+    // const userLogin = () => {
 
-        if(!email){
-            alert('Please fill out the empty field.');
-            return;
+    //     if(!email){
+    //         alert('Please fill out the empty field.');
+    //         return;
+    //     }
+    //     if(!pword){
+    //         alert('Please fill out the empty field.');
+    //         return;
+    //     }
+    //     Axios.post("http://localhost:3001/api/login", {
+    //         userEmail: email,
+    //         userPword: pword,
+    //     })
+    //     .then((response) => {
+    //         console.log(response);
+    //         if(response.data.message) {
+    //             setLoginStatus(response.data.message);
+    //         } else
+    //         {
+    //             if(response.data.role === 'admin'){
+    //                 // setIsLoggedIn(true);
+    //                 const id = response.data.account_id;
+    //                 console.log(id);
+    //                 navigate('/dashboard', { replace: true, state: id});
+    //                 props.setTrigger(false);
+    //             }
+    //             else{
+    //                 // setIsLoggedIn(true);
+    //                 const id = response.data.account_id;
+    //                 console.log(id);
+    //                 navigate('/customer', { replace: true, state: id});
+    //                 props.setTrigger(false);
+    //             }
+                
+    //         }
+    //     })
+    //     setEmail('');
+    //     setPword('');
+    // };
+    const userLogin = () => {
+        if (!email) {
+          alert('Please fill out the empty field.');
+          return;
         }
-        if(!pword){
-            alert('Please fill out the empty field.');
-            return;
+        if (!pword) {
+          alert('Please fill out the empty field.');
+          return;
         }
         Axios.post("http://localhost:3001/api/login", {
-            userEmail: email,
-            userPword: pword,
+          userEmail: email,
+          userPword: pword,
         })
-        .then((response) => {
-            if(response.data.message) {
-                setLoginStatus(response.data.message);
-            } else{
-                if(response.data[0].role === 'admin'){
-                    // setIsLoggedIn(true);
-                    const id = response.data[0].account_id;
-                    console.log(id);
-                    navigate('/dashboard', { replace: true, state: id});
-                    props.setTrigger(false);
-                }
-                else{
-                    // setIsLoggedIn(true);
-                    const id = response.data[0].account_id;
-                    console.log(id);
-                    navigate('/customer', { replace: true, state: id});
-                    props.setTrigger(false);
-                }
+          .then((response) => {
+            console.log(response.data); // Add this line for debugging
+            if (response.data.message) {
+              setLoginStatus(response.data.message);
+            } else {
+              if (response.data[0].role === 'admin') {
+                const id = response.data[0].account_id;
+                console.log(id);
+                navigate('/dashboard', { replace: true, state: id });
+                props.setTrigger(false);
+              } else {
+                const id = response.data[0].account_id;
+                console.log(id);
+                navigate('/customer', { replace: true, state: id });
+                props.setTrigger(false);
+              }
             }
-        })
-        setEmail('');
-        setPword('');
-    };
+            setEmail('');
+            setPword('');
+          })
+          .catch((error) => {
+            console.error('Failed to login', error);
+          });
+      };
+      
 
   return (props.trigger) ? (
     // <>

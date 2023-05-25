@@ -23,7 +23,8 @@ const Navbar = (props) => {
         const isSignupPage = location.pathname === '/signup';
         const isPrivacyPolicyPage = location.pathname === '/privacypolicy';
         const isFAQsPage = location.pathname === '/faq';
-        setIsListVisible(!isSignupPage && !isPrivacyPolicyPage && !isFAQsPage);
+        const isTermsAndConditionPage = location.pathname === '/terms-of-use';
+        setIsListVisible(!isSignupPage && !isPrivacyPolicyPage && !isFAQsPage && !isTermsAndConditionPage);
     }, [location.pathname]);
   return (
     <div className='flex justify-between items-center px-4 w-full mx-auto text-white border-b border-b-gray-500 md:grid-flow-col-3 p-1'>

@@ -6,13 +6,12 @@ import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios';
 import moment from 'moment-timezone';
 const PosLocker = () => {
-  const [rows, setRows] = useState([]);
   const [contact, setContact] = useState('');
   const [amount, setAmount] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
-
+  const [rows, setRows] = useState([]);
   const rowHeight = 100;
   const columns = [
     {field: 'id', headerName: 'ID', width: 100},
@@ -76,11 +75,10 @@ const PosLocker = () => {
   const [selectOption, setSelectOption] = useState(null);
   const handleOptionChange = (selectedOption) => {
     setSelectOption(selectedOption.label);
-    // alert(selectedOption.label);
   }
 
   const handleConfirm = () => {
-    if(!customerName || !amount || !contact){
+    if(!customerName || !amount || !contact || !selectOption || !selectedStartDate || !selectedEndDate){
       alert('Please fill up the empty field.');
       return;
     }
@@ -97,6 +95,7 @@ const PosLocker = () => {
       fetchLocker();
     })
     .catch(error => {
+      alert('The selected key is not available until the end date');
     })
     setCustomerName('');
     setContact('');
@@ -177,8 +176,8 @@ const PosLocker = () => {
           <button className='py-2 justify-start px-[50px] mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
         </div>
         </div>
-        <div className='hidden bg-white my-[50px] mx-auto md:h-[600px] md:flex rounded-md justify-center items-center'>
-          <DataGrid rows={rows} columns={columns} className='text-center' rowHeight={rowHeight} disableExtendRowFullWidth/>
+        <div className='hidden bg-white my-[50px] mx-auto md:w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>
+          <DataGrid rows={rows} columns={columns} className='w-[100%] text-center' rowHeight={rowHeight} disableExtendRowFullWidth/>
         </div>
     </div>
   )
