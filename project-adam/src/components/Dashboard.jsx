@@ -13,7 +13,9 @@ import DashboardGCash from './DashboardGCash'
 import FAQs from './FAQs'
 import DashboardAttendance from './DashboardAttendance'
 import UserAccountEmployee from './UserAccountEmployee'
-import UserAccountCustomer from './UserAccountCustomer'
+import SettingsPrivacyPolicy from './SettingsPrivacyPolicy'
+import DashboardAuditTrail from './DashboardAuditTrail'
+// import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
   const id = location.state;
@@ -23,7 +25,7 @@ const Dashboard = () => {
         <Routes>
           <Route exact path='/' element={<DashboardContent/>}/>
           <Route path='/reservation' element={<DashboardReservation/>}/>
-          <Route path='/membership' element={<DashboardMembership/>}/>
+          {/* <Route path='/membership' element={<DashboardMembership/>}/> */}
           <Route path='/settings' element={<DashboardSettings/>}/>
           <Route path='/pos' element={<DashboardPos/>}/>
           <Route path='/inventory' element={<DashboardInventory/>}/>
@@ -31,10 +33,12 @@ const Dashboard = () => {
           <Route path='/expenses' element={<DashboardExpenses/>}/>
           <Route path='/gcash' element={<DashboardGCash/>}/>
           <Route path='/faq' element={<FAQs/>}/>
+          <Route path='/privacypolicy' element={<SettingsPrivacyPolicy/>}/>
           <Route path='/attendance' element={<DashboardAttendance/>}/>
           <Route path='/employee' element={<UserAccountEmployee/>}/>
-          <Route path='/customer' element={<UserAccountCustomer/>}/>
-
+          {/* <Route path='/customer' element={<UserAccountCustomer/>}/> */}
+          <Route path='/customer' element={<DashboardMembership/>}/>
+          <Route path='/audit' element={<DashboardAuditTrail/>}/>
         </Routes>
     </>
   )

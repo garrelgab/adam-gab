@@ -14,7 +14,7 @@ const PosTabs = ({tabs}) => {
           <button
             key={index}
             className={`py-2 px-6 mx-2 rounded-md ${
-              activeTab === index ? 'bg-[#93F4D3] text-black' : 'bg-gray-300 text-black hover:text-white ease-in-out duration-300 hover:bg-gray-500'
+              activeTab === index ? 'bg-[#1ca350] text-white' : 'bg-[#fffdfa] text-black hover:text-white ease-in-out duration-300 hover:bg-gray-500'
             }`}
             onClick={() => handleTabClick(index)}
           >

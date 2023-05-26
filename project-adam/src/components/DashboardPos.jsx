@@ -6,10 +6,10 @@ import PosLocker from './PosLocker';
 
 const DashboardPos = () => {
   const tabs = [
-    {
-      title: 'Products',
-      content: <PosProducts/>,
-    },
+    // {
+    //   title: 'Products',
+    //   content: <PosProducts/>,
+    // },
     {
       title: 'Workout',
       content: <PosWorkOut/>,

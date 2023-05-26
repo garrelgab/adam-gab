@@ -388,6 +388,15 @@ app.get('/api/members-count', (req, res) => {
   });
 });
 
+app.get('/api/approved-count', (req, res) => {
+  const countPending = "select count(reservation_id) as count from tbl_reservation where status = 'Approved'";
+  connection.query(countPending, (err, result, fields) => {
+    if(err) throw err;
+    const count = result[0].count;
+    res.send({count});
+  });
+});
+
 app.get('/api/pending-count', (req, res) => {
   const countPending = "select count(reservation_id) as count from tbl_reservation where status = 'Pending'";
   connection.query(countPending, (err, result, fields) => {
@@ -989,6 +998,58 @@ app.get('/api/sales-report', (req, res) => {
   }); 
 });
 
+//Sum Daily
+app.get('/api/daily-sales', (req, res) => {
+  const dailySales = `SELECT sales_report_id, DATE_FORMAT(date, '%M %d, %Y') AS day, SUM(total) AS daily_total FROM tbl_sales_report GROUP BY DAY(date)`;
+  connection.query(dailySales, (err, result) => {
+    if(err){
+      console.log('Failed to fetch daily sales report', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+//Weekly
+app.get('/api/weekly-sales', (req, res) => {
+  const weeklySales = `SELECT sales_report_id, YEAR(date) AS year, WEEK(date) AS week, SUM(total) AS weekly_total FROM tbl_sales_report GROUP BY YEAR(date), WEEK(date)`;
+  connection.query(weeklySales, (err, result) => {
+    if(err){
+      console.log('Failed to fetch weekly sales report', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+//monthly
+app.get('/api/monthly-sales', (req, res) => {
+  const monthlySales = `SELECT sales_report_id, YEAR(date) AS year, MONTHNAME(date) AS month, SUM(total) AS monthly_total FROM tbl_sales_report GROUP BY YEAR(date), MONTH(date)`;
+  connection.query(monthlySales, (err, result) => {
+    if(err){
+      console.log('Failed to fetch monthly sales report', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+//yearly
+// 
+app.get('/api/yearly-sales', (req, res) => {
+  const yearlySales = `SELECT sales_report_id, YEAR(date) AS year, SUM(total) AS yearly_total FROM tbl_sales_report GROUP BY YEAR(date)`;
+  connection.query(yearlySales, (err, result) => {
+    if(err){
+      console.log('Failed to fetch yearly sales report', err);
+    }
+    else{
+      res.send(result)
+    }
+  });
+});
+
+
+
 //Workouts
 app.post('/api/add-workout', (req, res) => {
   const name = req.body.name;
@@ -1128,7 +1189,7 @@ app.get('/api/locker', (req, res) => {
 // SELECT order_id, SUM(qty) as total_sold, product_name FROM `tbl_orders` group by product_name, order_id order by total_sold desc limit 3;
 
 app.get('/api/attendance', (req, res) => {
-  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(time_out, '%h:%i:%s %p') as time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance`;
+  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance`;
   connection.query(getAttendance, (err, result) => {
     if(err){
       console.log('Failed to fetch attendance', err);
@@ -1147,8 +1208,8 @@ app.put('/api/update-attendance', (req, res) => {
       const attendanceId = result[0].attendance_id;
       const currentTime = new Date().toTimeString().slice(0, 8);
       // Update the last inserted attendance record
-      const updateAttendanceQuery = 'UPDATE tbl_attendance SET time_out = ? WHERE attendance_id = ?';
-      connection.query(updateAttendanceQuery, [currentTime, attendanceId], (err, updateResult) => {
+      const updateAttendanceQuery = `UPDATE tbl_attendance SET time_out = '${currentTime}', status = 'Inactive' WHERE attendance_id = ?`;
+      connection.query(updateAttendanceQuery, [attendanceId], (err, updateResult) => {
         if (err) {
           console.log('Failed to update attendance', err);
           res.sendStatus(500);
@@ -1158,6 +1219,104 @@ app.put('/api/update-attendance', (req, res) => {
       });
     }
   });
-
 })
+
+//Employee User
+// app.post('/api/add-employee', (req, res) => {
+//   const fname = req.body.fname;
+//   const lname = req.body.lname;
+//   const age = req.body.age;
+//   const gender = req.body.gender;
+//   const bday = req.body.bday;
+//   const role = req.body.role;
+//   const email = req.body.email;
+//   const pword = req.body.pword;
+//   const cpword = req.body.cpword;
+//   const currentDate = new Date().toISOString().slice(0, 10);
+
+// });
+
+app.post("/api/insert-employee", (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  const userFname = req.body.userFname;
+  const userLname = req.body.userLname;
+  const userAge = req.body.userAge;
+  const userGender = req.body.userGender;
+  const userBday = req.body.userBday;
+  const userEmail = req.body.userEmail;
+  const userPword = req.body.userPword;
+  const userCPword = req.body.userCPword;
+  const userRole = req.body.userRole;
+  const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+  connection.query(checkEmailQuery, [userEmail], (err, results) => {
+    if (err) {
+      console.log('Failed to query email', err);
+      res.sendStatus(500);
+    } else if (results.length > 0) {
+      // Email already exists
+      res.status(400).json({ error: 'Email already exists' });
+    } else {
+      // Email does not exist, proceed with insertion
+      const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+      connection.query(
+        sqlInsert,
+        [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole],
+        (err, result) => {
+          if (err) {
+            console.log('Failed to add account info', err);
+            res.sendStatus(500);
+          } else {
+            const accountId = result.insertId;
+            console.log('Last Inserted Account ID:', accountId);
+            const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
+              if (err) {
+                console.log('Failed to add account', err);
+                res.sendStatus(500);
+              } else {
+                res.send(result);
+              }
+            });
+            
+          }
+        }
+      );
+    }
+  });
+  const action = `Created new account: ${userFname}`;
+  const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+  connection.query(audit, (err, auditResult) => {
+    if(err){
+      console.log('Failed to add audit', err);
+    }
+    else{
+      res.send(auditResult);
+    }
+  });
+});
+
+app.get('/api/employee-list', (req, res) => {
+  const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'staff' or role = 'cashier'`;
+  connection.query(employeeList, (err, result) => {
+    if(err){
+      console.log('Failed to fetch employee list',err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/audit', (req, res) => {
+  const audit = `select audit_id, action, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_audit`;
+  connection.query(audit, (err, result) => {
+    if(err){
+      console.log('failed to fetch audit', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 module.exports = connection;

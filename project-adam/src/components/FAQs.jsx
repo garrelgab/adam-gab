@@ -189,7 +189,6 @@ const FAQs = () => {
       <div>
         <PosTabs tabs={tabs}/>
       </div>
-      
     </div>
   )
 }
