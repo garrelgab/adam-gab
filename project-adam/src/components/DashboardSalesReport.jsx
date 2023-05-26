@@ -5,7 +5,8 @@ import PosTabs from './PosTabs';
 const DashboardSalesReport = () => {
     const columns = [
       { field: 'id', headerName: 'ID', width:200},
-      { field: 'order_number', headerName: 'Order Number', width: 400},
+      // { field: 'order_number', headerName: 'Order Number', width: 400},
+      { field: 'description', headerName: 'Description', width: 400},
       { field: 'total', headerName: 'Total', width: 300},
       { field: 'date', headerName: 'Date', width: 300},
       { field: 'time', headerName: 'Time', width: 300},
@@ -107,7 +108,8 @@ const DashboardSalesReport = () => {
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
-          order_number: item.order_number,
+          // order_number: item.order_number,
+          description: item.description,
           total: formatPrice(item.total),
           date: item.date,
           time: item.time,

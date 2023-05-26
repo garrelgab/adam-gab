@@ -27,27 +27,27 @@ const PosWorkOut = () => {
   ]
 
   useEffect(() => {
-    // const fetchData = () => {
-    //   axios.get("http://localhost:3001/api/workouts")
-    //   .then((response) => {
-    //       const rows = response.data.map(item => ({
-    //       id: item.workout_id,
-    //       name: item.name,
-    //       type: item.type,
-    //       price: formatPrice(item.price),
-    //       date: item.date,
-    //       time: item.time,
-    //       }));
-    //       setRows(rows);
-    //   })
-    //   .catch(error => {
-    //       console.error(error);
-    //   });
-    // };
+    const fetchData = () => {
+      axios.get("http://localhost:3001/api/workouts")
+      .then((response) => {
+          const rows = response.data.map(item => ({
+          id: item.workout_id,
+          name: item.name,
+          type: item.type,
+          price: formatPrice(item.price),
+          date: item.date,
+          time: item.time,
+          }));
+          setRows(rows);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    };
 
-    // const formatPrice = (price) => {
-    //   return Number(price).toFixed(2);
-    // };
+    const formatPrice = (price) => {
+      return Number(price).toFixed(2);
+    };
 
     fetchData();
   }, []);

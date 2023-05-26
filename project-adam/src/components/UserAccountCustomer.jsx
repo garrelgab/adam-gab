@@ -16,7 +16,7 @@ const UserAccountCustomer = (props) => {
   return (
     <div className='mx-[50px] mt-[90px]'>
         <div className='flex items-center justify-between'>
-            <h1 className='text-[30px] text-[#93F4D3] font-light'>Customer User Account</h1>  
+        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Employee User Account</h1>  
             {/* <button className='py-2 justify-start px-[50px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white'>Add User</button> */}
         </div>
         <div className='hidden bg-white mt-[30px] mx-auto w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>

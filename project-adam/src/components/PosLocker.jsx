@@ -77,33 +77,6 @@ const PosLocker = () => {
     setSelectOption(selectedOption.label);
   }
 
-  const handleConfirm = () => {
-    if(!customerName || !amount || !contact || !selectOption || !selectedStartDate || !selectedEndDate){
-      alert('Please fill up the empty field.');
-      return;
-    }
-    axios.post('http://localhost:3001/api/add-locker', {
-      name: customerName,
-      contact: contact,
-      key: selectOption,
-      amount: amount,
-      startdate: selectedStartDate,
-      enddate: selectedEndDate,
-    })
-    .then(response => {
-      alert('Success');
-      fetchLocker();
-    })
-    .catch(error => {
-      alert('The selected key is not available until the end date');
-    })
-    setCustomerName('');
-    setContact('');
-    setAmount('');
-    setSelectedStartDate(null);
-    setSelectedEndDate(null);
-  };
-
   const fetchLocker = () => {
     axios.get("http://localhost:3001/api/locker")
     .then((response) => {
@@ -123,10 +96,38 @@ const PosLocker = () => {
     .catch(error => {
         console.error(error);
     });
-  };
+    };
   const formatPrice = (price) => {
       return Number(price).toFixed(2);
   };
+  const handleConfirm = () => {
+    if(!customerName || !amount || !contact || !selectOption || !selectedStartDate || !selectedEndDate){
+      alert('Please fill up the empty field.');
+      return;
+    }
+    axios.post('http://localhost:3001/api/add-locker', {
+      name: customerName,
+      contact: contact,
+      key: selectOption,
+      amount: amount,
+      startdate: selectedStartDate,
+      enddate: selectedEndDate,
+    })
+    .then(response => {
+      alert(`Customer: ${customerName}`);
+      fetchLocker();
+    })
+    .catch(error => {
+      alert('The selected key is not available until the end date');
+    })
+    setCustomerName('');
+    setContact('');
+    setAmount('');
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+  };
+
+  
   const minDate = new Date();
 
   useEffect(() => {

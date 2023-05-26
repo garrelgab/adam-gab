@@ -987,7 +987,7 @@ app.delete('/api/void', (req, res) => {
 });
 //Sales Report
 app.get('/api/sales-report', (req, res) => {
-  const viewSales = "select sales_report_id, order_number, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report";
+  const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report";
   connection.query(viewSales, (err, result) => {
     if(err){
       console.log('Failed to fetch sales report', err);
@@ -1065,7 +1065,17 @@ app.post('/api/add-workout', (req, res) => {
       console.log('Failed to add workout', err);
     }
     else{
-      res.send(result)
+      // res.send(result)
+      const salesWorkout = `Workout ID: ${result.insertId}, Customer Name: ${name}`;
+      const insertSales = `insert into tbl_sales_report (description, total, date, time) values ('${salesWorkout}', '${formattedPrice}', '${currentDate}', '${formattedTime}')`;
+      connection.query(insertSales, (err, insertSalesResult) => {
+        if(err){
+          console.log('Failed to add sales workout', err);
+        }
+        else{
+          res.send(result);
+        }
+      });
     }
   });
 });
@@ -1165,7 +1175,17 @@ app.post('/api/add-locker', (req, res) => {
             console.log('Failed to add locker', err);
             res.status(500).json({ error: 'Failed to add locker' });
           } else {
-            res.status(200).json({ success: true });
+            const salesLocker = `Locker ID: ${result.insertId}, Customer Name: ${name}`;
+            const insertSales = `insert into tbl_sales_report (description, total, date, time) values ('${salesLocker}', '${amount}', '${currentDate}', '${currentTime}')`;
+            connection.query(insertSales, (err, insertSalesResult) => {
+              if(err){
+                console.log('Failed to add sales workout', err);
+              }
+              else{
+                res.send(result);
+              }
+            });
+            // res.status(200).json({ success: true });
           }
         });
       }
