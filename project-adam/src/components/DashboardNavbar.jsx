@@ -63,7 +63,7 @@ const DashboardNavbar = (props) => {
         <div className='blocked text-white flex justify-between'>
             <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
             <div className='md:flex text-lg font-light hidden'>
-                <h1 className='border-r border-white px-5'>{userID}</h1>
+                <h1 className='border-r border-white px-5'>{currentTime}</h1>
                 <h1 className='px-5'>{currentDateTime}</h1>
             </div>
         </div>

@@ -63,10 +63,10 @@ const DashboardReservation = () => {
     agenda: true,
   }
   return (
-    <div className='mx-[50px] mt-[90px] text-black'>
-      <h1 className='text-[30px] font-light text-[#93F4D3]'>Reservation Management</h1>
+    <div className='bg-[#d3d3d3] px-[50px] pt-[90px] text-black'>
+      <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Reservation Management</h1>
       <div className='blocked flex md:justify-between  mt-[20px] mx-[0px]'>
-        <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
           <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Approved Reservation</h1>
           {approvedCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{approvedCount}</h1>
@@ -74,7 +74,7 @@ const DashboardReservation = () => {
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
           )}
         </div>
-        <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[30px] md:my-0 md:shadow-lg'>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[30px] md:my-0 md:shadow-lg'>
           <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Pending Reservation</h1>
           {pendingCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{pendingCount}</h1>
@@ -82,7 +82,7 @@ const DashboardReservation = () => {
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
           )}
         </div>
-        <div className='bg-[#D9D9D9] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
           <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Total Reservation</h1>
           {eventCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{eventCount}</h1>

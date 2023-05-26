@@ -134,15 +134,15 @@ const PosLocker = () => {
     fetchLocker();
   },[])
   return (
-    <div>
-      <h1 className='text-[25px] text-[#93F4D3] font-light'>Locker Rent</h1>  
-      <div className='text-[#93F4D3] mt-[30px] flex flex-col sm:flex-row items-center md:items-start'>
+    <div className='text-[#1ca350]'>
+      <h1 className='text-[25px]  font-extrabold'>Locker Rent</h1>  
+      <div className='mt-[30px] flex flex-col sm:flex-row items-center md:items-start'>
         <div className='flex flex-col'>
-          <label className="block mb-1 text-md md:text-lg text-left font-light">Customer Name</label>
+          <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Customer Name</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[600px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Customer Name' value={customerName} onChange={(e) => setCustomerName(e.target.value)} required/>
           <div className='flex'>
             <div>
-              <label className="block mb-1 text-md md:text-lg text-left font-light">Start Date</label>
+              <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Start Date</label>
               <button onClick={handleButtonClick} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required>
                 {selectedStartDate ? moment(selectedStartDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
               </button>
@@ -153,7 +153,7 @@ const PosLocker = () => {
               )}
             </div>
             <div className='ml-[40px]'>
-              <label className="block mb-1 text-md md:text-lg text-left font-light">End Date</label>
+              <label className="block mb-1 text-md md:text-lg text-left font-extrabold">End Date</label>
               <button onClick={handleButtonClick2} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required>
                 {selectedEndDate ? moment(selectedEndDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
               </button>
@@ -166,18 +166,18 @@ const PosLocker = () => {
           </div>
         </div>
         <div className='flex flex-col mx-[30px]'>
-          <label className="block mb-1 text-md md:text-lg text-left font-light">Contact No.</label>
+          <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Contact No.</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[300px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Contact No.' maxLength={11} value={contact} onChange={handleChangeContactNo}  required/>
-          <label className="block mb-1 text-md md:text-lg text-left font-light">Key No.</label>
+          <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Key No.</label>
           <Select className=' text-black font-light w-[350px] z-50 md:w-[300px]'value={selectOption} options={optionsKey} onChange={handleOptionChange} placeholder={selectOption ? selectOption : 'Select Key No.'}/>
         </div>
         <div className='flex flex-col'>
-          <label className="block mb-1 text-md md:text-lg text-left font-light">Amount</label>
+          <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Amount</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} onChange={handleChangeAmount} required/>
           <button className='py-2 justify-start px-[50px] mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
         </div>
         </div>
-        <div className='hidden bg-white my-[50px] mx-auto md:w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>
+        <div className='hidden bg-white my-[50px] mx-auto md:w-[100%] shadow-lg md:h-[600px] md:flex rounded-md justify-center items-center'>
           <DataGrid rows={rows} columns={columns} className='w-[100%] text-center' rowHeight={rowHeight} disableExtendRowFullWidth/>
         </div>
     </div>

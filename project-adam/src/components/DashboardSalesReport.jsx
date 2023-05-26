@@ -138,43 +138,44 @@ const DashboardSalesReport = () => {
       {
         title: 'All',
         content:
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
             <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
         </div>
       },
       {
         title: 'Daily',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
           <DataGrid rows={dailyRows} columns={dailyColums} className='text-center' disableExtendRowFullWidth/>
         </div>
       },
       {
         title: 'Weekly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
           <DataGrid rows={weekRows} columns={weekColums} className='text-center' disableExtendRowFullWidth/>
         </div>
       },
       {
         title: 'Monthly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
           <DataGrid rows={monthRows} columns={monthColumns} className='text-center' disableExtendRowFullWidth/>
         </div>
       },
       {
         title: 'Yearly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-2xl mt-[30px]'>
+        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
           <DataGrid rows={yearRows} columns={yearColumns} className='text-center' disableExtendRowFullWidth/>
         </div>
       },
     ];
   return (
-    <div className='mx-[50px] mt-[90px]'>
+    <div className='px-[50px] py-[90px] bg-[#d3d3d3]'>
       <div className='flex justify-between'>
-        <h1 className='text-[30px] font-light text-[#93F4D3]'>Sales Report</h1>
+        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Sales Report</h1>  
+
         <div>
             <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
             <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportPDF}>Export to PDF</button>

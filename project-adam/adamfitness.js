@@ -987,7 +987,7 @@ app.delete('/api/void', (req, res) => {
 });
 //Sales Report
 app.get('/api/sales-report', (req, res) => {
-  const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report";
+  const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report order by sales_report_id desc";
   connection.query(viewSales, (err, result) => {
     if(err){
       console.log('Failed to fetch sales report', err);
@@ -1000,7 +1000,7 @@ app.get('/api/sales-report', (req, res) => {
 
 //Sum Daily
 app.get('/api/daily-sales', (req, res) => {
-  const dailySales = `SELECT sales_report_id, DATE_FORMAT(date, '%M %d, %Y') AS day, SUM(total) AS daily_total FROM tbl_sales_report GROUP BY DAY(date)`;
+  const dailySales = `SELECT sales_report_id, DATE_FORMAT(date, '%M %d, %Y') AS day, SUM(total) AS daily_total FROM tbl_sales_report GROUP BY DAY(date) order by sales_report_id desc`;
   connection.query(dailySales, (err, result) => {
     if(err){
       console.log('Failed to fetch daily sales report', err);
@@ -1012,7 +1012,7 @@ app.get('/api/daily-sales', (req, res) => {
 });
 //Weekly
 app.get('/api/weekly-sales', (req, res) => {
-  const weeklySales = `SELECT sales_report_id, YEAR(date) AS year, WEEK(date) AS week, SUM(total) AS weekly_total FROM tbl_sales_report GROUP BY YEAR(date), WEEK(date)`;
+  const weeklySales = `SELECT sales_report_id, YEAR(date) AS year, WEEK(date) AS week, SUM(total) AS weekly_total FROM tbl_sales_report GROUP BY YEAR(date), WEEK(date) order by sales_report_id desc`;
   connection.query(weeklySales, (err, result) => {
     if(err){
       console.log('Failed to fetch weekly sales report', err);
@@ -1024,7 +1024,7 @@ app.get('/api/weekly-sales', (req, res) => {
 });
 //monthly
 app.get('/api/monthly-sales', (req, res) => {
-  const monthlySales = `SELECT sales_report_id, YEAR(date) AS year, MONTHNAME(date) AS month, SUM(total) AS monthly_total FROM tbl_sales_report GROUP BY YEAR(date), MONTH(date)`;
+  const monthlySales = `SELECT sales_report_id, YEAR(date) AS year, MONTHNAME(date) AS month, SUM(total) AS monthly_total FROM tbl_sales_report GROUP BY YEAR(date), MONTH(date) order by sales_report_id desc`;
   connection.query(monthlySales, (err, result) => {
     if(err){
       console.log('Failed to fetch monthly sales report', err);
@@ -1037,7 +1037,7 @@ app.get('/api/monthly-sales', (req, res) => {
 //yearly
 // 
 app.get('/api/yearly-sales', (req, res) => {
-  const yearlySales = `SELECT sales_report_id, YEAR(date) AS year, SUM(total) AS yearly_total FROM tbl_sales_report GROUP BY YEAR(date)`;
+  const yearlySales = `SELECT sales_report_id, YEAR(date) AS year, SUM(total) AS yearly_total FROM tbl_sales_report GROUP BY YEAR(date) order by sales_report_id desc`;
   connection.query(yearlySales, (err, result) => {
     if(err){
       console.log('Failed to fetch yearly sales report', err);
@@ -1081,7 +1081,7 @@ app.post('/api/add-workout', (req, res) => {
 });
 
 app.get('/api/workouts', (req, res) => {
-  const workouts = "select workout_id, name, type, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_workout";
+  const workouts = "select workout_id, name, type, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_workout order by workout_id desc";
   connection.query(workouts, (err, result) => {
     if(err){
       console.log('Failed to fetch Workouts ', err);
@@ -1195,7 +1195,7 @@ app.post('/api/add-locker', (req, res) => {
 
 
 app.get('/api/locker', (req, res) => {
-  const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker";
+  const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker order by locker_id desc";
   connection.query(getLocker, (err, result) => {
     if(err){
       console.log('Failed to fetch locker', err);

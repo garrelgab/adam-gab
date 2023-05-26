@@ -20,8 +20,8 @@ const DashboardPos = () => {
     },
   ];
   return (
-    <div className='mx-[50px] mt-[90px]'>
-        <h1 className='text-[30px] md:text-[35px] font-light text-[#93F4D3]'>Point of Sales</h1>
+    <div className='px-[50px] bg-[#d3d3d3] py-[90px]'>
+        <h1 className='text-[30px] md:text-[35px] font-extrabold text-[#1ca350]'>Window Payment (Walk-ins)</h1>
         <div>
           <PosTabs tabs={tabs}/>
         </div>
