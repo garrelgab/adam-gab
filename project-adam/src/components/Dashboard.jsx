@@ -40,7 +40,7 @@ const Dashboard = () => {
           {/* <Route path='/customer' element={<UserAccountCustomer/>}/> */}
           <Route path='/customer' element={<DashboardMembership/>}/>
           <Route path='/audit' element={<DashboardAuditTrail/>}/>
-          <Route path='/health-tips' element={<DashboardHealthTips/>}/>
+          <Route path='/health-tips' element={<DashboardHealthTips id={id}/>}/>
         </Routes>
     </>
   )

@@ -9,7 +9,7 @@ const DashboardHealthTips = (props) => {
     const [equipment, setEquipment] = useState('');
     const [editorContent, setEditorContent] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
-
+    const userID = props.id;
     const [rows, setRows] = useState([]);
 
     const renderInstructionCell = (params) => {
@@ -95,6 +95,7 @@ const DashboardHealthTips = (props) => {
             name: name,
             equipment: equipment,
             instruction: editorContent,
+            accID: userID,
         })
         .then((response) => {
             alert(`${name}, Successfully saved.`);

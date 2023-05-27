@@ -1407,10 +1407,13 @@ app.get('/api/audit', (req, res) => {
 // });
 
 app.post('/api/add-health-guide', (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
   const imageData = req.body.imageData;
   const name = req.body.name;
   const equipment = req.body.equipment;
   const instruction = req.body.instruction;
+  const accID = req.body.accID;
 
   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
   const buffer = Buffer.from(base64Data, 'base64');
@@ -1421,7 +1424,25 @@ app.post('/api/add-health-guide', (req, res) => {
       console.log('Error inserting image:', err);
       res.status(500).json({ error: 'Failed to insert image' });
     } else {
-      res.status(200).send('Image uploaded successfully');
+      const selectFname = `select fname from tbl_account_info where account_info_id = ?`;
+      connection.query(selectFname, [accID], (err, fnameResult) => {
+        if(err){
+          console.log('Failed to fetch first name', err);
+        }else{
+          const fname = fnameResult[0].fname;
+          const action = `${fname} -  Created new health guide: ${name}`;
+          const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+          connection.query(audit, (err, auditResult) => {
+            if(err){
+              console.log('Failed to add audit', err);
+            }
+            else{
+              res.send(auditResult);
+              // res.status(200).send('Image uploaded successfully');
+            }
+          });
+        }
+      });
     }
   });
 });
