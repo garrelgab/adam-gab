@@ -27,29 +27,29 @@ const Navbar = (props) => {
         setIsListVisible(!isSignupPage && !isPrivacyPolicyPage && !isFAQsPage && !isTermsAndConditionPage);
     }, [location.pathname]);
   return (
-    <div className='flex justify-between items-center px-4 w-full mx-auto text-white border-b border-b-gray-500 md:grid-flow-col-3 p-1'>
+    <div className='flex justify-between items-center border-b border-gray-400 drop-shadow-md px-4 w-full mx-auto text-black md:grid-flow-col-3 p-1'>
         <LinkRouter to='/'><img src={ADAMLOGONOBG} alt='' className='rounded-xl h-20 cursor-pointer'/></LinkRouter>
         
         <div className='hidden md:flex mr-2 items-center'>
             <ul className='hidden md:flex items-center text-xl font-light ml-[100px]'>
                 <LinkRouter to='/'>
-                    <li className='p-8 hover:text-[#93F4D3]'>Home</li>
+                    <li className='p-8 hover:text-[#1ca350]'>Home</li>
                 </LinkRouter>
                 {isListVisible && (
                     <>
                         <LinkScroll to='services' spy={true} smooth={true} offset={-150} duration={500}>
-                            <li className='p-8 hover:text-[#93F4D3] cursor-pointer'>Services</li>
+                            <li className='p-8 hover:text-[#1ca350] cursor-pointer'>Services</li>
                         </LinkScroll>
                         <LinkScroll to='facilities' spy={true} smooth={true} offset={-150} duration={500}>
-                            <li className='p-8 hover:text-[#93F4D3] cursor-pointer'>Facilities</li>
+                            <li className='p-8 hover:text-[#1ca350] cursor-pointer'>Facilities</li>
                         </LinkScroll>
                         <LinkScroll to='/' spy={true} smooth={true} offset={50} duration={500}>
-                            <li className='p-8 hover:text-[#93F4D3] cursor-pointer'>Products Available</li>
+                            <li className='p-8 hover:text-[#1ca350] cursor-pointer'>Products Available</li>
                         </LinkScroll>
                     </>
                 )}
             </ul>
-            <button className='font-normal h-[40px] bg-[#93F4D3] hover:outline hover:outline-offset-0 hover:bg-[#19313800] text-black hover:text-white rounded-md w-[90px] ml-2 my-2 py-2 ease-in-out duration-300'
+            <button className='font-normal h-[40px] bg-[#1ca350] hover:outline outline-black hover:text-black hover:outline-offset-0 hover:bg-[#19313800] text-white rounded-md w-[90px] ml-2 my-2 py-2 ease-in-out duration-300'
              onClick={handleLogin}>Login</button>
         </div>
         <div onClick={handleNav} className='blocked md:hidden'>

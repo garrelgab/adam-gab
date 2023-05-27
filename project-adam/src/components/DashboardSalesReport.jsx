@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import PosTabs from './PosTabs';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 const DashboardSalesReport = () => {
     const columns = [
       { field: 'id', headerName: 'ID', width:200},
@@ -127,12 +130,29 @@ const DashboardSalesReport = () => {
       return Number(price).toFixed(2);
     };
 
+    // Export data to PDF
+    const handleExportPDF = () => {
+      const doc = new jsPDF();
+      doc.autoTable({ html: '#data-grid' });
+      doc.save('data-grid.pdf');
+    };
+
+    // Export data to Excel
     const handleExportExcel = () => {
+      const data = rows.map(row => {
+        const rowData = {};
+        columns.forEach(column => {
+          rowData[column.field] = row[column.field];
+        });
+        return rowData;
+      });
 
-    }
-    const handleExportPDF = () =>{
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'DataGrid');
+      XLSX.writeFile(workbook, 'data-grid.xlsx');
+    };
 
-    }
 
     const tabs = [
       {

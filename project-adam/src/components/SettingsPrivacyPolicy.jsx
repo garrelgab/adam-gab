@@ -4,7 +4,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import PosTabs from './PosTabs';
-import { DataGrid } from '@mui/x-data-grid';
 
 const SettingsPrivacyPolicy = () => {
 
@@ -93,7 +92,7 @@ const SettingsPrivacyPolicy = () => {
       title: 'Add Privacy Policy',
       content: 
       <div>
-        <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Add Privacy Policy</h1>
+        <h1 className='md:text-[25px] font-bold text-[#1ca350]'>Add Privacy Policy</h1>
         <input type="text" className="shadow-lg block w-full my-[30px] p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Privacy Policy' value={name} onChange={(e) => setName(e.target.value)} required/>
         <div className='bg-white h-[390px]'>
             <ReactQuill className=' h-[350px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
@@ -107,9 +106,9 @@ const SettingsPrivacyPolicy = () => {
       title: 'Update Privacy Policy',
       content: 
       <div>
-        <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Update Privacy Policy</h1>
+        <h1 className='md:text-[25px] font-bold text-[#1ca350]'>Update Privacy Policy</h1>
         <Select className='bg-white text-black my-[30px]' options={options} onChange={handleChange} placeholder="Select an option"/>
-        <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
+        <h1 className='mt-[20px] text-[#1ca350] md:text-[20px]'>Content</h1>
         <div className='bg-white h-[390px] mt-[5px]'>
             <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
         </div>
@@ -130,7 +129,7 @@ const SettingsPrivacyPolicy = () => {
   },[]);
   return (
     <div className='mt-[90px] mx-[50px]'>
-      <h1 className='text-[30px] mb-[30px] text-[#93F4D3] font-light'>Privacy Policy</h1>
+      <h1 className='text-[30px] mb-[30px] text-[#1ca350] font-extrabold'>Privacy Policy</h1>
       <div>
         <PosTabs tabs={tabs}/>
       </div>      

@@ -1375,22 +1375,61 @@ app.get('/api/audit', (req, res) => {
   });
 });
 
+// app.post('/api/add-health-guide', (req, res) => {
+//   const imageData = req.body.imageData;
+//   const name = req.body.name;
+//   const equipment = req.body.equipment;
+//   const instruction = req.body.instruction;
+
+//   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+//   const buffer = Buffer.from(base64Data, 'base64');
+//   // const buffer = Buffer.from(imageData);
+
+//   const insertImageQuery = `INSERT INTO tbl_health_guide (name, equipment, instruction, instruction_image) VALUES (?, ?, ?, ?)`;
+//   connection.query(insertImageQuery, [name, equipment, instruction, buffer], (err, result) => {
+//     if (err) {
+//       console.log('Error inserting image:', err);
+//       res.status(500).json({ error: 'Failed to insert image' });
+//     } else {
+//       res.send('Image uploaded successfully', result);
+//     }
+//   });
+// });
+
 app.post('/api/add-health-guide', (req, res) => {
   const imageData = req.body.imageData;
   const name = req.body.name;
   const equipment = req.body.equipment;
   const instruction = req.body.instruction;
-  const buffer = Buffer.from(imageData, 'base64');
+
+  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+  const buffer = Buffer.from(base64Data, 'base64');
+
   const insertImageQuery = `INSERT INTO tbl_health_guide (name, equipment, instruction, instruction_image) VALUES (?, ?, ?, ?)`;
   connection.query(insertImageQuery, [name, equipment, instruction, buffer], (err, result) => {
     if (err) {
       console.log('Error inserting image:', err);
       res.status(500).json({ error: 'Failed to insert image' });
     } else {
-      res.send('Image uploaded successfully', result);
+      res.status(200).send('Image uploaded successfully');
     }
   });
 });
+
+
+app.get('/api/health-guide', (req, res) => {
+  const getHealthGuide = 'select health_guide_id, name, equipment, instruction, instruction_image from tbl_health_guide';
+  connection.query(getHealthGuide, (err, result) => {
+    if(err){
+      console.log('Failed to fetch health guide', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+
 
 // ...
 

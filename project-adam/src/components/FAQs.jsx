@@ -154,10 +154,10 @@ const FAQs = () => {
       title: "Add FAQ's",
       content: 
       <div>
-          <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Add FAQ's</h1>
-          <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Questions</h1>
+          <h1 className='md:text-[25px] font-bold text-[#1ca350]'>Add FAQ's</h1>
+          <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Questions</h1>
           <input type="text" className="shadow-lg block w-full mt-[5px] p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Question' value={name} onChange={(e) => setName(e.target.value)} required/>
-          <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
+          <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Content</h1>
           <div className='bg-white h-[240px]'>
               <ReactQuill className=' h-[200px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
           </div>
@@ -170,10 +170,10 @@ const FAQs = () => {
       title: "Update FAQ's",
       content: 
       <div>
-          <h1 className='md:text-[25px] font-light text-[#93F4D3]'>Update FAQ's</h1>
-        <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Questions</h1>
+          <h1 className='md:text-[25px] font-bold text-[#1ca350]'>Update FAQ's</h1>
+        <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Questions</h1>
         <Select className='bg-white text-black mt-[5px]' options={options} onChange={handleChange} placeholder="Select question"/>
-        <h1 className='mt-[20px] text-[#93f4d3] md:text-[20px]'>Content</h1>
+        <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Content</h1>
         <div className='bg-white h-[390px] mt-[5px]'>
             <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
         </div>
@@ -185,7 +185,7 @@ const FAQs = () => {
   ];
   return (
     <div className='mt-[90px] mx-[50px]'>
-      <h1 className='text-[30px] mb-[30px] text-[#93F4D3] font-light'>FAQ's</h1>
+      <h1 className='text-[30px] mb-[30px] text-[#1ca350] font-extrabold'>FAQ's</h1>
       <div>
         <PosTabs tabs={tabs}/>
       </div>

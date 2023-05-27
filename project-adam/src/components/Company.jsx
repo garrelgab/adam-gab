@@ -2,10 +2,10 @@ import React from 'react'
 import Sample1 from '../imgs/sample1.png'
 const Company = () => {
   return (
-    <div className='bg-[#2a2a2a] py-[50px] md:py-[100px] text-justify  text-white md:drop-shadow-md' id='company'>
+    <div className='bg-[#d3d3d3] py-[50px] md:py-[100px] text-justify border-gray-500 text-white shadow-md' id='company'>
         <div className='mx-auto max-w-[1240px]'>
-            <div className='mx-[30px] text-white'>
-                <h1 className='flex justify-center text-[40px] md:text-[40px] font-extrabold text-[#93F4D3] mb-[30px]'>About Us</h1>
+            <div className='mx-[30px] text-black'>
+                <h1 className='flex justify-center text-[40px] md:text-[40px] font-extrabold text-[#1ca350] mb-[30px]'>About Us</h1>
                 <h1 className='flex text-center justify-center my-[10px]'>A wonderful place to start your fitness journey is by choosing a personal trainer from ADAM Fitness who has the credentials to work out safely and effectively!</h1>
                 <h1 className='flex text-center justify-center mt-[30px]'>ADAM Fitness Center offers variety of services such as Weight Loss, Body Building, Body Toning, Circuit Training, Personal Training Class, and Dance Studio Rental that will surely enhance the well-being of an individual.</h1>
                 <h1 className='flex text-center justify-center mt-[30px]'>We also offer food supplements that is necessary for muscle strengthening. In ADAM Fitness, we want to push you in your boundaries and take it to greater heights.</h1>
