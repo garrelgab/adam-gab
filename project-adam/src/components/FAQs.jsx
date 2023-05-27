@@ -146,8 +146,8 @@ const FAQs = () => {
     {
       title: "FAQ's",
       content: 
-      <div className='w-[100%] h-[400px] bg-[white]'>
-        <DataGrid rows={rows} columns={columns}/>
+      <div className='w-[100%] h-[700px] my-[50px] rounded-md bg-[white]'>
+        <DataGrid rows={rows} columns={columns} rowHeight={150}/>
       </div>
     },
     {
@@ -158,7 +158,7 @@ const FAQs = () => {
           <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Questions</h1>
           <input type="text" className="shadow-lg block w-full mt-[5px] p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Question' value={name} onChange={(e) => setName(e.target.value)} required/>
           <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Content</h1>
-          <div className='bg-white h-[240px]'>
+          <div className='bg-white h-[240px] rounded-md'>
               <ReactQuill className=' h-[200px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
           </div>
           <div className='flex justify-end mt-[60px] md:mt-[30px]'>
@@ -174,7 +174,7 @@ const FAQs = () => {
         <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Questions</h1>
         <Select className='bg-white text-black mt-[5px]' options={options} onChange={handleChange} placeholder="Select question"/>
         <h1 className='mt-[20px] text-[#1ca350] font-bold md:text-[20px]'>Content</h1>
-        <div className='bg-white h-[390px] mt-[5px]'>
+        <div className='bg-white h-[390px] mt-[5px] rounded-md'>
             <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
         </div>
         <div className='flex justify-end mt-[30px]'>

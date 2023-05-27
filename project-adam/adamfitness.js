@@ -267,7 +267,17 @@ app.post("/api/login", (req, res) => {
   );
 });
 
-
+app.get('/api/account-name', (req, res) => {
+  const accID = req.query.accID;
+  const accName = `select fname, lname from tbl_account_info where account_info_id = ?`;
+  connection.query(accName, [accID], (err, result) => {
+    if(err){
+      console.log('Failed to get account name', err);
+    }else{
+      res.send(result);
+    }
+  });
+});
 
 
 app.get("/api/members", (req, res) => {

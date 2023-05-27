@@ -83,11 +83,11 @@ const DashboardContent = () => {
   
   
   return (
-    <div className='px-[50px] bg-[#d3d3d3] py-[90px] text-black'>
+    <div className='px-[50px] bg-[#d3d3d3] py-[90px] text-white'>
       <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Dashboard</h1>
-      <div className='blocked flex md:justify-between  mt-[20px] mx-[0px]'>
+      <div className='blocked flex flex-col md:flex-row md:justify-between  mt-[20px] mx-[0px]'>
         <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Total Members</h1>
+          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Members</h1>
           {membersCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{membersCount}</h1>
           ) : (
@@ -95,7 +95,7 @@ const DashboardContent = () => {
           )}
         </div>
         <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[30px] md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Total Pending Reservation</h1>
+          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Pending Reservation</h1>
           {pendingCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{pendingCount}</h1>
           ) : (
@@ -103,7 +103,7 @@ const DashboardContent = () => {
           )}
         </div>
         <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-xl text-center font-bold mt-[-50px] mb-[0px]'>Total Reservation</h1>
+          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Reservation</h1>
           {eventCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{eventCount}</h1>
           ) : (
@@ -114,7 +114,7 @@ const DashboardContent = () => {
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg'>
         {events.length ? (
             <Calendar
-            className='bg-white font-light rounded-lg'
+            className='bg-white font-light rounded-lg text-black'
             localizer={localizer}
             style={{ height: 700 }}
             min={new Date()}
@@ -127,7 +127,7 @@ const DashboardContent = () => {
             />
           ) : (
             <Calendar
-            className='bg-white font-light rounded-lg'
+            className='bg-white font-light rounded-lg text-black'
             localizer={localizer}
             style={{ height: 700 }}
             min={new Date()}

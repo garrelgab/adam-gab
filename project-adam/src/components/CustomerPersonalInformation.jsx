@@ -63,7 +63,7 @@ const CustomerPersonalInformation = (props) => {
         });
     }, []);
   return (
-    <div className='flex justify-center align-middle py-[90px] bg-[#93F4D3]'>
+    <div className='flex justify-center align-middle py-[90px] bg-[#d3d3d3]'>
         <div className='text-black md:text-white md:max-w-[1240px] md:mx-auto md:max-h-[830px] w-[400px] md:w-[100%]'>
             <h1 className='text-black text-[30px] font-light text-center mb-[100px]'>Personal Information</h1>
             <div className='md:flex md:flex-col-2 text-black'>

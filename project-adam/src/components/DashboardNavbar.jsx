@@ -19,9 +19,7 @@ const DashboardNavbar = (props) => {
     const [currentTime, setCurrentTime] = useState('');
     const [currentDateTime, setCurrentDateTime] = useState('');
 
-    useEffect(() => {
-        handleRunningDate();
-    }, []);
+    
 
     const handleRunningDate = () => {
         const interval = setInterval(() => {
@@ -58,6 +56,26 @@ const DashboardNavbar = (props) => {
             console.log(error);
         })
     };
+    const [fname, setFname] = useState('');
+    const [lname, setLname] = useState('');
+    const fetchAccountName = () => {
+        axios.get('http://localhost:3001/api/account-name', {
+            params: {
+                accID: userID,
+            }
+        })
+        .then(response => {
+            setFname(response.data[0].fname);
+            setLname(response.data[0].lname);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+    useEffect(() => {
+        handleRunningDate();
+        fetchAccountName();
+    }, []);
   return (
     <div className='fixed top-0 left-0 w-[100%] overflow-auto md:py-[20px] py-[20px] bg-[#1ca350] shadow-lg z-50'>
         <div className='blocked text-white flex justify-between'>
@@ -70,6 +88,9 @@ const DashboardNavbar = (props) => {
         <div className={nav ? 'fixed overflow-auto top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] z-50 text-start text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
             <div className='blocked md:py-[20px] py-[20px] border-b border-gray-800'>
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
+            </div>
+            <div className='mb-[20px] md:mb-[30px] justify-center items-center flex border-b border-gray-500 mx-[40px]'>
+                <h1 className='my-[30px] md:my-[40px] text-[20px] md:text-[30px]'>{fname}</h1>
             </div>
             <ul className=''>
                 <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
@@ -136,7 +157,7 @@ const DashboardNavbar = (props) => {
                     <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Attendance Log</h1></li>
                 </LinkRouter>
                 <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Media Guide</h1></li>
+                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Guide</h1></li>
                 </LinkRouter>
                 <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
                 <LinkRouter to='/'>
