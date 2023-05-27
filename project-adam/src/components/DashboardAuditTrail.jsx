@@ -14,14 +14,14 @@ const DashboardAuditTrail = () => {
     const fetchAudit = () => {
         axios.get('http://localhost:3001/api/audit')
         .then(response => {
-            const rows = response.data.map(item => ({
-                id: item.audit_id,
-                action: item.action,
-                date: item.date,
-                time: item.time,
-                // add more columns as needed
-              }));
-              setRows(rows);
+          const rows = response.data.map(item => ({
+              id: item.audit_id,
+              action: item.action,
+              date: item.date,
+              time: item.time,
+              // add more columns as needed
+            }));
+            setRows(rows);
         })
         .catch(error => {
 

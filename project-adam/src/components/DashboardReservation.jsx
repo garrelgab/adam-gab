@@ -62,8 +62,10 @@ const DashboardReservation = () => {
     month: true,
     agenda: true,
   }
+
+  
   return (
-    <div className='bg-[#d3d3d3] px-[50px] pt-[90px] text-black'>
+    <div className='bg-[#d3d3d3] px-[50px] py-[90px] text-black'>
       <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Reservation Management</h1>
       <div className='blocked flex md:justify-between  mt-[20px] mx-[0px]'>
         <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>

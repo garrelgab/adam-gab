@@ -135,6 +135,9 @@ const DashboardNavbar = (props) => {
                 <LinkRouter to='/dashboard/attendance' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Attendance Log</h1></li>
                 </LinkRouter>
+                <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
+                    <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Media Guide</h1></li>
+                </LinkRouter>
                 <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
                 <LinkRouter to='/'>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300' onClick={handleLogout}><h1 className='mx-[20px] font-bold'>Logout</h1></li>

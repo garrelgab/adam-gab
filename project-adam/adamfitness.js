@@ -4,6 +4,7 @@ const express = require('express')
 const cors = require('cors')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+const fs = require('fs');
 // const moment = require('moment')
 const app = express();
 const port = process.env.PORT || 3001
@@ -294,18 +295,53 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
+// app.post("/api/reservation", (req, res) => {
+//   const customerName = req.body.customerName;
+//   const customerStartTime = req.body.customerStartTime;
+//   const customerEndTime = req.body.customerEndTime;
+//   const customerDate = req.body.customerDate;
+//   const customerStatus = req.body.customerStatus;
+//   const customerID = req.body.customerID;
+
+//   const getCustomerName = `select fname from tbl_account_info where account_info_id = '${customerID}'`;
+//   connection.query(getCustomerName, (err, results) => {
+
+//   })
+//   const sqlInsert = "insert into tbl_reservation (name, time_start, time_end, customer_date, status) values (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
+//   connection.query(sqlInsert, [customerName, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
+//     res.send(result);
+//   });
+// });
+
 app.post("/api/reservation", (req, res) => {
   const customerName = req.body.customerName;
   const customerStartTime = req.body.customerStartTime;
   const customerEndTime = req.body.customerEndTime;
   const customerDate = req.body.customerDate;
   const customerStatus = req.body.customerStatus;
+  const customerID = req.body.customerID;
 
-  const sqlInsert = "insert into tbl_reservation (name, time_start, time_end, customer_date, status) values (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
-  connection.query(sqlInsert, [customerName, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
-    res.send(result);
+  const getCustomerName = `SELECT fname FROM tbl_account_info WHERE account_info_id = '${customerID}'`;
+  connection.query(getCustomerName, (err, results) => {
+    if (err) {
+      console.log("Error fetching customer name:", err);
+      res.status(500).json({ error: "Failed to fetch customer name" });
+    } else {
+      const fname = results[0].fname; // Assuming the query returns a single row
+
+      const sqlInsert = "INSERT INTO tbl_reservation (name, time_start, time_end, customer_date, status) VALUES (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
+      connection.query(sqlInsert, [fname, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
+        if (err) {
+          console.log("Error inserting reservation:", err);
+          res.status(500).json({ error: "Failed to insert reservation" });
+        } else {
+          res.send(result);
+        }
+      });
+    }
   });
 });
+
 
 app.get("/api/events", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation";
@@ -326,7 +362,6 @@ app.get("/api/events", (req, res) => {
     }
   });
 });
-
 app.get("/api/events/approved", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation where status = 'Approved'";
   connection.query(fetchEvents, (err, result) => {
@@ -337,7 +372,7 @@ app.get("/api/events/approved", (req, res) => {
     else{
       const events = result.map((event) => ({
         id: event.reservation_id,
-        title: `${event.name} - ${event.status}`,
+        title: `${event.status}`,
         start: `${event.start} ${event.time_start_formatted}`,
         end: `${event.start} ${event.time_end_formatted}`,
       }));
@@ -1209,7 +1244,7 @@ app.get('/api/locker', (req, res) => {
 // SELECT order_id, SUM(qty) as total_sold, product_name FROM `tbl_orders` group by product_name, order_id order by total_sold desc limit 3;
 
 app.get('/api/attendance', (req, res) => {
-  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance`;
+  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance order by attendance_id desc`;
   connection.query(getAttendance, (err, result) => {
     if(err){
       console.log('Failed to fetch attendance', err);
@@ -1290,34 +1325,34 @@ app.post("/api/insert-employee", (req, res) => {
             const accountId = result.insertId;
             console.log('Last Inserted Account ID:', accountId);
             const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
-            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
+            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, results) => {
               if (err) {
                 console.log('Failed to add account', err);
                 res.sendStatus(500);
               } else {
-                res.send(result);
+                const action = `Created new account: ${userFname}`;
+                const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+                connection.query(audit, (err, auditResult) => {
+                  if(err){
+                    console.log('Failed to add audit', err);
+                  }
+                  else{
+                    res.send(auditResult);
+                  }
+                });
               }
             });
-            
           }
         }
       );
     }
   });
-  const action = `Created new account: ${userFname}`;
-  const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
-  connection.query(audit, (err, auditResult) => {
-    if(err){
-      console.log('Failed to add audit', err);
-    }
-    else{
-      res.send(auditResult);
-    }
-  });
+
+  
 });
 
 app.get('/api/employee-list', (req, res) => {
-  const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'staff' or role = 'cashier'`;
+  const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'staff' or role = 'cashier' order by account_info_id desc`;
   connection.query(employeeList, (err, result) => {
     if(err){
       console.log('Failed to fetch employee list',err);
@@ -1329,7 +1364,7 @@ app.get('/api/employee-list', (req, res) => {
 });
 
 app.get('/api/audit', (req, res) => {
-  const audit = `select audit_id, action, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_audit`;
+  const audit = `select audit_id, action, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_audit order by audit_id desc`;
   connection.query(audit, (err, result) => {
     if(err){
       console.log('failed to fetch audit', err);
@@ -1339,4 +1374,25 @@ app.get('/api/audit', (req, res) => {
     }
   });
 });
+
+app.post('/api/add-health-guide', (req, res) => {
+  const imageData = req.body.imageData;
+  const name = req.body.name;
+  const equipment = req.body.equipment;
+  const instruction = req.body.instruction;
+  const buffer = Buffer.from(imageData, 'base64');
+  const insertImageQuery = `INSERT INTO tbl_health_guide (name, equipment, instruction, instruction_image) VALUES (?, ?, ?, ?)`;
+  connection.query(insertImageQuery, [name, equipment, instruction, buffer], (err, result) => {
+    if (err) {
+      console.log('Error inserting image:', err);
+      res.status(500).json({ error: 'Failed to insert image' });
+    } else {
+      res.send('Image uploaded successfully', result);
+    }
+  });
+});
+
+// ...
+
+
 module.exports = connection;

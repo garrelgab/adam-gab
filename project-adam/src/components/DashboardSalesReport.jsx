@@ -21,7 +21,7 @@ const DashboardSalesReport = () => {
     const [dailyRows, setDailyRows] = useState([]);
 
     const weekColums = [
-      {field: 'week', headerName: 'Week', width:200},
+      // {field: 'week', headerName: 'Week', width:200},
       {field: 'weeklyTotal', headerName: 'Weekly Total', width:300},
       {field: 'year', headerName: 'Year', width:200},
     ];
@@ -61,7 +61,7 @@ const DashboardSalesReport = () => {
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
-          week: item.week,
+          // week: item.week,
           weeklyTotal: formatPrice(item.weekly_total),
           year: item.year,
           // add more columns as needed

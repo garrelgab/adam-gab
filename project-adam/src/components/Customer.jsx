@@ -13,7 +13,7 @@ const Customer = () => {
     <>
         <CustomerNavbar id={id}/>
         <Routes>
-            <Route path='/' element={<CustomerCalendar/>}/>
+            <Route path='/' element={<CustomerCalendar id={id}/>}/>
             <Route path='/personalinfo' element={<CustomerPersonalInformation id={id}/>}/>
             <Route path='/account' element={<CustomerChangePassword id={id}/>}/>
         </Routes>

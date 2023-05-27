@@ -36,8 +36,8 @@ const DashboardAttendance = () => {
     fetchData();
   }, []);
   return (
-    <div className='mx-[50px] mt-[90px]'>
-        <h1 className='text-[30px] text-[#93F4D3] font-light'>Attendance Log</h1>
+    <div className='px-[50px] bg-[#d3d3d3] py-[90px]'>
+        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Attendance Log</h1>
         <div className='hidden bg-white my-[50px] mx-auto w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>
           <DataGrid rows={rows} columns={columns} className='text-center w-full' rowHeight={rowHeight} disableExtendRowFullWidth/>
         </div>

@@ -169,12 +169,12 @@ const PosLocker = () => {
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Contact No.</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[300px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Contact No.' maxLength={11} value={contact} onChange={handleChangeContactNo}  required/>
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Key No.</label>
-          <Select className=' text-black font-light w-[350px] z-50 md:w-[300px]'value={selectOption} options={optionsKey} onChange={handleOptionChange} placeholder={selectOption ? selectOption : 'Select Key No.'}/>
+          <Select className=' text-black shadow-lg font-light w-[350px] z-50 md:w-[300px]'value={selectOption} options={optionsKey} onChange={handleOptionChange} placeholder={selectOption ? selectOption : 'Select Key No.'}/>
         </div>
         <div className='flex flex-col'>
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Amount</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} onChange={handleChangeAmount} required/>
-          <button className='py-2 justify-start px-[50px] mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
+          <button className='py-2 justify-start px-[50px] shadow-lg mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
         </div>
         </div>
         <div className='hidden bg-white my-[50px] mx-auto md:w-[100%] shadow-lg md:h-[600px] md:flex rounded-md justify-center items-center'>

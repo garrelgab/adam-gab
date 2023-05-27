@@ -10,7 +10,7 @@ import CustomerReservationDetails from './CustomerReservationDetails';
 
 const CustomerCalendar = (props) => {
   const location = useLocation();
-  const id = location.state;
+  const id = props.id;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenDetails, setModalOpenDetails] = useState(false);
@@ -64,8 +64,8 @@ const CustomerCalendar = (props) => {
     agenda: true,
   }
   return (
-    <div className='mx-[50px] mt-[90px] text-black z-10'>
-      <h1 className='text-[30px] text-[#93F4D3] font-light'>Calendar</h1>
+    <div className='px-[50px] py-[90px] bg-[#d3d3d3] text-black z-10'>
+      <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Calendar</h1>
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg shadow-2xl'>
         
         {events.length ? (
@@ -93,7 +93,7 @@ const CustomerCalendar = (props) => {
           onSelectSlot={handleSelectSlot}
           />
         )}
-        {selectedDate && <AddReservation className='z-50' date1={selectedDate} myDate={selectedDate1} onClose={handleCloseModal} />}
+        {selectedDate && <AddReservation className='z-50' date1={selectedDate} id={id} myDate={selectedDate1} onClose={handleCloseModal} />}
         {modalOpenDetails && <CustomerReservationDetails eventTitle={selectedEvent} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpenDetails(false)}/>}
 
       </div>

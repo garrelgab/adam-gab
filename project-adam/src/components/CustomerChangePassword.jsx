@@ -30,14 +30,17 @@ const CustomerChangePassword = (props) => {
     setCPword('');
   }
   return (
-    <div className='flex justify-center text-white'>
+    <div className='flex justify-center bg-[#d3d3d3] text-black'>
         <div className='py-[90px]'>
-            <h1 className=' text-[30px] font-light text-center mb-[50px] text-[#93F4D3]'>Change Password?</h1>
+            <h1 className=' text-[30px] font-extrabold text-center mb-[50px] text-[#1ca350]'>Change Password?</h1>
             <div className=''>
-                <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Password</label>
-                <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Password' value={pword} onChange={(e) => setPword(e.target.value)}/>
-                <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light">Confirm Password</label>
-                <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Confirm Password' value={cpword} onChange={(e) => setCPword(e.target.value)}/>
+              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Enter Password</label>
+              <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Password' value={pword} onChange={(e) => setPword(e.target.value)}/>
+              <label className="block mb-1 text-md md:text-[30px] mx-auto text-center text-[#1ca350] font-extrabold my-[30px]">Set a new password</label>
+              <label className="block mb-1 mt-[30px] text-md md:text-lg mx-auto text-left font-light ">New Password</label>
+              <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Password' value={pword} onChange={(e) => setPword(e.target.value)}/>
+              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light">Confirm Password</label>
+              <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Confirm Password' value={cpword} onChange={(e) => setCPword(e.target.value)}/>
             </div>
             <div className='mt-[50px] md:mt-[150px] text-center'>
                 <button className='w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={handleUpdateCustomerPassword}>Confirm</button>

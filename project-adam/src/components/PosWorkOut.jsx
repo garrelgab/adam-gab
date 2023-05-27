@@ -104,12 +104,12 @@ const PosWorkOut = () => {
             </div>
             <div className='flex flex-col mx-[30px]'>
                 <label className="font-extrabold block mb-1 text-md md:text-lg text-left">Type of Work-out</label>
-                <Select className=' text-black w-[350px] z-10 md:w-[400px]' options={options} onChange={handleChange} placeholder="Select type of work-out"/>
+                <Select className=' text-black w-[350px] z-10 md:w-[400px] shadow-lg' options={options} onChange={handleChange} placeholder="Select type of work-out"/>
             </div>
             <div className='flex flex-col'>
               <label className="font-extrabold block mb-1 text-md md:text-lg text-left">Price</label>
               <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none cursor-default" placeholder='Price' value={price} readOnly required/>
-              <button className='py-2 px-[30px] mt-[30px] md:mt-[31px] md:mx-[0px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
+              <button className='py-2 px-[30px] mt-[30px] md:mt-[31px] md:mx-[0px] shadow-lg rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
             </div>
             <div>
             </div>

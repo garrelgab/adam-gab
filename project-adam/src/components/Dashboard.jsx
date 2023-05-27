@@ -15,6 +15,7 @@ import DashboardAttendance from './DashboardAttendance'
 import UserAccountEmployee from './UserAccountEmployee'
 import SettingsPrivacyPolicy from './SettingsPrivacyPolicy'
 import DashboardAuditTrail from './DashboardAuditTrail'
+import DashboardHealthTips from './DashboardHealthTips'
 // import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
@@ -39,6 +40,7 @@ const Dashboard = () => {
           {/* <Route path='/customer' element={<UserAccountCustomer/>}/> */}
           <Route path='/customer' element={<DashboardMembership/>}/>
           <Route path='/audit' element={<DashboardAuditTrail/>}/>
+          <Route path='/health-tips' element={<DashboardHealthTips/>}/>
         </Routes>
     </>
   )

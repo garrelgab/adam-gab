@@ -80,7 +80,7 @@ const UserEmployeeModal = (props) => {
       userGender: selectedGender,
       userBday: selectedDate,
       userEmail: email,
-      userPword: pword, 
+      userPword: pword,
       userCPword: cpword,
       userRole: selectedRole,
     })
@@ -102,11 +102,6 @@ const UserEmployeeModal = (props) => {
       console.log(error);
     });
   }
-
-  
-  useEffect(() => {
-
-  }, []);
   return (
     <div className='flex flex-col  bg-[#fffdfa] mt-[30px] rounded-md shadow-lg'>
       <div className='text-black py-[50px]  z-10'>

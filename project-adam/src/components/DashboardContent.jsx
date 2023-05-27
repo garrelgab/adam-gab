@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
+import { Calendar, momentLocalizer, Event } from 'react-big-calendar'
 import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from 'axios';
@@ -64,6 +64,24 @@ const DashboardContent = () => {
     month: true,
     agenda: true,
   }
+
+  const getEventStyle = (event, start, end, isSelected) => {
+    let backgroundColor = '';
+    
+    if (event.status === 'Pending') {
+      backgroundColor = 'yellow'; // Set the desired background color for pending events
+    } else if (event.status === 'Approved') {
+      backgroundColor = 'green'; // Set the desired background color for approved events
+    }
+    
+    return {
+      style: {
+        backgroundColor
+      }
+    };
+  };
+  
+  
   return (
     <div className='px-[50px] bg-[#d3d3d3] py-[90px] text-black'>
       <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Dashboard</h1>
@@ -104,6 +122,8 @@ const DashboardContent = () => {
             selectable
             events={events}
             onSelectEvent={handleSelectedEvent}
+            // eve={getEventStyle}
+            eventStyleGetter={getEventStyle}
             />
           ) : (
             <Calendar
@@ -112,6 +132,7 @@ const DashboardContent = () => {
             style={{ height: 700 }}
             min={new Date()}
             views={views}
+            eventStyleGetter={getEventStyle}
             selectable
             />
           )}

@@ -19,6 +19,7 @@ const AddReservation = (props) => {
   const myDate = props.myDate;
   const status = 'Pending';
 
+  const id = props.id;
 //   const timeFromDB = result.time; // assuming the format is HH:MM:SS
 
 // // Format the time using dayjs
@@ -36,12 +37,13 @@ const AddReservation = (props) => {
   };
 
   const handleSaveReservation = () => {
-    if(!name) {
-      alert('Field required.');
-      return;
-    }
+    // if(!name) {
+    //   alert('Field required.');
+    //   return;
+    // }
     axios.post("http://localhost:3001/api/reservation", {
-      customerName: name,
+      // customerName: name,
+      customerID: id,
       customerStartTime: startTimeFormat,
       customerEndTime: endTimeFormat,
       customerDate: myDate,
@@ -67,11 +69,13 @@ const AddReservation = (props) => {
               <div className='flex justify-start'>
                 <h1 className='text-[20px] font-bold'>{props.date1}</h1>
               </div>
-              <div className='my-[20px] flex justify-center'>
+              {/* <div className='my-[20px] flex justify-center'>
                 <form>
+                <h1 className='text-[20px] font-bold'>{id}</h1>
+
                   <input type="text" className="shadow-lg block w-[350px] mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} required/>
                 </form>
-              </div>
+              </div> */}
               <div className='flex flex-col'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <label>Start: </label>
