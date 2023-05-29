@@ -174,7 +174,7 @@ const PosLocker = () => {
         <div className='flex flex-col'>
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Amount</label>
           <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} onChange={handleChangeAmount} required/>
-          <button className='py-2 justify-start px-[50px] shadow-lg mt-[30px] md:mt-[31px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
+          <button className='py-2 justify-start px-[50px] shadow-lg mt-[30px] md:mt-[31px] font-bold rounded-md bg-gray-50 text-[#1ca350] ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
         </div>
         </div>
         <div className='hidden bg-white my-[50px] mx-auto md:w-[100%] shadow-lg md:h-[600px] md:flex rounded-md justify-center items-center'>

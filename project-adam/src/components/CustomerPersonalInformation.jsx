@@ -65,7 +65,7 @@ const CustomerPersonalInformation = (props) => {
   return (
     <div className='flex justify-center align-middle py-[90px] bg-[#d3d3d3]'>
         <div className='text-black md:text-white md:max-w-[1240px] md:mx-auto md:max-h-[830px] w-[400px] md:w-[100%]'>
-            <h1 className='text-black text-[30px] font-light text-center mb-[100px]'>Personal Information</h1>
+            <h1 className='text-[#1ca350] text-[30px] font-extrabold text-center mb-[100px]'>Personal Information</h1>
             <div className='md:flex md:flex-col-2 text-black'>
                 <div className='mt-[100px] md:mt-[10px] max-w-[350px] md:max-w-[100%] mx-auto'>
                     <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">First Name</label>
@@ -88,7 +88,7 @@ const CustomerPersonalInformation = (props) => {
                 </div>
             </div>
             <div className='mt-[50px] md:mt-[150px] text-center'>
-                <button className='w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={handleUpdateCustomerInfo}>Confirm</button>
+                <button className='w-[350px] p-3 font-bold rounded-xl bg-white ease-in-out duration-300 hover:bg-gray-500 text-[#1ca350] hover:text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={handleUpdateCustomerInfo}>Confirm</button>
             </div>
         </div>
     </div>

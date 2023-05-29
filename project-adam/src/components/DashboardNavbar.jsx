@@ -4,6 +4,9 @@ import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { Link as LinkRouter } from 'react-router-dom';
 const DashboardNavbar = (props) => {
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
     const userID = props.id;
     const userRole = props.role;
     const [nav, setNav] = useState(false);
@@ -90,7 +93,7 @@ const DashboardNavbar = (props) => {
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
             <div className='mb-[20px] md:mb-[30px] justify-center items-center flex border-b border-gray-500 mx-[40px]'>
-                <h1 className='my-[30px] md:my-[40px] text-[20px] md:text-[30px]'>{fname}</h1>
+                <h1 className='my-[30px] md:my-[40px] font-bold text-[20px] md:text-[30px]'>{capitalizeFirstLetter(fname)}</h1>
             </div>
             <ul className=''>
                 <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
@@ -128,10 +131,12 @@ const DashboardNavbar = (props) => {
                         <LinkRouter to='/dashboard/faq' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>FAQ's</h1></li>
                         </LinkRouter>
-                        <LinkRouter to='/dashboard/privacypolicy' state={userID} onClick={handleNav}>
+                        <LinkRouter to='/dashboard/privacy-policy' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Privacy Policy</h1></li>
                         </LinkRouter>
-                        <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Terms and Conditions</h1></li>
+                        <LinkRouter to='/dashboard/terms-of-use' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Terms and Conditions</h1></li>
+                        </LinkRouter>
                     </ul>
                 )}
                 <div className={!navUser ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavUser}>
@@ -159,7 +164,9 @@ const DashboardNavbar = (props) => {
                 <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Guide</h1></li>
                 </LinkRouter>
-                <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
+                <LinkRouter to="/dashboard/announcement" state={userID} onClick={handleNav}>
+                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
+                </LinkRouter>
                 <LinkRouter to='/'>
                     <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300' onClick={handleLogout}><h1 className='mx-[20px] font-bold'>Logout</h1></li>
                 </LinkRouter>

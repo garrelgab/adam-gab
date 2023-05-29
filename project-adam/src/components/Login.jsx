@@ -104,7 +104,7 @@ const Login = (props) => {
     //     )};
     // </>
     <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal'>
-        <div className='relative text-black md:text-black bg-[#1ca350] max-h-[700px] md:max-h-[750px] w-[400px] md:w-[500px] rounded-xl'>
+        <div className='relative text-black md:text-black shadow-md bg-[#1ca350] max-h-[700px] md:max-h-[750px] w-[400px] md:w-[500px] rounded-xl'>
             <div className='text-white'>
                 <button className='ml-[90%] mt-[5%]' onClick={() => props.setTrigger(false)}>
                     <AiOutlineClose size={25}/>
@@ -122,10 +122,10 @@ const Login = (props) => {
                 <input type="password"className="shadow-lg block w-[350px] p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:outline-none" value={pword} placeholder='Password' onChange={(e) => setPword(e.target.value)}/>
             </div>
             <div className='mt-[50px] md:mt-[100px] text-center'>
-                <button className='shadow-lg w-[350px] p-3 text-xl font-light rounded-xl bg-[#d3d3d3] hover:bg-gray-500 ease-in-out duration-300' onClick={userLogin}>Login</button>
-                <h1 className="block mb-1 text-l md:text-l text-center font-light text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-black">Forget Password?</h1>
+                <button className='shadow-lg w-[350px] p-3 text-xl font-bold rounded-xl text-[#1ca350] hover:text-white bg-white hover:bg-gray-500 ease-in-out duration-300' onClick={userLogin}>Login</button>
+                <h1 className="block mb-1 text-l md:text-l text-center font-bold text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-white">Forget Password?</h1>
                 <LinkRouter to="/signup" onClick={() => props.setTrigger(false)}>
-                    <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-light rounded-xl bg-[#d3d3d3] hover:bg-gray-500 md:mb-[50px] ease-in-out duration-300'>Create Account</button>
+                    <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-bold rounded-xl bg-white text-[#1ca350] hover:text-white hover:bg-gray-500 md:mb-[50px] ease-in-out duration-300'>Create Account</button>
                 </LinkRouter>
             </div>
         </div>

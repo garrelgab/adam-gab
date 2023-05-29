@@ -17,7 +17,7 @@ function App()  {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/dashboard/*' element={<Dashboard/>}/>
         <Route path='/customer/*' element={<Customer/>}/>
-        <Route path='/privacypolicy' element={<PrivacyPolicy/>}/>
+        <Route path='/privacy-policy' element={<PrivacyPolicy/>}/>
         <Route path='/faq' element={<HomeFAQs/>}/>
         <Route path='/terms-of-use' element={<TermsAndConditions/>}/>
     </Routes>

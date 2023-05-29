@@ -1112,7 +1112,7 @@ app.post('/api/add-workout', (req, res) => {
     else{
       // res.send(result)
       const salesWorkout = `Workout ID: ${result.insertId}, Customer Name: ${name}`;
-      const insertSales = `insert into tbl_sales_report (description, total, date, time) values ('${salesWorkout}', '${formattedPrice}', '${currentDate}', '${formattedTime}')`;
+      const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${salesWorkout}', '${formattedPrice}', '${currentDate}', '${formattedTime}', 'Work-out')`;
       connection.query(insertSales, (err, insertSalesResult) => {
         if(err){
           console.log('Failed to add sales workout', err);
@@ -1221,7 +1221,7 @@ app.post('/api/add-locker', (req, res) => {
             res.status(500).json({ error: 'Failed to add locker' });
           } else {
             const salesLocker = `Locker ID: ${result.insertId}, Customer Name: ${name}`;
-            const insertSales = `insert into tbl_sales_report (description, total, date, time) values ('${salesLocker}', '${amount}', '${currentDate}', '${currentTime}')`;
+            const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${salesLocker}', '${amount}', '${currentDate}', '${currentTime}', 'Locker')`;
             connection.query(insertSales, (err, insertSalesResult) => {
               if(err){
                 console.log('Failed to add sales workout', err);
@@ -1253,15 +1253,43 @@ app.get('/api/locker', (req, res) => {
 
 // SELECT order_id, SUM(qty) as total_sold, product_name FROM `tbl_orders` group by product_name, order_id order by total_sold desc limit 3;
 
+// app.get('/api/attendance', (req, res) => {
+//   const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance order by attendance_id desc`;
+//   connection.query(getAttendance, (err, result) => {
+//     if(err){
+//       console.log('Failed to fetch attendance', err);
+//     }
+//     res.send(result);
+//   });
+// });
+
 app.get('/api/attendance', (req, res) => {
-  const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance order by attendance_id desc`;
+  const getAttendance = `
+    SELECT
+      attendance_id,
+      name,
+      status,
+      DATE_FORMAT(time_in, '%h:%i:%s %p') AS time_in,
+      CASE
+        WHEN time_out = '' THEN ''
+        ELSE DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p')
+      END AS time_out,
+      DATE_FORMAT(date, '%M %d, %Y') AS date
+    FROM
+      tbl_attendance
+    ORDER BY
+      attendance_id DESC
+  `;
   connection.query(getAttendance, (err, result) => {
-    if(err){
+    if (err) {
       console.log('Failed to fetch attendance', err);
+      res.status(500).send('Failed to fetch attendance');
+    } else {
+      res.send(result);
     }
-    res.send(result);
   });
 });
+
 
 app.put('/api/update-attendance', (req, res) => {
   const getLastInsertedId = 'SELECT attendance_id FROM tbl_attendance ORDER BY attendance_id DESC LIMIT 1';
@@ -1460,9 +1488,54 @@ app.get('/api/health-guide', (req, res) => {
   });
 });
 
+app.post('/api/add-announcement', (req, res) => {
+  const annTitle = req.body.annTitle;
+  const annContent = req.body.annContent;
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
 
+  const accID = req.body.accID;
 
-// ...
+  const addAnnouncement = `insert into tbl_announcement (title, ann_content, date, time, status) values (?, ?, '${currentDate}', '${currentTime}', 'Unread')`;
+  connection.query(addAnnouncement, [annTitle, annContent], (err, result) => {
+    if(err){
+      console.log('Failed to add announcement', err);
+    }
+    else{
+      const selectFname = `select fname from tbl_account_info where account_info_id = ?`;
+      connection.query(selectFname, [accID], (err, fnameResult) => {
+        if(err){
+          console.log('Failed to fetch first name', err);
+        }else{
+          const fname = fnameResult[0].fname;
+          const action = `${fname} -  Created new announcement: ${annTitle}`;
+          const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+          connection.query(audit, (err, auditResult) => {
+            if(err){
+              console.log('Failed to add audit', err);
+            }
+            else{
+              res.send(auditResult);
+              // res.status(200).send('Image uploaded successfully');
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
+app.get('/api/announcement', (req, res) => {
+  const announcement = `select announcement_id, title, ann_content, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_announcement order by announcement_id desc`;
+  connection.query(announcement, (err, result) => {
+    if(err){
+      console.log('Failed to fetch announcement', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
 
 
 module.exports = connection;

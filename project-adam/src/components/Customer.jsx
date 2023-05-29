@@ -5,6 +5,7 @@ import CustomerPersonalInformation from './CustomerPersonalInformation'
 import CustomerChangePassword from './CustomerChangePassword'
 import CustomerCalendar from './CustomerCalendar'
 import CustomerHealthTips from './CustomerHealthTips'
+import CustomerAnnouncement from './CustomerAnnouncement'
 
 const Customer = () => {
 
@@ -18,6 +19,8 @@ const Customer = () => {
             <Route path='/personalinfo' element={<CustomerPersonalInformation id={id}/>}/>
             <Route path='/account' element={<CustomerChangePassword id={id}/>}/>
             <Route path='/health-tips' element={<CustomerHealthTips id={id}/>}/>
+            <Route path='/announcement' element={<CustomerAnnouncement id={id}/>}/>
+
         </Routes>
     </>
     

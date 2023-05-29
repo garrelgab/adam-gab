@@ -7,6 +7,11 @@ import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import { useNavigate } from 'react-router';
 const CreateAccount = (props) => {
 
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+      
     const genderOptions = [
         { label: 'Select Gender', value: '' },
         { label: 'Male', value: 'Male' },
@@ -197,8 +202,8 @@ const CreateAccount = (props) => {
             return;
         }
         Axios.post("http://localhost:3001/api/insert", {
-            userFname: fname,
-            userLname: lname,
+            userFname: capitalizeFirstLetter(fname),
+            userLname: capitalizeFirstLetter(lname),
             userAge: age,
             userGender: selectedGender,
             userBday: selectedDate,
@@ -287,7 +292,7 @@ const CreateAccount = (props) => {
     };
     
   return (
-    <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#d3d3d3] border-b border-gray-500 w-[100%] h-[100%] bg-login'>
+    <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#d3d3d3] drop-shadow-md w-[100%] h-[100%] bg-login'>
         <div className='text-white md:text-black md:max-w-[1240px] md:mx-auto w-[400px] md:w-[100%]'>
             <h1 className='text-3xl md:text-5xl font-bold text-center md:mb-2 mt-[50px] md:mt-[10px]'>Create Account</h1>
             <h1 className='text-l md:text-xl pb-[100px] font-light text-center'>Create a new Account</h1>

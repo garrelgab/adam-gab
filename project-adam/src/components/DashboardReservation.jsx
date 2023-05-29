@@ -104,6 +104,7 @@ const DashboardReservation = () => {
           selectable
           events={events}
           onSelectEvent={handleSelectedEvent}
+          maxRows={Infinity}
           />
         ) : (
           <Calendar

@@ -147,7 +147,7 @@ const FAQs = () => {
       title: "FAQ's",
       content: 
       <div className='w-[100%] h-[700px] my-[50px] rounded-md bg-[white]'>
-        <DataGrid rows={rows} columns={columns} rowHeight={150}/>
+        <DataGrid rows={rows} columns={columns} rowHeight={150} className='w-[100%]'/>
       </div>
     },
     {
@@ -162,7 +162,7 @@ const FAQs = () => {
               <ReactQuill className=' h-[200px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
           </div>
           <div className='flex justify-end mt-[60px] md:mt-[30px]'>
-              <button className='w-[150px] p-2 text-lg font-light rounded-md bg-white hover:bg-gray-500 text-black shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleAddFaq}>Add</button>
+              <button className='w-[150px] p-2 font-bold rounded-md bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleAddFaq}>Add</button>
           </div>
       </div>,
     },
@@ -178,7 +178,7 @@ const FAQs = () => {
             <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
         </div>
         <div className='flex justify-end mt-[30px]'>
-            <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleUpdateFaq}>Confirm</button>
+            <button className='w-[150px] p-2 font-bold rounded-md bg-white text-[#1ca350] hover:text-white hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleUpdateFaq}>Confirm</button>
         </div>
       </div>,
     },

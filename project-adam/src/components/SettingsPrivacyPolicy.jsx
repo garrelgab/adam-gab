@@ -98,7 +98,7 @@ const SettingsPrivacyPolicy = () => {
             <ReactQuill className=' h-[350px] min-h-[200px] text-black rounded-md' value={editorContent} onChange={setEditorContent}/>
         </div>
         <div className='flex justify-end mt-[30px]'>
-            <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleAddPrivacy}>Add</button>
+            <button className='w-[150px] p-2 rounded-md bg-white text-[#1ca350] font-bold hover:text-white hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleAddPrivacy}>Add</button>
         </div>
       </div>
     },
@@ -113,7 +113,7 @@ const SettingsPrivacyPolicy = () => {
             <ReactQuill className=' h-[350px] text-black rounded-md' value={description} onChange={setDescription}/>
         </div>
         <div className='flex justify-end mt-[30px]'>
-            <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleUpdatePrivacy}>Confirm</button>
+            <button className='w-[150px] p-2 rounded-md bg-white text-[#1ca350] font-bold hover:text-white hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleUpdatePrivacy}>Confirm</button>
         </div>
       </div>
     }

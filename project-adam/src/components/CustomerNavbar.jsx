@@ -4,6 +4,10 @@ import { Link as LinkRouter } from 'react-router-dom';
 import axios from 'axios';
 // import moment from 'moment';
 const CustomerNavbar = (props) => {
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     const [nav, setNav] = useState(false);
     const handleNav = () => {
         setNav(!nav)
@@ -74,7 +78,7 @@ const CustomerNavbar = (props) => {
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
             <div className='mb-[20px] md:mb-[30px] justify-center items-center flex border-b border-gray-500 mx-[40px]'>
-                <h1 className='my-[30px] md:my-[40px] text-[20px] md:text-[30px]'>{fname}</h1>
+                <h1 className='my-[30px] md:my-[40px] text-[20px] md:text-[30px] font-bold'>{capitalizeFirstLetter(fname)}</h1>
             </div>
             <ul className='flex flex-col text-left'>
                 <LinkRouter to='/customer' state={userID} onClick={handleNav}>
@@ -89,7 +93,9 @@ const CustomerNavbar = (props) => {
                 <LinkRouter to='/customer/health-tips' state={userID} onClick={handleNav}>
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Health Guide</li>
                 </LinkRouter>
-                <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Announcement</li>
+                <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Announcement</li>
+                </LinkRouter>
                 <LinkRouter to='/'>
                     <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0' onClick={handleLogout}>Logout</h1>
                 </LinkRouter>

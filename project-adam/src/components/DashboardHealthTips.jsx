@@ -152,7 +152,7 @@ const DashboardHealthTips = (props) => {
                     </div>
                 </div>
                 <div className='flex justify-end mt-[30px]'>
-                    <button className='w-[150px] p-2 text-lg rounded-md bg-white text-black hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleConfirm}>Confirm</button>
+                    <button className='w-[150px] p-2 font-bold rounded-md bg-white text-[#1ca350] hover:text-white hover:bg-gray-500 shadow-lg hover:shadow-xl ease-in-out duration-300' onClick={handleConfirm}>Confirm</button>
                 </div>
             </div>
         }

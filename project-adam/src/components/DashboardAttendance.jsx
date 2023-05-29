@@ -22,7 +22,8 @@ const DashboardAttendance = () => {
         status: item.status,
         timein: item.time_in,
         // timeout: item.time_out,
-        timeout: item.time_out !== "00:00:00" ? item.time_out : 'No Data',
+        // timeout: item.time_out !== "00:00:00" ? item.time_out : 'No Data',
+        timeout: item.time_out !== "00:00:00" ? item.time_out : "",
         date: item.date,
         }));
         setRows(rows);

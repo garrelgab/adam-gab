@@ -197,8 +197,8 @@ const DashboardSalesReport = () => {
         <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Sales Report</h1>  
 
         <div>
-            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
-            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-black ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportPDF}>Export to PDF</button>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportPDF}>Export to PDF</button>
         </div>
       </div>
         <div className=''>
