@@ -113,9 +113,6 @@ const DashboardNavbar = (props) => {
                 </LinkRouter>
                  <LinkRouter to='/dashboard/expenses' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Expenses Management</h1></li>
-                </LinkRouter>
-                <LinkRouter to='/dashboard/gcash' state={userID} onClick={handleNav}>
-                    <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>G-Cash</h1></li>
                 </LinkRouter> */}
                 <LinkRouter to='/dashboard/salesreport' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Sales Report</h1></li>
@@ -128,6 +125,9 @@ const DashboardNavbar = (props) => {
                 </div>
                 {navSettings && (
                     <ul className='ease-in-out duration-300'>
+                        <LinkRouter to='/dashboard/gcash' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>G-Cash</h1></li>
+                        </LinkRouter>
                         <LinkRouter to='/dashboard/faq' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>FAQ's</h1></li>
                         </LinkRouter>

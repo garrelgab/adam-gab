@@ -42,7 +42,7 @@ const AddReservation = (props) => {
     }
 
     const durationHours = endTime.diff(startTime, 'hours');
-    if (durationHours > 4) {
+    if (durationHours > 3) {
       alert('Reservation duration cannot exceed 4 hours.');
       return;
     }

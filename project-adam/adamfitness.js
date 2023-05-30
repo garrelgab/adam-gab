@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const fs = require('fs');
 // const moment = require('moment')
 const app = express();
+const bcrypt = require('bcrypt');
 const port = process.env.PORT || 3001
 
 const connection = mysql.createPool({
@@ -45,25 +46,199 @@ app.get('/', (req, res)=>{
 });
 
 // app.post("/api/insert", (req, res) => {
-  
 //   const currentDate = new Date().toISOString().slice(0, 10);
-//   const userFname = req.body.userFname
-//   const userLname = req.body.userLname
-//   const userAge = req.body.userAge
-//   const userGender = req.body.userGender
-//   const userBday = req.body.userBday
-//   const userEmail = req.body.userEmail
-//   const userPword = req.body.userPword
-//   const userCPword = req.body.userCPword
-//   const userRole = req.body.userRole
-//   const sqlInsert = `insert into tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
-//   connection.query(sqlInsert, [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole], (err, result) => {
-//     console.log(result);
-//   });
+//   const userFname = req.body.userFname;
+//   const userLname = req.body.userLname;
+//   const userAge = req.body.userAge;
+//   const userGender = req.body.userGender;
+//   const userBday = req.body.userBday;
+//   const userEmail = req.body.userEmail;
+//   const userPword = req.body.userPword;
+//   const userCPword = req.body.userCPword;
+  
+//   bcrypt.hash(userPword, 10, (err, hashUserPword) => {
+//     if(err){
+//       console.log('Error hashing password', err);
+//       res.sendStatus(500);
+//       return;
+//     }
+//     bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
+//       if(err){
+//         console.log('Error hashing confirm password', err);
+//         res.sendStatus(500);
+//         return;
+//       }
+//       const userRole = req.body.userRole;
 
-//   const sqlAccount = "insert into tbl_accounts (email, password, role, status) value (?, ?, ?, 'Active')";
-//   connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
-//     console.log(result);
+//       const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+//       connection.query(checkEmailQuery, [userEmail], (err, results) => {
+//         if (err) {
+//           console.log('Failed to query email', err);
+//           res.sendStatus(500);
+//         } else if (results.length > 0) {
+//           // Email already exists
+//           res.status(400).json({ error: 'Email already exists' });
+//         } else {
+//           // Email does not exist, proceed with insertion
+//           const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+//           connection.query(
+//             sqlInsert,
+//             [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
+//             (err, result) => {
+//               if (err) {
+//                 console.log('Failed to add account info', err);
+//                 res.sendStatus(500);
+//               } else {
+//                 const accountId = result.insertId;
+//                 console.log('Last Inserted Account ID:', accountId);
+//                 const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+//                 connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
+//                   if (err) {
+//                     console.log('Failed to add account', err);
+//                     res.sendStatus(500);
+//                   } else {
+//                     const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+//                     connection.query(
+//                       sqlHealth,
+//                       [
+//                         req.body.diabetes,
+//                         req.body.chest,
+//                         req.body.bones,
+//                         req.body.heartmur,
+//                         req.body.epilepsy,
+//                         req.body.oedema,
+//                         req.body.recent,
+//                         req.body.highblood,
+//                         req.body.asthma,
+//                         req.body.fainting,
+//                         req.body.heartdisease,
+//                         req.body.shortbreath,
+//                         req.body.allergies,
+//                         req.body.pneumonia,
+//                         req.body.tachy,
+//                         req.body.heartattack,
+//                         req.body.palpitation,
+//                         req.body.lowblood,
+//                         req.body.seizure,
+//                         req.body.other,
+//                         accountId,
+//                       ],
+//                       (err, result) => {
+//                         if (err) {
+//                           console.log('Failed to add health conditions', err);
+//                           res.sendStatus(500);
+//                         } else {
+//                           res.sendStatus(200);
+//                         }
+//                       }
+//                     );
+//                   }
+//                 });
+//               }
+//             }
+//           );
+//         }
+//       });
+//     })
+//   })
+// });
+
+
+// app.post("/api/insert", (req, res) => {
+//   const currentDate = new Date().toISOString().slice(0, 10);
+//   const userFname = req.body.userFname;
+//   const userLname = req.body.userLname;
+//   const userAge = req.body.userAge;
+//   const userGender = req.body.userGender;
+//   const userBday = req.body.userBday;
+//   const userEmail = req.body.userEmail;
+//   const userPword = req.body.userPword;
+//   const userCPword = req.body.userCPword;
+//   const userRole = req.body.userRole;
+
+//   // Hash the passwords
+//   bcrypt.hash(userPword, 10, (err, hashUserPword) => {
+//     if (err) {
+//       console.log('Error hashing password', err);
+//       res.sendStatus(500);
+//       return;
+//     }
+//     bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
+//       if (err) {
+//         console.log('Error hashing confirm password', err);
+//         res.sendStatus(500);
+//         return;
+//       }
+//       const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+//       connection.query(checkEmailQuery, [userEmail], (err, results) => {
+//         if (err) {
+//           console.log('Failed to query email', err);
+//           res.sendStatus(500);
+//         } else if (results.length > 0) {
+//           // Email already exists
+//           res.status(400).json({ error: 'Email already exists' });
+//         } else {
+//           // Email does not exist, proceed with insertion
+//           const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+//           connection.query(
+//             sqlInsert,
+//             [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
+//             (err, result) => {
+//               if (err) {
+//                 console.log('Failed to add account info', err);
+//                 res.sendStatus(500);
+//               } else {
+//                 const accountId = result.insertId;
+//                 console.log('Last Inserted Account ID:', accountId);
+//                 const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+//                 connection.query(sqlAccount, [userEmail, hashUserPword, userRole], (err, result) => {
+//                   if (err) {
+//                     console.log('Failed to add account', err);
+//                     res.sendStatus(500);
+//                   } else {
+//                     const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+//                     connection.query(
+//                       sqlHealth,
+//                       [
+//                         req.body.diabetes,
+//                         req.body.chest,
+//                         req.body.bones,
+//                         req.body.heartmur,
+//                         req.body.epilepsy,
+//                         req.body.oedema,
+//                         req.body.recent,
+//                         req.body.highblood,
+//                         req.body.asthma,
+//                         req.body.fainting,
+//                         req.body.heartdisease,
+//                         req.body.shortbreath,
+//                         req.body.allergies,
+//                         req.body.pneumonia,
+//                         req.body.tachy,
+//                         req.body.heartattack,
+//                         req.body.palpitation,
+//                         req.body.lowblood,
+//                         req.body.seizure,
+//                         req.body.other,
+//                         accountId,
+//                       ],
+//                       (err, result) => {
+//                         if (err) {
+//                           console.log('Failed to add health conditions', err);
+//                           res.sendStatus(500);
+//                         } else {
+//                           res.sendStatus(200);
+//                         }
+//                       }
+//                     );
+//                   }
+//                 });
+//               }
+//             }
+//           );
+//         }
+//       });
+//     });
 //   });
 // });
 
@@ -77,97 +252,163 @@ app.post("/api/insert", (req, res) => {
   const userEmail = req.body.userEmail;
   const userPword = req.body.userPword;
   const userCPword = req.body.userCPword;
-  const userRole = req.body.userRole;
+  let userRole = req.body.userRole; // Default role
+  let isFirstAdmin = false; // Flag to track if it's the first admin creation
 
-  const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
-  connection.query(checkEmailQuery, [userEmail], (err, results) => {
+  // Check if there is an existing admin role
+  connection.query("SELECT * FROM tbl_accounts WHERE role = 'admin'", (err, adminResult) => {
     if (err) {
-      console.log('Failed to query email', err);
+      console.log('Failed to check existing admin role', err);
       res.sendStatus(500);
-    } else if (results.length > 0) {
-      // Email already exists
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      // Email does not exist, proceed with insertion
-      const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
-      connection.query(
-        sqlInsert,
-        [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole],
-        (err, result) => {
+      return;
+    }
+
+    if (adminResult.length === 0) {
+      // No existing admin role found, set the role as admin
+      userRole = 'admin';
+      isFirstAdmin = true;
+    }
+
+    // Hash the passwords
+    bcrypt.hash(userPword, 10, (err, hashUserPword) => {
+      if (err) {
+        console.log('Error hashing password', err);
+        res.sendStatus(500);
+        return;
+      }
+      bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
+        if (err) {
+          console.log('Error hashing confirm password', err);
+          res.sendStatus(500);
+          return;
+        }
+        const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+        connection.query(checkEmailQuery, [userEmail], (err, results) => {
           if (err) {
-            console.log('Failed to add account info', err);
+            console.log('Failed to query email', err);
             res.sendStatus(500);
+          } else if (results.length > 0) {
+            // Email already exists
+            res.status(400).json({ error: 'Email already exists' });
           } else {
-            const accountId = result.insertId;
-            console.log('Last Inserted Account ID:', accountId);
-            const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
-            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
-              if (err) {
-                console.log('Failed to add account', err);
-                res.sendStatus(500);
-              } else {
-                const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-                connection.query(
-                  sqlHealth,
-                  [
-                    req.body.diabetes,
-                    req.body.chest,
-                    req.body.bones,
-                    req.body.heartmur,
-                    req.body.epilepsy,
-                    req.body.oedema,
-                    req.body.recent,
-                    req.body.highblood,
-                    req.body.asthma,
-                    req.body.fainting,
-                    req.body.heartdisease,
-                    req.body.shortbreath,
-                    req.body.allergies,
-                    req.body.pneumonia,
-                    req.body.tachy,
-                    req.body.heartattack,
-                    req.body.palpitation,
-                    req.body.lowblood,
-                    req.body.seizure,
-                    req.body.other,
-                    accountId,
-                  ],
-                  (err, result) => {
+            // Email does not exist, proceed with insertion
+            const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+            connection.query(
+              sqlInsert,
+              [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
+              (err, result) => {
+                if (err) {
+                  console.log('Failed to add account info', err);
+                  res.sendStatus(500);
+                } else {
+                  const accountId = result.insertId;
+                  console.log('Last Inserted Account ID:', accountId);
+                  const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+                  connection.query(sqlAccount, [userEmail, hashUserPword, userRole], (err, result) => {
                     if (err) {
-                      console.log('Failed to add health conditions', err);
+                      console.log('Failed to add account', err);
                       res.sendStatus(500);
                     } else {
-                      res.sendStatus(200);
+                      const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                      connection.query(
+                        sqlHealth,
+                        [
+                          req.body.diabetes,
+                          req.body.chest,
+                          req.body.bones,
+                          req.body.heartmur,
+                          req.body.epilepsy,
+                          req.body.oedema,
+                          req.body.recent,
+                          req.body.highblood,
+                          req.body.asthma,
+                          req.body.fainting,
+                          req.body.heartdisease,
+                          req.body.shortbreath,
+                          req.body.allergies,
+                          req.body.pneumonia,
+                          req.body.tachy,
+                          req.body.heartattack,
+                          req.body.palpitation,
+                          req.body.lowblood,
+                          req.body.seizure,
+                          req.body.other,
+                          accountId,
+                        ],
+                        (err, result) => {
+                          if (err) {
+                            console.log('Failed to add health conditions', err);
+                            res.sendStatus(500);
+                          } else {
+                            if (isFirstAdmin) {
+                              res.sendStatus(201); // First admin created
+                            } else {
+                              res.sendStatus(200); // Regular account created
+                            }
+                          }
+                        }
+                      );
                     }
-                  }
-                );
+                  });
+                }
               }
-            });
+            );
           }
-        }
-      );
-    }
+        });
+      });
+    });
   });
 });
 
 
-
 // app.post("/api/login", (req, res) => {
-//   const userEmail = req.body.userEmail
-//   const userPword = req.body.userPword
+//   const userEmail = req.body.userEmail;
+//   const userPword = req.body.userPword;
 //   connection.query(
-//     "select * from tbl_accounts where email = ? and password = ? and status = 'Active'",
+//     "SELECT * FROM tbl_accounts WHERE email = ? AND password = ? AND status = 'Active'",
 //     [userEmail, userPword],
 //     (err, result) => {
-//       if (err) {
-//         res.send({err: err})
-//       }
-//       if(result.length > 0) {
-//         res.send(result);
+//       if (err) 
+//       {
+//         res.send({ err: err });
+//       } 
+//       else if (result.length > 0) 
+//       {
+//         const accountId = result[0].account_id;
+//         connection.query(
+//           "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
+//           [accountId],
+//           (err, accountInfoResult) => {
+//             if (err) {
+//               res.send({ err: err });
+//             } else if (accountInfoResult.length > 0) {
+//               const firstName = accountInfoResult[0].fname;
 
-//       } else {
-//         res.send({ message: 'Incorrect username/password.'});
-        
+//               // Insert fname into tbl_attendance
+//               const currentDate = new Date().toISOString().slice(0, 10);
+//               const currentTime = new Date().toTimeString().slice(0, 8);
+//               connection.query(
+//                 `INSERT INTO tbl_attendance (fname, status, time_in, time_out, date) VALUES (?, 'Active', '${currentTime}', '', '${currentDate}')`,
+//                 [firstName],
+//                 (err, insertionResult) => {
+//                   if (err) {
+//                     res.send({ err: err });
+//                   } else {
+//                     const role = result[0].role;
+//                     res.send({ message: "Attendance record inserted successfully.", role: role});
+//                     res.send(result);
+//                   }
+//                 }
+//               );
+//             } else {
+//               res.send({ message: "Incorrect username/password." });
+//             }
+//           }
+//         );
+//       }
+//       else 
+//       {
+//         res.send({ message: "Account info not found." });
 //       }
 //     }
 //   );
@@ -192,28 +433,30 @@ app.post("/api/insert", (req, res) => {
 //               res.send({ err: err });
 //             } else if (accountInfoResult.length > 0) {
 //               const firstName = accountInfoResult[0].fname;
-//               const role = accountInfoResult[0].role;
 //               // Insert fname into tbl_attendance
 //               const currentDate = new Date().toISOString().slice(0, 10);
 //               const currentTime = new Date().toTimeString().slice(0, 8);
 //               connection.query(
-//                 `INSERT INTO tbl_attendance (fname, status, time_in, time_out, date) VALUES (?, 'Active', '${currentTime}', '', '${currentDate}')`,
-//                 [firstName],
+//                 `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
+//                 [firstName, currentTime, currentDate],
 //                 (err, insertionResult) => {
 //                   if (err) {
 //                     res.send({ err: err });
 //                   } else {
-//                     res.send({ message: "Attendance record inserted successfully.", role: role });
+//                     const role = result[0].role; // Retrieve the role from tbl_accounts
+//                     // res.send({ message: "Attendance record inserted successfully.", account_id: accountId, role: role });
+//                     // res.send({ message: "Attendance record inserted successfully.", insertionResult });
+//                     res.send(result);
 //                   }
 //                 }
 //               );
 //             } else {
-//               res.send({ message: "Account info not found." });
+//               res.send({ message: "Incorrect username/password." });
 //             }
 //           }
 //         );
 //       } else {
-//         res.send({ message: "Incorrect username/password." });
+//         res.send({ message: "Account info not found." });
 //       }
 //     }
 //   );
@@ -223,49 +466,59 @@ app.post("/api/login", (req, res) => {
   const userEmail = req.body.userEmail;
   const userPword = req.body.userPword;
   connection.query(
-    "SELECT * FROM tbl_accounts WHERE email = ? AND password = ? AND status = 'Active'",
-    [userEmail, userPword],
+    "SELECT * FROM tbl_accounts WHERE email = ? AND status = 'Active'",
+    [userEmail],
     (err, result) => {
       if (err) {
         res.send({ err: err });
       } else if (result.length > 0) {
-        const accountId = result[0].account_id;
-        connection.query(
-          "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
-          [accountId],
-          (err, accountInfoResult) => {
-            if (err) {
-              res.send({ err: err });
-            } else if (accountInfoResult.length > 0) {
-              const firstName = accountInfoResult[0].fname;
-              // Insert fname into tbl_attendance
-              const currentDate = new Date().toISOString().slice(0, 10);
-              const currentTime = new Date().toTimeString().slice(0, 8);
-              connection.query(
-                `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
-                [firstName, currentTime, currentDate],
-                (err, insertionResult) => {
-                  if (err) {
-                    res.send({ err: err });
-                  } else {
-                    const role = result[0].role; // Retrieve the role from tbl_accounts
-                    // res.send({ message: "Attendance record inserted successfully.", account_id: accountId, role: role });
-                    // res.send({ message: "Attendance record inserted successfully.", insertionResult });
-                    res.send(result);
-                  }
+        const hashedPassword = result[0].password;
+        bcrypt.compare(userPword, hashedPassword, (err, isMatch) => {
+          if (err) {
+            res.send({ err: err });
+          } else if (isMatch) {
+            const accountId = result[0].account_id;
+            connection.query(
+              "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
+              [accountId],
+              (err, accountInfoResult) => {
+                if (err) {
+                  res.send({ err: err });
+                } else if (accountInfoResult.length > 0) {
+                  const firstName = accountInfoResult[0].fname;
+                  // Insert fname into tbl_attendance
+                  const currentDate = new Date().toISOString().slice(0, 10);
+                  const currentTime = new Date().toTimeString().slice(0, 8);
+                  connection.query(
+                    `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
+                    [firstName, currentTime, currentDate],
+                    (err, insertionResult) => {
+                      if (err) {
+                        res.send({ err: err });
+                      } else {
+                        const role = result[0].role; // Retrieve the role from tbl_accounts
+                        // res.send({ message: "Login successful.", account_id: accountId, role: role });
+                        // res.send(insertionResult);
+                        res.send(result);
+                      }
+                    }
+                  );
+                } else {
+                  res.send({ message: "Incorrect username/password." });
                 }
-              );
-            } else {
-              res.send({ message: "Account info not found." });
-            }
+              }
+            );
+          } else {
+            res.send({ message: "Incorrect username/password." });
           }
-        );
+        });
       } else {
-        res.send({ message: "Incorrect username/password." });
+        res.send({ message: "Account not found or inactive." });
       }
     }
   );
 });
+
 
 app.get('/api/account-name', (req, res) => {
   const accID = req.query.accID;
@@ -486,20 +739,132 @@ app.get('/api/get-info', (req, res) => {
   })
 });
 
+// app.put('/api/customer-pass', (req, res) => {
+//   const customerPword = req.body.customerPword;
+//   const customerCPword = req.body.customerCPword;
+//   const customerID = req.body.customerID;
+//   const updatePass = "update tbl_account_info set pword = ?, cpword = ? where account_info_id = ?";
+//   connection.query(updatePass, [customerPword, customerCPword, customerID], (err, result) => {
+//     if (err) {
+//       console.log("Error updating password:", err);
+//     } else {
+//       res.send(result);
+//       console.log(customerID);
+//     }
+//   });
+// });
+
+// app.put('/api/customer-pass', (req, res) => {
+//   const customerID = req.body.customerID;
+//   const currentPword = req.body.currentPword;
+//   const newPword = req.body.newPword;
+//   const confirmPword = req.body.confirmPword;
+//   // First, check if the current password matches the one in the database
+//   const checkCurrentPwordQuery = "SELECT * FROM tbl_account_info WHERE account_info_id = ? AND pword = ?";
+//   connection.query(checkCurrentPwordQuery, [customerID, currentPword], (err, rows) => {
+//     if (err) {
+//       console.log("Error checking current password:", err);
+//       res.sendStatus(500);
+//       return;
+//     }
+
+//     if (rows.length === 0) {
+//       // Current password is incorrect
+//       res.status(400).json({ message: "Current password is incorrect" });
+//       return;
+//     }
+
+//     // Current password is correct, proceed with updating the password
+//     const updatePassQuery = "UPDATE tbl_account_info SET pword = ?, cpword = ? WHERE account_info_id = ?";
+//     connection.query(updatePassQuery, [newPword, confirmPword, customerID], (err, result) => {
+//       if (err) {
+//         console.log("Error updating password:", err);
+//         res.sendStatus(500);
+//         return;
+//       }
+//       res.sendStatus(200);
+//     });
+//   });
+// });
+
 app.put('/api/customer-pass', (req, res) => {
-  const customerPword = req.body.customerPword;
-  const customerCPword = req.body.customerCPword;
   const customerID = req.body.customerID;
-  const updatePass = "update tbl_account_info set pword = ?, cpword = ? where account_info_id = ?";
-  connection.query(updatePass, [customerPword, customerCPword, customerID], (err, result) => {
+  const currentPword = req.body.currentPword;
+  const newPword = req.body.newPword;
+  const confirmPword = req.body.confirmPword;
+
+  // First, check if the current password matches the one in the database
+  const checkCurrentPwordQuery = "SELECT * FROM tbl_account_info WHERE account_info_id = ?";
+  connection.query(checkCurrentPwordQuery, [customerID], (err, rows) => {
     if (err) {
-      console.log("Error updating password:", err);
-    } else {
-      res.send(result);
-      console.log(customerID);
+      console.log("Error checking current password:", err);
+      res.sendStatus(500);
+      return;
     }
+
+    if (rows.length === 0) {
+      // Account not found
+      res.status(400).json({ message: "Account not found" });
+      return;
+    }
+
+    // Compare the current password with the stored hashed password
+    const hashedCurrentPword = rows[0].pword;
+    bcrypt.compare(currentPword, hashedCurrentPword, (err, isMatch) => {
+      if (err) {
+        console.log("Error comparing passwords:", err);
+        res.sendStatus(500);
+        return;
+      }
+
+      if (!isMatch) {
+        // Current password is incorrect
+        res.status(400).json({ message: "Current password is incorrect" });
+        return;
+      }
+
+      // Current password is correct, proceed with updating the password
+      bcrypt.hash(newPword, 10, (err, hashNewPword) => {
+        if (err) {
+          console.log("Error hashing new password:", err);
+          res.sendStatus(500);
+          return;
+        }
+
+        bcrypt.hash(confirmPword, 10, (err, hashConfirmPword) => {
+          if (err) {
+            console.log("Error hashing confirm password:", err);
+            res.sendStatus(500);
+            return;
+          }
+
+          // Update the password in tbl_account_info and tbl_accounts
+          const updatePassQuery = "UPDATE tbl_account_info SET pword = ?, cpword = ? WHERE account_info_id = ?";
+          connection.query(updatePassQuery, [hashNewPword, hashConfirmPword, customerID], (err, result) => {
+            if (err) {
+              console.log("Error updating password:", err);
+              res.sendStatus(500);
+              return;
+            }
+
+            const updateAccountPassQuery = "UPDATE tbl_accounts SET password = ? WHERE account_id = ?";
+            connection.query(updateAccountPassQuery, [hashNewPword, customerID], (err, result) => {
+              if (err) {
+                console.log("Error updating account password:", err);
+                res.sendStatus(500);
+                return;
+              }
+
+              res.sendStatus(200);
+            });
+          });
+        });
+      });
+    });
   });
 });
+
+
 
 //FAQ Section
 app.post('/api/add-faq', (req, res) => {
@@ -1199,7 +1564,7 @@ app.post('/api/add-locker', (req, res) => {
   const enddate = req.body.enddate;
 
   // Check if the key is already used
-  const checkKeyQuery = `SELECT * FROM tbl_locker WHERE key_no = '${key}' AND end_date >= '${enddate}'`;
+  const checkKeyQuery = `SELECT * FROM tbl_locker WHERE key_no = '${key}' AND start_date < '${startdate}' AND end_date >= '${enddate}'`;
   connection.query(checkKeyQuery, (err, rows) => {
     if (err) {
       console.log('Error checking key:', err);
@@ -1530,6 +1895,47 @@ app.get('/api/announcement', (req, res) => {
   connection.query(announcement, (err, result) => {
     if(err){
       console.log('Failed to fetch announcement', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.post('/api/add-proof-of-payment', (req, res) => {
+  const userID = req.body.userID;
+  const refNum = req.body.refNum;
+  const amount = req.body.amount;
+  const imageData = req.body.imageData;
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+  const buffer = Buffer.from(base64Data, 'base64');
+
+  const getFname = `select fname, email from tbl_account_info where account_info_id = '${userID}'`;
+  connection.query(getFname, (err, fnameResult) => {
+    if(err){
+      console.log('Failed to get first name', err);
+    }else{
+      const fname = fnameResult[0].fname;
+      const email = fnameResult[0].email;
+      const addProof = `insert into tbl_proof_of_payment (account_info_id, email, name, reference_number, amount, image, date, time) values (?, ?, ?, ?, ?, ?, '${currentDate}', '${currentTime}')`;
+      connection.query(addProof, [userID, email, fname, refNum, amount, buffer], (err, proofResult) => {
+        if(err){
+          console.log('Failed to insert proof of payment');
+        }else{
+          res.send(proofResult);
+        }
+      });
+    }
+  });
+});
+
+app.get('/api/gcash', (req, res) => {
+  const getGcashData = `select proof_of_payment_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image from tbl_proof_of_payment`;
+  connection.query(getGcashData, (err, result) => {
+    if(err){
+      console.log('Failed to fetch proof of payment', err);
     }
     else{
       res.send(result);

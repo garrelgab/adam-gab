@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PosTabs from './PosTabs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -9,6 +9,7 @@ const DashboardHealthTips = (props) => {
     const [equipment, setEquipment] = useState('');
     const [editorContent, setEditorContent] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
+    const fileRef = useRef(null);
     const userID = props.id;
     const [rows, setRows] = useState([]);
 
@@ -21,7 +22,7 @@ const DashboardHealthTips = (props) => {
             {`${index + 1}. ${sentence.trim()}`}
           </div>
         ));
-      return <div style={{ whiteSpace: 'pre-wrap' }}>{instructionText}</div>;
+      return <div style={{ whiteSpace: 'pre-wrap', overflow: 'auto', maxHeight:250}}>{instructionText}</div>;
     };
 
     const renderImageCell = (params) => {
@@ -109,13 +110,14 @@ const DashboardHealthTips = (props) => {
         setEquipment('');
         setEditorContent('');
         setSelectedImage(null);
-        setSelectedImage('');
+        if(fileRef.current){
+            fileRef.current.value = '';
+        }
     };
 
     useEffect(() => {
         fetchHealthGuide();
     }, []);
-    const rowHeight = 300;
     const tabs = [
         {
             title: 'Health Media Guide',
@@ -123,7 +125,7 @@ const DashboardHealthTips = (props) => {
             <div>
                 <h1 className='md:text-[25px] text-[#1ca350] font-bold'>Health Media Guide</h1>
                 <div className='bg-[white] h-[600px] rounded-md'>
-                    <DataGrid rows={rows} columns={columns} rowHeight={rowHeight} className='text-black w-[100%]'/>
+                    <DataGrid rows={rows} columns={columns} rowHeight={270} className='text-black w-[100%]'/>
                 </div>
             </div>
         },
@@ -143,7 +145,7 @@ const DashboardHealthTips = (props) => {
                 </div>
                 <div className='my-[5px]'>
                     <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Upload Image</h1>
-                    <input type="file" accept='image/*' className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" onChange={handleImageUpload} required/>
+                    <input type="file" ref={fileRef} accept='image/*' className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" onChange={handleImageUpload} required/>
                 </div>
                 <div className='my-[5px]'>
                     <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Instruction</h1>

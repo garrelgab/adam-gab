@@ -21,7 +21,7 @@ const Navbar = (props) => {
 
     useEffect(() => {
         const isSignupPage = location.pathname === '/signup';
-        const isPrivacyPolicyPage = location.pathname === '/privacypolicy';
+        const isPrivacyPolicyPage = location.pathname === '/privacy-policy';
         const isFAQsPage = location.pathname === '/faq';
         const isTermsAndConditionPage = location.pathname === '/terms-of-use';
         setIsListVisible(!isSignupPage && !isPrivacyPolicyPage && !isFAQsPage && !isTermsAndConditionPage);

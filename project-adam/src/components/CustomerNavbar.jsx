@@ -82,22 +82,25 @@ const CustomerNavbar = (props) => {
             </div>
             <ul className='flex flex-col text-left'>
                 <LinkRouter to='/customer' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Reservation</li>            
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Reservation</li>            
                 </LinkRouter>
                 <LinkRouter to='/customer/personalinfo' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Personal Information</li>            
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Personal Information</li>            
                 </LinkRouter>
                 <LinkRouter to='/customer/account' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Change Password</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Change Password</li>
                 </LinkRouter>
                 <LinkRouter to='/customer/health-tips' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Health Guide</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Health Guide</li>
                 </LinkRouter>
                 <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer'>Announcement</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Announcement</li>
+                </LinkRouter>
+                <LinkRouter to='/customer/proof-of-payment' state={userID} onClick={handleNav}>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Proof of Payment</li>
                 </LinkRouter>
                 <LinkRouter to='/'>
-                    <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0' onClick={handleLogout}>Logout</h1>
+                    <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0 ease-in-out duration-300' onClick={handleLogout}>Logout</h1>
                 </LinkRouter>
             </ul>
             

@@ -45,7 +45,7 @@ const Dashboard = () => {
           <Route path='/audit' element={<DashboardAuditTrail/>}/>
           <Route path='/health-tips' element={<DashboardHealthTips id={id}/>}/>
           <Route path='/announcement' element={<DashboardAnnouncement id={id}/>}/>
-
+          
         </Routes>
     </>
   )
