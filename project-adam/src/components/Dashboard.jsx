@@ -18,6 +18,7 @@ import DashboardAuditTrail from './DashboardAuditTrail'
 import DashboardHealthTips from './DashboardHealthTips'
 import SettingsTermsConditions from './SettingsTermsConditions'
 import DashboardAnnouncement from './DashboardAnnouncement'
+import DashboardMembershipModule from './DashboardMembershipModule'
 // import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const Dashboard = () => {
         <Routes>
           <Route exact path='/' element={<DashboardContent/>}/>
           <Route path='/reservation' element={<DashboardReservation/>}/>
-          {/* <Route path='/membership' element={<DashboardMembership/>}/> */}
+          <Route path='/membership' element={<DashboardMembershipModule/>}/>
           <Route path='/settings' element={<DashboardSettings/>}/>
           <Route path='/pos' element={<DashboardPos/>}/>
           <Route path='/inventory' element={<DashboardInventory/>}/>

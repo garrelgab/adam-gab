@@ -5,18 +5,29 @@ const CustomerProofPayment = (props) => {
   const userID = props.id;
   // const [name, setName] = useState('');
   const [referenceNum, setReference] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
   const [amount, setAmount] = useState('');
   const inputFileRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
 
     reader.onloadend = () => {
-    setSelectedImage(reader.result);
+    if (file && isFileSupported(file)) {
+      const imageData = reader.result.split(',')[1];
+      setSelectedImage(imageData);
+    } else {
+      alert('Please upload a PNG or JPEG (JPG) file.');
+      setSelectedImage(null);
+    }
     };
     reader.readAsDataURL(file);
   };
+  const isFileSupported = (file) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    return allowedTypes.includes(file.type);
+  };
+
   const handleChangeAmount = (event) => {
     const inputValue = event.target.value;
     // Validate if the input is a non-negative number
@@ -63,7 +74,7 @@ const CustomerProofPayment = (props) => {
   };
   return (
     <div className='mt-[90px] mx-[50px]'>
-        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Proof of Payment</h1>
+        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Payment</h1>
         <div className='flex flex-col'>
           {/* <div className='my-[5px]'>
               <h1 className='md:text-[20px] mt-[30px] text-[#1ca350] font-bold'>Name</h1>

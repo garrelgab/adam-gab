@@ -4,7 +4,9 @@ import UserEmployeeModal from './UserEmployeeModal';
 import PosTabs from './PosTabs';
 import axios from 'axios';
 const UserAccountEmployee = (props) => {
-
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
   const [rows, setRows] = useState([]);
   const rowHeight = 100;
   const columns = [
@@ -32,7 +34,7 @@ const UserAccountEmployee = (props) => {
         gender: item.gender,
         bday: item.bday,
         email: item.email,
-        role: item.role,
+        role: capitalizeFirstLetter(item.role),
         date: item.date_created,
         // add more columns as needed
       }));
@@ -44,7 +46,7 @@ const UserAccountEmployee = (props) => {
   }
   useEffect(() => {
     fetchEmployee();
-  },[])
+  },[]);
   const tabs = [
     {
       title: 'Employee List',
@@ -55,7 +57,7 @@ const UserAccountEmployee = (props) => {
     },
     {
       title: 'Add new user',
-      content: <UserEmployeeModal/>
+      content: <UserEmployeeModal fetchEmployee={fetchEmployee}/>
     }
   ];
   return (

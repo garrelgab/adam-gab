@@ -1,29 +1,31 @@
 import Modal from '@mui/material/Modal';
-
-
-// import React from 'react'
-
-// const ImageModal = () => {
-//   return (
-//     <div>ImageModal</div>
-//   )
-// }
+import React, { useEffect, useState } from 'react';
 
 const ImageModal = ({ open, onClose, imageData }) => {
+  const [base64Image, setBase64Image] = useState('');
+
+  useEffect(() => {
+    if (imageData) {
+      setBase64Image(imageData);
+      console.log(imageData);
+    } else {
+      setBase64Image('');
+    }
+  }, [imageData]);
   return (
     <Modal open={open} onClose={onClose}>
-      <div>
-        {imageData && (
+      <div className='flex justify-center items-center h-[100%]' onClick={onClose}>
+        {base64Image ? (
           <img
-            src={`data:image/png;base64,${imageData}`}
+            src={base64Image}
             alt="Proof of Payment"
-            style={{ width: '100%', height: 'auto' }}
+            // style={{ width: '40%', height: 'auto'}}
+            className='w-[40%] h-auto rounded-md'
           />
-        )}
+        ) : <h1>No Image</h1>}
       </div>
     </Modal>
   );
-}
+};
 
-export default ImageModal
-
+export default ImageModal;

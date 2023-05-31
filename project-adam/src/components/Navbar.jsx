@@ -28,7 +28,7 @@ const Navbar = (props) => {
     }, [location.pathname]);
   return (
     <div className='flex justify-between items-center border-b border-gray-400 drop-shadow-md px-4 w-full mx-auto text-black md:grid-flow-col-3 p-1'>
-        <LinkRouter to='/'><img src={ADAMLOGONOBG} alt='' className='rounded-xl h-20 cursor-pointer'/></LinkRouter>
+        <LinkRouter to='/'><img src={ADAMLOGONOBG} alt='' className='rounded-xl bg-transparent h-20 cursor-pointer'/></LinkRouter>
         
         <div className='hidden md:flex mr-2 items-center'>
             <ul className='hidden md:flex items-center text-xl font-bold ml-[100px]'>
@@ -55,7 +55,7 @@ const Navbar = (props) => {
         <div onClick={handleNav} className='blocked md:hidden'>
             {!nav ? <AiOutlineClose size={20}/> : <AiOutlineMenu size={20}/>}
         </div>
-        <div className={!nav ? 'fixed left-0 top-0 w-[65%] bg-[#1a1a1a] h-full border-r border-gray-500 ease-in-out duration-500 md:hidden font-light' : 'fixed left-[-100%]'}>
+        <div className={!nav ? 'fixed left-0 top-0 w-[65%] h-full border-r border-gray-500 ease-in-out duration-500 md:hidden font-light z-50' : 'fixed left-[-100%]'}>
             <img src={ADAMLOGONOBG} alt='' className='rounded-xl h-20 pl-4 mb-0 mt-1'/>
             <ul className='pt-1 pl-0'>
                 <LinkRouter to="/" onClick={handleNav}>

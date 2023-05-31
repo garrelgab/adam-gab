@@ -244,6 +244,7 @@ app.get('/', (req, res)=>{
 
 app.post("/api/insert", (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
   const userFname = req.body.userFname;
   const userLname = req.body.userLname;
   const userAge = req.body.userAge;
@@ -343,7 +344,16 @@ app.post("/api/insert", (req, res) => {
                             if (isFirstAdmin) {
                               res.sendStatus(201); // First admin created
                             } else {
-                              res.sendStatus(200); // Regular account created
+                              const newMember = `New Member Account: ${userFname} ${userLname}`;
+                              const insertAudit = `insert into tbl_audit (action, date, time) values (?, ?, ?)`
+                              connection.query(insertAudit, [newMember, currentDate, currentTime], (err, newMemberResult) => {
+                                if (err) {
+                                  console.log('Failed to add new member', err);
+                                } else {
+                                  res.sendStatus(200);
+                                }
+                              })
+                              // res.sendStatus(200); // Regular account created
                             }
                           }
                         }
@@ -1602,8 +1612,6 @@ app.post('/api/add-locker', (req, res) => {
     }
   });
 });
-
-
 app.get('/api/locker', (req, res) => {
   const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker order by locker_id desc";
   connection.query(getLocker, (err, result) => {
@@ -1615,18 +1623,6 @@ app.get('/api/locker', (req, res) => {
     }
   });
 });
-
-// SELECT order_id, SUM(qty) as total_sold, product_name FROM `tbl_orders` group by product_name, order_id order by total_sold desc limit 3;
-
-// app.get('/api/attendance', (req, res) => {
-//   const getAttendance = `select attendance_id, name, status, DATE_FORMAT(time_in, '%h:%i:%s %p') as time_in, DATE_FORMAT(STR_TO_DATE(time_out, '%H:%i:%s'), '%h:%i:%s %p') AS time_out, DATE_FORMAT(date, '%M %d, %Y') as date from tbl_attendance order by attendance_id desc`;
-//   connection.query(getAttendance, (err, result) => {
-//     if(err){
-//       console.log('Failed to fetch attendance', err);
-//     }
-//     res.send(result);
-//   });
-// });
 
 app.get('/api/attendance', (req, res) => {
   const getAttendance = `
@@ -1694,6 +1690,64 @@ app.put('/api/update-attendance', (req, res) => {
 
 // });
 
+// app.post("/api/insert-employee", (req, res) => {
+//   const currentDate = new Date().toISOString().slice(0, 10);
+//   const currentTime = new Date().toTimeString().slice(0, 8);
+//   const userFname = req.body.userFname;
+//   const userLname = req.body.userLname;
+//   const userAge = req.body.userAge;
+//   const userGender = req.body.userGender;
+//   const userBday = req.body.userBday;
+//   const userEmail = req.body.userEmail;
+//   const userPword = req.body.userPword;
+//   const userCPword = req.body.userCPword;
+//   const userRole = req.body.userRole;
+//   const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+//   connection.query(checkEmailQuery, [userEmail], (err, results) => {
+//     if (err) {
+//       console.log('Failed to query email', err);
+//       res.sendStatus(500);
+//     } else if (results.length > 0) {
+//       // Email already exists
+//       res.status(400).json({ error: 'Email already exists' });
+//     } else {
+//       // Email does not exist, proceed with insertion
+//       const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+//       connection.query(
+//         sqlInsert,
+//         [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole],
+//         (err, result) => {
+//           if (err) {
+//             console.log('Failed to add account info', err);
+//             res.sendStatus(500);
+//           } else {
+//             const accountId = result.insertId;
+//             console.log('Last Inserted Account ID:', accountId);
+//             const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+//             connection.query(sqlAccount, [userEmail, userPword, userRole], (err, results) => {
+//               if (err) {
+//                 console.log('Failed to add account', err);
+//                 res.sendStatus(500);
+//               } else {
+//                 const action = `Created new account: ${userFname}`;
+//                 const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+//                 connection.query(audit, (err, auditResult) => {
+//                   if(err){
+//                     console.log('Failed to add audit', err);
+//                   }
+//                   else{
+//                     res.send(auditResult);
+//                   }
+//                 });
+//               }
+//             });
+//           }
+//         }
+//       );
+//     }
+//   });
+// });
+
 app.post("/api/insert-employee", (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
@@ -1706,53 +1760,68 @@ app.post("/api/insert-employee", (req, res) => {
   const userPword = req.body.userPword;
   const userCPword = req.body.userCPword;
   const userRole = req.body.userRole;
-  const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
-  connection.query(checkEmailQuery, [userEmail], (err, results) => {
+
+  // Hash the passwords
+  bcrypt.hash(userPword, 10, (err, hashUserPword) => {
     if (err) {
-      console.log('Failed to query email', err);
+      console.log('Error hashing password', err);
       res.sendStatus(500);
-    } else if (results.length > 0) {
-      // Email already exists
-      res.status(400).json({ error: 'Email already exists' });
-    } else {
-      // Email does not exist, proceed with insertion
-      const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
-      connection.query(
-        sqlInsert,
-        [userFname, userLname, userAge, userGender, userBday, userEmail, userPword, userCPword, userRole],
-        (err, result) => {
-          if (err) {
-            console.log('Failed to add account info', err);
-            res.sendStatus(500);
-          } else {
-            const accountId = result.insertId;
-            console.log('Last Inserted Account ID:', accountId);
-            const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
-            connection.query(sqlAccount, [userEmail, userPword, userRole], (err, results) => {
+      return;
+    }
+    bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
+      if (err) {
+        console.log('Error hashing confirm password', err);
+        res.sendStatus(500);
+        return;
+      }
+
+      const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
+      connection.query(checkEmailQuery, [userEmail], (err, results) => {
+        if (err) {
+          console.log('Failed to query email', err);
+          res.sendStatus(500);
+        } else if (results.length > 0) {
+          // Email already exists
+          res.status(400).json({ error: 'Email already exists' });
+        } else {
+          // Email does not exist, proceed with insertion
+          const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
+          connection.query(
+            sqlInsert,
+            [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
+            (err, result) => {
               if (err) {
-                console.log('Failed to add account', err);
+                console.log('Failed to add account info', err);
                 res.sendStatus(500);
               } else {
-                const action = `Created new account: ${userFname}`;
-                const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
-                connection.query(audit, (err, auditResult) => {
-                  if(err){
-                    console.log('Failed to add audit', err);
-                  }
-                  else{
-                    res.send(auditResult);
+                const accountId = result.insertId;
+                console.log('Last Inserted Account ID:', accountId);
+                const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
+                connection.query(sqlAccount, [userEmail, hashUserPword, userRole], (err, results) => {
+                  if (err) {
+                    console.log('Failed to add account', err);
+                    res.sendStatus(500);
+                  } else {
+                    const action = `Created new account: ${userFname}`;
+                    const audit = `insert into tbl_audit (action, date, time) values ('${action}', '${currentDate}','${currentTime}')`;
+                    connection.query(audit, (err, auditResult) => {
+                      if (err) {
+                        console.log('Failed to add audit', err);
+                      } else {
+                        res.sendStatus(200);
+                      }
+                    });
                   }
                 });
               }
-            });
-          }
+            }
+          );
         }
-      );
-    }
+      });
+    });
   });
-
-  
 });
+
 
 app.get('/api/employee-list', (req, res) => {
   const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'staff' or role = 'cashier' order by account_info_id desc`;
@@ -1902,6 +1971,35 @@ app.get('/api/announcement', (req, res) => {
   });
 });
 
+// app.post('/api/add-proof-of-payment', (req, res) => {
+//   const userID = req.body.userID;
+//   const refNum = req.body.refNum;
+//   const amount = req.body.amount;
+//   const imageData = req.body.imageData;
+//   const currentDate = new Date().toISOString().slice(0, 10);
+//   const currentTime = new Date().toTimeString().slice(0, 8);
+//   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+//   const buffer = Buffer.from(base64Data, 'base64');
+
+//   const getFname = `select fname, email from tbl_account_info where account_info_id = '${userID}'`;
+//   connection.query(getFname, (err, fnameResult) => {
+//     if(err){
+//       console.log('Failed to get first name', err);
+//     }else{
+//       const fname = fnameResult[0].fname;
+//       const email = fnameResult[0].email;
+//       const addProof = `insert into tbl_proof_of_payment (account_info_id, email, name, reference_number, amount, image, date, time) values (?, ?, ?, ?, ?, ?, '${currentDate}', '${currentTime}')`;
+//       connection.query(addProof, [userID, email, fname, refNum, amount, buffer], (err, proofResult) => {
+//         if(err){
+//           console.log('Failed to insert proof of payment');
+//         }else{
+//           res.send(proofResult);
+//         }
+//       });
+//     }
+//   });
+// });
+
 app.post('/api/add-proof-of-payment', (req, res) => {
   const userID = req.body.userID;
   const refNum = req.body.refNum;
@@ -1912,27 +2010,34 @@ app.post('/api/add-proof-of-payment', (req, res) => {
   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
   const buffer = Buffer.from(base64Data, 'base64');
 
-  const getFname = `select fname, email from tbl_account_info where account_info_id = '${userID}'`;
-  connection.query(getFname, (err, fnameResult) => {
-    if(err){
+  const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
+  connection.query(getFname, [userID], (err, fnameResult) => {
+    if (err) {
       console.log('Failed to get first name', err);
-    }else{
+      res.status(500).send('Failed to get first name');
+    } else {
       const fname = fnameResult[0].fname;
       const email = fnameResult[0].email;
-      const addProof = `insert into tbl_proof_of_payment (account_info_id, email, name, reference_number, amount, image, date, time) values (?, ?, ?, ?, ?, ?, '${currentDate}', '${currentTime}')`;
-      connection.query(addProof, [userID, email, fname, refNum, amount, buffer], (err, proofResult) => {
-        if(err){
-          console.log('Failed to insert proof of payment');
-        }else{
-          res.send(proofResult);
+      const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
+      connection.query(
+        addProof,
+        [userID, email, fname, refNum, amount, buffer, currentDate, currentTime],
+        (err, proofResult) => {
+          if (err) {
+            console.log('Failed to insert proof of payment', err);
+            res.status(500).send('Failed to insert proof of payment');
+          } else {
+            res.send('Proof of payment added successfully');
+          }
         }
-      });
+      );
     }
   });
 });
 
+
 app.get('/api/gcash', (req, res) => {
-  const getGcashData = `select proof_of_payment_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image from tbl_proof_of_payment`;
+  const getGcashData = `select proof_of_payment_id, account_info_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image from tbl_proof_of_payment where status = 'Pending'`;
   connection.query(getGcashData, (err, result) => {
     if(err){
       console.log('Failed to fetch proof of payment', err);
@@ -1943,5 +2048,112 @@ app.get('/api/gcash', (req, res) => {
   });
 });
 
+app.post('/api/add-membership', (req, res) => {
+  const accID = req.body.accID;
+  const proofID = req.body.proofID;
+  const amount = req.body.amount;
+  const membershipType = req.body.membershipType;
+  const currentDate = new Date();
+  const startDate = currentDate.toISOString().slice(0, 10);
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  const endDate = currentDate.toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
 
+  const getAccountInfo = `select * from tbl_account_info where account_info_id = '${accID}'`;
+  connection.query(getAccountInfo, (err, accountInfoResult) => {
+    if(err){
+      console.log('Failed to get account info', err);
+    }else{
+      const fname = accountInfoResult[0].fname + " " + accountInfoResult[0].lname;
+      const accName = accountInfoResult[0].fname;
+      const email = accountInfoResult[0].email;
+      // const name = fname + lname;
+      const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')`
+      connection.query(insertMembership, [accID, fname, email, membershipType, amount, startDate, endDate, startDate, currentTime], (err, insertMembershipResult) => {
+        if(err){
+          console.log('Failed to add membership', err);
+        }else{
+          // res.sendStatus(200);
+          const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
+          connection.query(updatePayment, [proofID], (err, paymentResult) => {
+            if(err){
+              console.log('Failed to update payment', err);
+            } else {
+              const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+              connection.query(
+                insertNotification,
+                [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
+                (err, notificationResult) => {
+                  if (err) {
+                    console.log('Failed to insert notification', err);
+                  } else {
+                    res.sendStatus(200);
+                  }
+                }
+              );
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
+app.get('/api/membership', (req, res) => {
+  const fetchMembershipData = `select membership_id, account_info_id, name, email, membership_type, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_membership`;
+  connection.query(fetchMembershipData, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch membership data', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/notification', (req, res) => {
+  const accID = req.query.accID;
+  const fetchNotifData = `select notification_id, account_info_id, description, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_notification where account_info_id = ?`;
+  connection.query(fetchNotifData, [accID], (err, result) => {
+    if (err) {
+      console.log('Failed to fetch notif data', err);
+    } else {
+      res.send(result);
+    }
+  })
+});
+
+app.get('/api/unread-notif', (req, res) => {
+  const accID = req.query.accID;
+  const fetchUnreadNotif = `select count(*) as count from tbl_notification where status = 'Unread' and account_info_id = ?`;
+  connection.query(fetchUnreadNotif, [accID], (err, result) => {
+    if (err) {
+      console.log('Failed to get unread notifications count', err);
+      res.status(500).send('Failed to get unread notifications count');
+    } else {
+      const count = result[0].count;
+      res.json({ count });
+    }
+  });
+});
+
+// const autoInsertData = () => {
+//   const currentDate = new Date();
+//   const threeDaysFromNow = new Date();
+//   threeDaysFromNow.setDate(currentDate.getDate() + 3);
+
+//   const endDateCondition = threeDaysFromNow.toISOString().slice(0, 10);
+
+//   const insertQuery = `INSERT INTO your_table (column1, column2, ...) SELECT value1, value2, ... FROM another_table WHERE end_date < '${endDateCondition}'`;
+
+//   connection.query(insertQuery, (err, result) => {
+//     if (err) {
+//       console.error('Error inserting data:', err);
+//     } else {
+//       console.log('Data inserted successfully:', result.affectedRows, 'rows inserted.');
+//     }
+//   });
+// };
+
+// // Run the auto-insert function periodically (e.g., every day)
+// setInterval(autoInsertData, 24 * 60 * 60 * 1000); // Run once every 24 hours
 module.exports = connection;

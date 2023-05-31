@@ -4,12 +4,18 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
+import { Buffer } from 'buffer';
+import ImageModal from './ImageModal';
+
 const DashboardHealthTips = (props) => {
     const [name, setName] = useState('');
     const [equipment, setEquipment] = useState('');
     const [editorContent, setEditorContent] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const fileRef = useRef(null);
+    const [openModal, setOpenModal] = useState(false);
+    const [modalImageData, setModalImageData] = useState(null);  
     const userID = props.id;
     const [rows, setRows] = useState([]);
 
@@ -24,16 +30,6 @@ const DashboardHealthTips = (props) => {
         ));
       return <div style={{ whiteSpace: 'pre-wrap', overflow: 'auto', maxHeight:250}}>{instructionText}</div>;
     };
-
-    const renderImageCell = (params) => {
-        return (
-          <img
-            src={params.value}
-            alt="Instruction"
-            style={{ width: '100%', height: 'auto' }}
-          />
-        );
-      };
     const columns = [
         // {field: 'id', headerName: 'ID', width: 100},
         {field: 'name', headerName: 'Type of Workout', width: 250},
@@ -54,11 +50,35 @@ const DashboardHealthTips = (props) => {
         {
             field: 'image',
             headerName: 'Image',
-            width: 500,
-            renderCell: renderImageCell,
-        },
+            width: 150,
+            renderCell: (params) => (
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  backgroundColor: 'white',
+                  color: 'gray',
+                  '&:hover': {
+                    backgroundColor: 'gray',
+                    color: 'white',
+                  },
+                }}
+                onClick={() => handleButtonClick(params.row)}
+              >
+                View Image
+              </Button>
+            ),
+          },
     ];
-    
+    const handleButtonClick = (row) => {
+        setModalImageData(row.image);
+        console.log(row);
+        setOpenModal(true);
+    };
+    const bufferToBase64 = (buffer) => {
+        const base64String = Buffer.from(buffer).toString('base64');
+        return `data:image/png;base64,${base64String}`;
+    };
     const fetchHealthGuide = () => {
         axios.get('http://localhost:3001/api/health-guide')
           .then(response => {
@@ -67,7 +87,7 @@ const DashboardHealthTips = (props) => {
                 name: item.name,
                 equipment: item.equipment,
                 instruction: item.instruction.replace(/<\/?p>/g, ''),
-                image: item.instruction_image.toString('base64'),
+                image: item.instruction_image ? bufferToBase64(Buffer.from(item.instruction_image)) : null,
             }));
             setRows(rows);
           })
@@ -79,11 +99,22 @@ const DashboardHealthTips = (props) => {
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         const reader = new FileReader();
-
+    
         reader.onloadend = () => {
-        setSelectedImage(reader.result);
+        if (file && isFileSupported(file)) {
+          const imageData = reader.result.split(',')[1];
+          setSelectedImage(imageData);
+        } else {
+          alert('Please upload a PNG or JPEG (JPG) file.');
+          setSelectedImage(null);
+        }
         };
         reader.readAsDataURL(file);
+    };
+
+    const isFileSupported = (file) => {
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        return allowedTypes.includes(file.type);
     };
 
     const handleConfirm = () => {
@@ -127,6 +158,8 @@ const DashboardHealthTips = (props) => {
                 <div className='bg-[white] h-[600px] rounded-md'>
                     <DataGrid rows={rows} columns={columns} rowHeight={270} className='text-black w-[100%]'/>
                 </div>
+                <ImageModal open={openModal} onClose={() => setOpenModal(false)} imageData={modalImageData} />
+
             </div>
         },
         {

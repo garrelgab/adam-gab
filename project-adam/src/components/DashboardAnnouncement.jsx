@@ -12,7 +12,7 @@ const DashboardAnnouncement = (props) => {
     
     const [annTitle, setAnnTitle] = useState('');
     const [editorContent, setEditorContent] = useState('');
-    const [rows, setRows] = useState('');
+    const [rows, setRows] = useState([]);
     const columns = [
         {field: 'id', headerName: 'ID', width: 100},
         {

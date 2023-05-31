@@ -72,12 +72,12 @@ const CustomerChangePassword = (props) => {
         <div className='py-[90px]'>
             <h1 className=' text-[30px] font-extrabold text-center mb-[50px] text-[#1ca350]'>Change Password?</h1>
             <div className=''>
-              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Enter Current Password</label>
+              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold text-[#1ca350] ">Enter Current Password</label>
               <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Current Password' value={currentPword} onChange={(e) => setCurrentPword(e.target.value)}/>
               <label className="block mb-1 text-md md:text-[30px] mx-auto text-center text-[#1ca350] font-extrabold my-[30px]">Set a new password</label>
-              <label className="block mb-1 mt-[30px] text-md md:text-lg mx-auto text-left font-light ">New Password</label>
+              <label className="block mb-1 mt-[30px] text-md md:text-lg mx-auto text-left font-bold text-[#1ca350]">New Password</label>
               <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='New Password' value={newPword} onChange={(e) => setNewPword(e.target.value)}/>
-              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light">Confirm Password</label>
+              <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold text-[#1ca350]">Confirm Password</label>
               <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Confirm New Password' value={confirmPword} onChange={(e) => setConfirmPword(e.target.value)}/>
             </div>
             <div className='mt-[50px] md:mt-[150px] text-center'>

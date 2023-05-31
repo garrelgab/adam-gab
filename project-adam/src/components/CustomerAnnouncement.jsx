@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
+import PosTabs from './PosTabs'
 const CustomerAnnouncement = (props) => {
 
     const userID = props.id;
@@ -8,7 +9,7 @@ const CustomerAnnouncement = (props) => {
     function capitalizeFirstLetter(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
-    const [rows, setRows] = useState('');
+    const [rows, setRows] = useState([]);
     const columns = [
         {field: 'id', headerName: 'ID', width: 100},
         {
@@ -24,7 +25,7 @@ const CustomerAnnouncement = (props) => {
             headerName: 'Message',
             width: 500, // Set the desired width
             renderCell: (params) => (
-            <div style={{ width: '100%', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{params.value}</div>
+            <div style={{ width: '100%', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', overflow: 'auto', maxHeight:250 }}>{params.value}</div>
             ),
         },
         {field: 'date', headerName: 'Date', width: 250},
@@ -32,11 +33,6 @@ const CustomerAnnouncement = (props) => {
 
     ];
 
-    // const getRowClassName = (params) => {
-    //     const status = params.row.status;
-    //     return status === 'Unread' ? 'font-bold' : '';
-    // };
-    
     const fetchAnnouncementData = () => {
         axios.get('http://localhost:3001/api/announcement')
         .then(response => {
@@ -54,17 +50,90 @@ const CustomerAnnouncement = (props) => {
         })
     };
 
+    const [notifRows, setNotifRows] = useState([]);
+    const notifColums = [
+        // {field: 'id', headerName: 'ID', width: 100},
+        // {field: 'accID', headerName: 'Account ID', width: 100},
+        {field: 'desc', headerName: 'Description', width: 800},
+        {field: 'date', headerName: 'Date', width: 200},
+        {field: 'status', headerName: 'Status', width: 100},
+    ];
+
+    const fetchNotificationData = () => {
+        axios.get('http://localhost:3001/api/notification', {
+            params: {
+                accID: userID,
+            }
+        })
+        .then(response => {
+            const rows = response.data.map(item => ({
+                id: item.notification_id,
+                accID: item.account_info_id,
+                desc: item.description,
+                date: item.date + " " + item.time,
+                status: item.status,
+            }));
+            setNotifRows(rows);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    };
+
+    const [unreadNotifications, setUnreadNotifications] = useState(0);
+
+    const fetchUnreadNotifications = async () => {
+        try {
+          const response = await axios.get('http://localhost:3001/api/unread-notif', {
+            params: {
+                accID: userID,
+            }
+          });
+          const count = response.data.count; // Assuming the API response provides the count
+          setUnreadNotifications(count);
+        } catch (error) {
+          console.log(error);
+        }
+    };
+
+    const tabs = [
+        {
+            title: 'Announcement',
+            content: 
+            <div>
+                <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
+                    {/* <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]' getRowClassName={getRowClassName}/> */}
+                    <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]'/>
+                </div>
+            </div>
+        },
+        {
+            title: (
+                <div className='flex justify-center items-center'>
+                    {/* {unreadNotifications > 0 && (
+                        <h1 className="bg-red-600 items-center px-1 text-[9px] mr-[10px] rounded-full text-white">{unreadNotifications}</h1>
+                    )} */}
+                    Notification
+                </div>
+            ),
+            content:
+            <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
+                <DataGrid rows={notifRows} columns={notifColums} className='w-[100%]'/>
+            </div>
+        }
+    ]
     useEffect(() => {
         fetchAnnouncementData();
+        fetchNotificationData();
+        fetchUnreadNotifications();
     },[]);
   return (
     <div className='my-[90px] mx-[50px]'>
-        <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Announcement</h1>
-        <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
-            {/* <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]' getRowClassName={getRowClassName}/> */}
-            <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]'/>
-
+        <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Announcement / Notifications</h1>
+        <div>
+            <PosTabs tabs={tabs}/>
         </div>
+        
     </div>
   )
 }

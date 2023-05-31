@@ -30,13 +30,13 @@ const AddReservation = (props) => {
   const handleEndTimeChange = (timeEnd) => {
     setEndTime(timeEnd);
   };
-
+ 
   const handleSaveReservation = () => {
     // if(!name) {
     //   alert('Field required.');
     //   return;
     // }
-    if (startTime.hour() < 7 || startTime.hour() >= 22) {
+    if (startTime.hour() < 7 || startTime.hour() >= 22 || endTime.hour() < 7 || endTime.hour() >= 22) {
       alert('Reservation can only be made between 7 AM and 10 PM.');
       return;
     }

@@ -4,12 +4,11 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 
-const UserEmployeeModal = (props) => {
+const UserEmployeeModal = ({fetchEmployee}) => {
 
   function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
-
   const roleType = [
     { label: 'Role Type', value: '' },
     { label: 'Staff', value: 'staff' },
@@ -67,6 +66,8 @@ const UserEmployeeModal = (props) => {
     setShowCalendar(false);
   };
 
+  
+  
   const handleConfirm = () => {
     if(!fname || !lname || !selectedGender || !email || !pword || !cpword){
       alert('Please fill up the empty fields.');
@@ -90,7 +91,7 @@ const UserEmployeeModal = (props) => {
       userRole: selectedRole,
     })
     .then(response => {
-      alert(`Successfully created. User: ${capitalizeFirstLetter()} `, response);
+      alert(`Successfully created. User: ${capitalizeFirstLetter(fname)} `, response);
       setFname('');
       setLname('');
       setAge('');
@@ -101,12 +102,14 @@ const UserEmployeeModal = (props) => {
       setSelectedGender('');
       setSelectedRole('');
       setSelectedDate(null);
+      fetchEmployee();
     })
     .catch(error => {
       // alert('Email already exist.')
       console.log(error);
     });
   }
+  
   return (
     <div className='flex flex-col  bg-[#1ca350] mt-[30px] rounded-md shadow-lg'>
                 <h1 className="block mb-1 text-md md:text-[30px] text-white mt-[50px] mx-auto text-left font-bold ">Add Employee User Account</h1>

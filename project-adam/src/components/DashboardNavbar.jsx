@@ -126,7 +126,7 @@ const DashboardNavbar = (props) => {
                 {navSettings && (
                     <ul className='ease-in-out duration-300'>
                         <LinkRouter to='/dashboard/gcash' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>G-Cash</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Payment Settings</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/faq' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>FAQ's</h1></li>
@@ -152,6 +152,9 @@ const DashboardNavbar = (props) => {
                         </LinkRouter>
                         <LinkRouter to='/dashboard/customer' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Customer User Account</h1></li>
+                        </LinkRouter>
+                        <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Membership</h1></li>
                         </LinkRouter>
                     </ul>
                 )}

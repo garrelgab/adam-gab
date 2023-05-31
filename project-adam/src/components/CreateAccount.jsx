@@ -158,10 +158,7 @@ const CreateAccount = (props) => {
         //     alert('18 years old below is not allowed to create account. Waiver Required.');
         //     return;
         // }
-        if(!terms){
-            alert('Please check the terms and conditions.');
-            return;
-        }
+        
         if(!selectedGender){
             alert('Please fill out the empty field.');
             return;
@@ -199,6 +196,10 @@ const CreateAccount = (props) => {
             alert('Password and Confirm Password must match!');
             setPword('');
             setCPword('');
+            return;
+        }
+        if(!terms){
+            alert('Please check the terms and conditions.');
             return;
         }
         Axios.post("http://localhost:3001/api/insert", {

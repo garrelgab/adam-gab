@@ -66,18 +66,18 @@ const CustomerPersonalInformation = (props) => {
     <div className='flex justify-center align-middle py-[90px] bg-[#d3d3d3]'>
         <div className='text-black md:text-white md:max-w-[1240px] md:mx-auto md:max-h-[830px] w-[400px] md:w-[100%]'>
             <h1 className='text-[#1ca350] text-[30px] font-extrabold text-center mb-[100px]'>Personal Information</h1>
-            <div className='md:flex md:flex-col-2 text-black'>
+            <div className='md:flex md:flex-col text-black'>
                 <div className='mt-[100px] md:mt-[10px] max-w-[350px] md:max-w-[100%] mx-auto'>
-                    <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">First Name</label>
+                    <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold text-[#1ca350] ">First Name</label>
                     {/* <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light "></label> */}
 
                     <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder={fname} value={fname} onChange={(e) => setFname(e.target.value)}/>
-                    <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
+                    <label className="block mb-1 mt-[5px] text-md md:text-lg mx-auto text-left font-bold text-[#1ca350] ">Last Name</label>
                     <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder={lname} value={lname} onChange={(e) => setLname(e.target.value)}/>
                 </div>
 
-                <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>
-                    <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light">Gender</label>
+                <div className='mt-[10px] md:mt-[5px] max-w-[350px] mx-auto'>
+                    <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold text-[#1ca350]">Gender</label>
                     <select id="gender-select" className="font-light shadow-lg mb-1 block w-[350px] rounded-lg p-4 bg-gray-50 text-black focus:outline-none" placeholder='Select Gender' onChange={handleChange}>
                         {genderOptions.map((option) => (
                         <option className='p-4 text-lg font-light' key={option.value} value={option.value}>

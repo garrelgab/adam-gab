@@ -59,9 +59,25 @@ const CustomerNavbar = (props) => {
             console.log(error);
         });
     };
+    const [unreadNotifications, setUnreadNotifications] = useState(0);
+
+    const fetchUnreadNotifications = async () => {
+        try {
+          const response = await axios.get('http://localhost:3001/api/unread-notif', {
+            params: {
+                accID: userID,
+            }
+          });
+          const count = response.data.count; // Assuming the API response provides the count
+          setUnreadNotifications(count);
+        } catch (error) {
+          console.log(error);
+        }
+    };
     useEffect(() => {
         handleRunningDate();
         fetchAccountName();
+        fetchUnreadNotifications();
     }, []);
   return (
     <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1ca350] z-50'>
@@ -94,10 +110,15 @@ const CustomerNavbar = (props) => {
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Health Guide</li>
                 </LinkRouter>
                 <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Announcement</li>
+                    <div className='flex hover:bg-gray-500 items-center hover:text-white cursor-pointer ease-in-out duration-300'>
+                        <li className='p-6 '>Announcement</li>
+                        {/* {unreadNotifications > 0 && (
+                            <h1 className="bg-red-600 items-center px-2 text-[13px] rounded-full text-white">{unreadNotifications}</h1>
+                        )} */}
+                    </div>
                 </LinkRouter>
                 <LinkRouter to='/customer/proof-of-payment' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Proof of Payment</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Payment</li>
                 </LinkRouter>
                 <LinkRouter to='/'>
                     <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0 ease-in-out duration-300' onClick={handleLogout}>Logout</h1>
