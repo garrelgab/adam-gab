@@ -35,7 +35,7 @@ const CustomerHealthTips = () => {
       {
           field: 'instruction',
           headerName: 'Instruction',
-          width: 500, // Set the desired width
+          flex: 1, // Set the desired width
           renderCell: renderInstructionCell,
       },
       {

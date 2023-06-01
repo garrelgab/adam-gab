@@ -2136,6 +2136,18 @@ app.get('/api/unread-notif', (req, res) => {
   });
 });
 
+app.put('/api/update-notif', (req, res) => {
+  const accID = req.body.accID;
+  const updateNotif = `update tbl_notification set status = 'Read' where account_info_id = ?`;
+  connection.query(updateNotif, [accID], (err, result) => {
+    if (err) {
+      console.log('Failed to update notif', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 // const autoInsertData = () => {
 //   const currentDate = new Date();
 //   const threeDaysFromNow = new Date();

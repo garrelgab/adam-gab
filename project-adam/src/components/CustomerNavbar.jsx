@@ -34,6 +34,19 @@ const CustomerNavbar = (props) => {
         clearInterval(interval);
         };
     }
+
+    const handleUpdateNotif = () => {
+        axios.put('http//:localhost:3001/api/update-notif', {
+            accID: userID,
+        })
+        .then(response => {
+            fetchUnreadNotifications();
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    };
+
     const handleLogout = () => {
         axios.put('http://localhost:3001/api/update-attendance')
         .then(response => {
@@ -82,7 +95,9 @@ const CustomerNavbar = (props) => {
   return (
     <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1ca350] z-50'>
         <div className='blocked  text-white flex justify-between'>
-            <AiOutlineMenu size={30} className='cursor-pointer ml-[3%] md:ml-[1%]' onClick={handleNav}/>
+            <div className='flex cursor-pointer ml-[3%] md:ml-[1%]' onClick={fetchUnreadNotifications}>
+                <AiOutlineMenu size={30} className='' onClick={handleNav}/>
+            </div>
             <div className='md:flex text-lg font-light hidden'>
                 <h1 className='border-r border-white px-5'>{currentTime}</h1>
                 <h1 className='px-5'>{currentDateTime}</h1>
@@ -90,7 +105,7 @@ const CustomerNavbar = (props) => {
         </div>
         
         <div className={nav ? 'fixed overflow-auto  top-0 left-0 w-[60%] border-r border-gray-500 md:w-[20%] text-center z-50 text-black bg-[#d9d9d9] h-full ease-in-out duration-500 font-light' : 'fixed left-[-100%]'}>
-            <div className='blocked md:py-[20px] py-[20px] border-b border-gray-800'>
+            <div className='blocked md:py-[20px] py-[20px] border-b border-gray-800' onClick={fetchUnreadNotifications}>
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
             <div className='mb-[20px] md:mb-[30px] justify-center items-center flex border-b border-gray-500 mx-[40px]'>
@@ -112,9 +127,9 @@ const CustomerNavbar = (props) => {
                 <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
                     <div className='flex hover:bg-gray-500 items-center hover:text-white cursor-pointer ease-in-out duration-300'>
                         <li className='p-6 '>Announcement</li>
-                        {/* {unreadNotifications > 0 && (
+                        {unreadNotifications > 0 && (
                             <h1 className="bg-red-600 items-center px-2 text-[13px] rounded-full text-white">{unreadNotifications}</h1>
-                        )} */}
+                        )}
                     </div>
                 </LinkRouter>
                 <LinkRouter to='/customer/proof-of-payment' state={userID} onClick={handleNav}>

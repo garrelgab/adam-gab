@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import PosTabs from './PosTabs'
+import { Autocomplete } from '@mui/material';
 const CustomerAnnouncement = (props) => {
 
     const userID = props.id;
@@ -23,7 +24,7 @@ const CustomerAnnouncement = (props) => {
         {
             field: 'annContent',
             headerName: 'Message',
-            width: 500, // Set the desired width
+            flex: 1, // Set the desired width
             renderCell: (params) => (
             <div style={{ width: '100%', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', overflow: 'auto', maxHeight:250 }}>{params.value}</div>
             ),
@@ -54,11 +55,11 @@ const CustomerAnnouncement = (props) => {
     const notifColums = [
         // {field: 'id', headerName: 'ID', width: 100},
         // {field: 'accID', headerName: 'Account ID', width: 100},
-        {field: 'desc', headerName: 'Description', width: 800},
+        {field: 'desc', headerName: 'Notification', flex: 1},
         {field: 'date', headerName: 'Date', width: 200},
-        {field: 'status', headerName: 'Status', width: 100},
+        // {field: 'status', headerName: 'Status', width: 100},
     ];
-
+    
     const fetchNotificationData = () => {
         axios.get('http://localhost:3001/api/notification', {
             params: {
@@ -79,6 +80,7 @@ const CustomerAnnouncement = (props) => {
             console.log(error);
         })
     };
+    
 
     const [unreadNotifications, setUnreadNotifications] = useState(0);
 
@@ -95,10 +97,36 @@ const CustomerAnnouncement = (props) => {
           console.log(error);
         }
     };
+    const [readRows, setReadRows] = useState([]);
 
+    const getRowClassName = (params) => {
+    if (readRows.includes(params.row.id)) {
+        return ''; // Remove any styling for read rows
+    } else if (params.row.status === 'Unread') {
+        return 'font-bold'; // Apply bold styling for unread rows
+    }
+    return '';
+    };
+    const handleUpdateNotif = () => {
+        axios.put('http://localhost:3001/api/update-notif', {
+            accID: userID,
+        })
+        .then(response => {
+            // console.log(response);
+            fetchUnreadNotifications();
+            setReadRows([...readRows, ...notifRows.map((row) => row.id)]);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    };
     const tabs = [
         {
-            title: 'Announcement',
+            title: (
+                <div onClick={handleUpdateNotif}>
+                    Announcement
+                </div>
+            ),
             content: 
             <div>
                 <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
@@ -110,15 +138,16 @@ const CustomerAnnouncement = (props) => {
         {
             title: (
                 <div className='flex justify-center items-center'>
-                    {/* {unreadNotifications > 0 && (
+                    {unreadNotifications > 0 && (
                         <h1 className="bg-red-600 items-center px-1 text-[9px] mr-[10px] rounded-full text-white">{unreadNotifications}</h1>
-                    )} */}
+                    )}
                     Notification
+
                 </div>
             ),
             content:
-            <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
-                <DataGrid rows={notifRows} columns={notifColums} className='w-[100%]'/>
+            <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]' onClick={handleUpdateNotif}>
+                <DataGrid rows={notifRows} columns={notifColums} getRowClassName={getRowClassName} className='w-[100%]'/>
             </div>
         }
     ]
@@ -127,6 +156,8 @@ const CustomerAnnouncement = (props) => {
         fetchNotificationData();
         fetchUnreadNotifications();
     },[]);
+
+    
   return (
     <div className='my-[90px] mx-[50px]'>
         <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Announcement / Notifications</h1>
