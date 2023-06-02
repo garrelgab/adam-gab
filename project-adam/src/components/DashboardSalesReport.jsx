@@ -9,7 +9,7 @@ const DashboardSalesReport = () => {
     const columns = [
       { field: 'id', headerName: 'ID', width:200},
       // { field: 'order_number', headerName: 'Order Number', width: 400},
-      { field: 'description', headerName: 'Description', width: 400},
+      { field: 'description', headerName: 'Description', flex: 1},
       { field: 'total', headerName: 'Total', width: 300},
       { field: 'date', headerName: 'Date', width: 300},
       { field: 'time', headerName: 'Time', width: 300},
@@ -18,28 +18,28 @@ const DashboardSalesReport = () => {
     const[rows, setRows] = useState([]);
 
     const dailyColums = [
-      {field: 'day', headerName: 'Day', width:300},
-      {field: 'dailyTotal', headerName: 'Daily Total', width:300},
+      {field: 'day', headerName: 'Day', flex: 1},
+      {field: 'dailyTotal', headerName: 'Daily Total', flex: 1},
     ];
     const [dailyRows, setDailyRows] = useState([]);
 
     const weekColums = [
       // {field: 'week', headerName: 'Week', width:200},
-      {field: 'weeklyTotal', headerName: 'Weekly Total', width:300},
-      {field: 'year', headerName: 'Year', width:200},
+      {field: 'weeklyTotal', headerName: 'Weekly Total', flex: 1},
+      {field: 'year', headerName: 'Year', flex: 1},
     ];
     const [weekRows, setWeekRows] = useState([]);
 
     const monthColumns = [
-      {field: 'month', headerName: 'Month', width:200},
-      {field: 'monthlyTotal', headerName: 'Monthly Total', width:300},
-      {field: 'year', headerName: 'Year', width:200},
+      {field: 'month', headerName: 'Month', flex: 1},
+      {field: 'monthlyTotal', headerName: 'Monthly Total', flex: 1},
+      {field: 'year', headerName: 'Year', flex: 1},
     ];
     const [monthRows, setMonthRows] = useState([]);
 
     const yearColumns = [
-      {field: 'year', headerName: 'Year', width:200},
-      {field: 'yearlyTotal', headerName: 'Yearly Total', width:300},
+      {field: 'year', headerName: 'Year', flex: 1},
+      {field: 'yearlyTotal', headerName: 'Yearly Total', flex: 1},
     ];
     const [yearRows, setYearRows] = useState([]);
 

@@ -15,7 +15,7 @@ const PosLocker = () => {
   const rowHeight = 100;
   const columns = [
     {field: 'id', headerName: 'ID', width: 100},
-    {field: 'name', headerName: 'Customer Name', width: 350},
+    {field: 'name', headerName: 'Customer Name', width: 450},
     {field: 'contact', headerName: 'Contact No.', width: 150},
     {field: 'key', headerName: 'Key No.', width: 150},
     {field: 'amount', headerName: 'Amount', width: 150},

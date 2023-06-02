@@ -342,6 +342,15 @@ app.post("/api/insert", (req, res) => {
                             res.sendStatus(500);
                           } else {
                             if (isFirstAdmin) {
+                              const sqlModules = `INSERT INTO tbl_modules (account_info_id, dashboard, reservation, window_payment, sales_report, settings, user_account, audit_trail, attendance_log, health_guide, announcement) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                              const modulesValues = [accountId, true, true, true, true, true, true, true, true, true, true];
+                              connection.query(sqlModules, modulesValues, (err, result) => {
+                                if (err) {
+                                  console.log('Failed to insert modules for admin', err);
+                                } else {
+                                  console.log('Modules inserted for admin');
+                                }
+                              });
                               res.sendStatus(201); // First admin created
                             } else {
                               const newMember = `New Member Account: ${userFname} ${userLname}`;
@@ -1808,7 +1817,26 @@ app.post("/api/insert-employee", (req, res) => {
                       if (err) {
                         console.log('Failed to add audit', err);
                       } else {
-                        res.sendStatus(200);
+                        const dashboard = req.body.dashboard;
+                        const reservation = req.body.reservation;
+                        const window = req.body.window;
+                        const sales = req.body.sales;
+                        const settings = req.body.settings;
+                        const userAccount = req.body.userAccount;
+                        const audit = req.body.audit;
+                        const attendance = req.body.attendance;
+                        const health = req.body.health;
+                        const announcement = req.body.announcement;
+        
+                        const addRole = `insert into tbl_modules (account_info_id, dashboard, reservation, window_payment, sales_report, settings, user_account, audit_trail, attendance_log, health_guide, announcement) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                        connection.query(addRole, [accountId, dashboard, reservation, window, sales, settings, userAccount, audit, attendance, health, announcement], (err, result) => {
+                          if (err) {
+                            console.log('Failed to add role', err);
+                            // res.status(300).send('Failed to add role', err);
+                          } else {
+                            res.sendStatus(200);
+                          }
+                        });
                       }
                     });
                   }
@@ -2148,6 +2176,41 @@ app.put('/api/update-notif', (req, res) => {
   });
 });
 
+app.put('/api/access', (req, res) => {
+  const accID = req.body.accID;
+  const dashboard = req.body.dashboard;
+  const reservation = req.body.reservation;
+  const window = req.body.window;
+  const sales = req.body.sales;
+  const settings = req.body.settings;
+  const userAccount = req.body.userAccount;
+  const audit = req.body.audit;
+  const attendance = req.body.attendance;
+  const health = req.body.health;
+  const announcement = req.body.announcement;
+
+  const addRole = `update tbl_modules set dashboard = ?, reservation = ?, window_payment = ?, sales_report = ?, settings = ?, user_account = ?, audit_trail = ?, attendance_log = ?, health_guide = ?, announcement = ? where account_info_id = ?`;
+  connection.query(addRole, [dashboard, reservation, window, sales, settings, userAccount, audit, attendance, health, announcement, accID], (err, result) => {
+    if (err) {
+      console.log('Failed to add role', err);
+      //res.status(300).send('Failed to add role', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/modules', (req, res) => {
+  const accID = req.query.accID;
+  const accessModule = 'select * from tbl_modules where account_info_id = ?';
+  connection.query(accessModule, [accID], (err, result) => {
+    if (err) {
+      console.log('Failed to fetch access module', err);
+    } else {
+      res.status(200).send(result);
+    }
+  });
+});
 // const autoInsertData = () => {
 //   const currentDate = new Date();
 //   const threeDaysFromNow = new Date();

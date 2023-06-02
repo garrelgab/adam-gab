@@ -20,7 +20,7 @@ const PosWorkOut = () => {
   const rowHeight = 100;
   const columns = [
     { field: 'id', headerName: 'ID', width:100},
-    { field: 'name', headerName: 'Customer Name', width: 500},
+    { field: 'name', headerName: 'Customer Name', flex: 1},
     { field: 'type', headerName: 'Type of Work-out', width: 300},
     { field: 'price', headerName: 'Price', width: 100},
     { field: 'date', headerName: 'Date', width: 150},

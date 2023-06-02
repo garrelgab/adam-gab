@@ -44,7 +44,7 @@ const DashboardHealthTips = (props) => {
         {
             field: 'instruction',
             headerName: 'Instruction',
-            width: 500, // Set the desired width
+            flex: 1, // Set the desired width
             renderCell: renderInstructionCell,
         },
         {
@@ -68,7 +68,7 @@ const DashboardHealthTips = (props) => {
                 View Image
               </Button>
             ),
-          },
+        },
     ];
     const handleButtonClick = (row) => {
         setModalImageData(row.image);

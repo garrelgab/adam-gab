@@ -35,18 +35,6 @@ const CustomerNavbar = (props) => {
         };
     }
 
-    const handleUpdateNotif = () => {
-        axios.put('http//:localhost:3001/api/update-notif', {
-            accID: userID,
-        })
-        .then(response => {
-            fetchUnreadNotifications();
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    };
-
     const handleLogout = () => {
         axios.put('http://localhost:3001/api/update-attendance')
         .then(response => {

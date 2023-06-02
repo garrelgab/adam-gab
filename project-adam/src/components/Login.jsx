@@ -74,15 +74,15 @@ const Login = (props) => {
             if (response.data.message) {
               setLoginStatus(response.data.message);
             } else {
-              if (response.data[0].role === 'admin') {
+              if (response.data[0].role === 'customer') {
                 const id = response.data[0].account_id;
                 console.log(id);
-                navigate('/dashboard', { replace: true, state: id });
+                navigate('/customer', { replace: true, state: id });
                 props.setTrigger(false);
               } else {
                 const id = response.data[0].account_id;
                 console.log(id);
-                navigate('/customer', { replace: true, state: id });
+                navigate('/dashboard', { replace: true, state: id });
                 props.setTrigger(false);
               }
             }

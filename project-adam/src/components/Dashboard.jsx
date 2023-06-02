@@ -40,7 +40,7 @@ const Dashboard = () => {
           <Route path='/privacy-policy' element={<SettingsPrivacyPolicy/>}/>
           <Route path='/terms-of-use' element={<SettingsTermsConditions/>}/>
           <Route path='/attendance' element={<DashboardAttendance/>}/>
-          <Route path='/employee' element={<UserAccountEmployee/>}/>
+          <Route path='/employee' element={<UserAccountEmployee id={id}/>}/>
           {/* <Route path='/customer' element={<UserAccountCustomer/>}/> */}
           <Route path='/customer' element={<DashboardMembership/>}/>
           <Route path='/audit' element={<DashboardAuditTrail/>}/>

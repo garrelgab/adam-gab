@@ -4,7 +4,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 
-const UserEmployeeModal = ({fetchEmployee}) => {
+const UserEmployeeModal = ({fetchEmployee, id}) => {
 
   function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -67,7 +67,17 @@ const UserEmployeeModal = ({fetchEmployee}) => {
   };
 
   
-  
+  const dashboard = true;
+  const reservation = false;
+  const windowPayment = false;
+  const salesReport = false;
+  const settings = false;
+  const userAccount = false;
+  const audit = false;
+  const attendanceLog = false;
+  const healthGuide = false;
+  const announcement = false;
+
   const handleConfirm = () => {
     if(!fname || !lname || !selectedGender || !email || !pword || !cpword){
       alert('Please fill up the empty fields.');
@@ -89,6 +99,16 @@ const UserEmployeeModal = ({fetchEmployee}) => {
       userPword: pword,
       userCPword: cpword,
       userRole: selectedRole,
+      dashboard: dashboard,
+      reservation: reservation,
+      window: windowPayment,
+      sales: salesReport,
+      settings: settings,
+      userAccount: userAccount,
+      audit: audit,
+      attendance: attendanceLog,
+      health: healthGuide,
+      announcement: announcement,
     })
     .then(response => {
       alert(`Successfully created. User: ${capitalizeFirstLetter(fname)} `, response);
@@ -112,8 +132,7 @@ const UserEmployeeModal = ({fetchEmployee}) => {
   
   return (
     <div className='flex flex-col  bg-[#1ca350] mt-[30px] rounded-md shadow-lg'>
-                <h1 className="block mb-1 text-md md:text-[30px] text-white mt-[50px] mx-auto text-left font-bold ">Add Employee User Account</h1>
-
+      <h1 className="block mb-1 text-md md:text-[30px] text-white mt-[50px] mx-auto text-left font-bold ">Add Employee User Account</h1>
       <div className='text-white py-[50px]  z-10'>
         <div>
           <form className='md:flex md:flex-col-3'>

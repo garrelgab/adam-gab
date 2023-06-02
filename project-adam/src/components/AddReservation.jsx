@@ -13,7 +13,7 @@ const AddReservation = (props) => {
   const sevenAM = dayjs().set('hour', 7).startOf('hour');
   const tenPM = dayjs().set('hour', 22).startOf('hour');
   
-  // const [name, setName] = useState('');
+  const [name, setName] = useState('');
   const [startTime, setStartTime] = useState(sevenAM);
   const [endTime, setEndTime] = useState(tenPM);
   const myDate = props.myDate;
@@ -43,9 +43,9 @@ const AddReservation = (props) => {
 
     const durationHours = endTime.diff(startTime, 'hours');
     if (durationHours > 3) {
-      alert('Reservation duration cannot exceed 4 hours.');
+      alert('Reservation duration cannot exceed 3 hours.');
       return;
-    }
+    }  
     axios.post("http://localhost:3001/api/reservation", {
       // customerName: name,
       customerID: id,
@@ -66,21 +66,21 @@ const AddReservation = (props) => {
 
   return (
     <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
-        <div className='text-white w-[500px] h-[400px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'>
+        <div className='text-white w-[400px] md:w-[500px] h-[500px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'>
             <button className='ml-[90%] mt-[5%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>
-          <div className='mx-[50px]'>
+            <div className='mx-[50px]'>
               <div className='flex justify-start'>
                 <h1 className='text-[20px] font-bold'>{props.date1}</h1>
               </div>
-              {/* <div className='my-[20px] flex justify-center'>
+              <div className='my-[20px] flex'>
                 <form>
-                <h1 className='text-[20px] font-bold'>{id}</h1>
+                {/* <h1 className='text-[20px] font-bold'>{id}</h1> */}
 
-                  <input type="text" className="shadow-lg block w-[350px] mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} required/>
+                  <input type="text" className=" flex shadow-lg mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={name} onChange={(e) => setName(e.target.value)} required/>
                 </form>
-              </div> */}
+              </div>
               <div className='flex flex-col mt-[30px]'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <label>Start: </label>

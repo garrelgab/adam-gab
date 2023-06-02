@@ -26,7 +26,7 @@ const DashboardAnnouncement = (props) => {
         {
             field: 'annContent',
             headerName: 'Message',
-            width: 500, // Set the desired width
+            flex: 1, // Set the desired width
             renderCell: (params) => (
             <div style={{ width: '100%', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{params.value}</div>
             ),

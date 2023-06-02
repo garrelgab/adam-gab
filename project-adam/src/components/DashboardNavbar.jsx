@@ -8,22 +8,16 @@ const DashboardNavbar = (props) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     const userID = props.id;
-    const userRole = props.role;
     const [nav, setNav] = useState(false);
     const [navSettings, setNavSettings] = useState(false);
     const [navUser, setNavUser] = useState(false);
-
     const handleNav = () => {
         setNav(!nav)
         setNavSettings(false);
         setNavUser(false);
     }
-
     const [currentTime, setCurrentTime] = useState('');
     const [currentDateTime, setCurrentDateTime] = useState('');
-
-    
-
     const handleRunningDate = () => {
         const interval = setInterval(() => {
         const now = new Date();
@@ -39,8 +33,6 @@ const DashboardNavbar = (props) => {
         clearInterval(interval);
         };
     }
-
-
     const handleNavSettings = () => {
         setNavSettings(!navSettings);
         setNavUser(false);
@@ -49,7 +41,6 @@ const DashboardNavbar = (props) => {
         setNavUser(!navUser);
         setNavSettings(false);
     }
-
     const handleLogout = () => {
         axios.put('http://localhost:3001/api/update-attendance')
         .then(response => {
@@ -75,9 +66,80 @@ const DashboardNavbar = (props) => {
             console.log(error);
         });
     };
+
+    const [dashboard, setDashboard] = useState(false);
+    const [reservation, setReservation] = useState(false);
+    const [windowPayment, setWindowPayment] = useState(false);
+    const [salesReport, setSalesReport] = useState(false);
+    const [settings, setSettings] = useState(false);
+    const [userAccount, setUserAccount] = useState(false);
+    const [audit, setAudit] = useState(false);
+    const [attendanceLog, setAttendace] = useState(false);
+    const [healthGuide, setHealthGudie] = useState(false);
+    const [announcement, setAnnounce] = useState(false);
+    const fetchAccessModule = () => {
+        axios
+        .get('http://localhost:3001/api/modules', {
+            params: {
+              accID: userID,
+            },
+          })
+        .then(response => {
+            if (response.data.length > 0) {
+              const data = response.data[0];
+      
+              const dashboardValue = data.dashboard;
+              const isDashboardChecked = Boolean(dashboardValue);
+              setDashboard(isDashboardChecked);
+      
+              const reservationValue = data.reservation;
+              const isReservationChecked = Boolean(reservationValue);
+              setReservation(isReservationChecked);
+      
+              const windowValue = data.window_payment;
+              const isWindowChecked = Boolean(windowValue);
+              setWindowPayment(isWindowChecked);
+      
+              const salesValue = data.sales_report;
+              const isSalesChecked = Boolean(salesValue);
+              setSalesReport(isSalesChecked);
+      
+              const settingsValue = data.settings;
+              const isSettingsChecked = Boolean(settingsValue);
+              setSettings(isSettingsChecked);
+      
+              const userValue = data.user_account;
+              const isUserChecked = Boolean(userValue);
+              setUserAccount(isUserChecked);
+      
+              const auditValue = data.audit_trail;
+              const isAuditChecked = Boolean(auditValue);
+              setAudit(isAuditChecked);
+      
+              const attendanceValue = data.attendance_log;
+              const isAttendanceChecked = Boolean(attendanceValue);
+              setAttendace(isAttendanceChecked);
+      
+              const healthValue = data.health_guide;
+              const isHealthChecked = Boolean(healthValue);
+              setHealthGudie(isHealthChecked);
+      
+              const announcementValue = data.announcement;
+              const isAnnouncementChecked = Boolean(announcementValue);
+              setAnnounce(isAnnouncementChecked);
+            }
+            console.log(response);
+
+            })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
     useEffect(() => {
         handleRunningDate();
         fetchAccountName();
+        fetchAccessModule();
     }, []);
   return (
     <div className='fixed top-0 left-0 w-[100%] overflow-auto md:py-[20px] py-[20px] bg-[#1ca350] shadow-lg z-50'>
@@ -96,33 +158,48 @@ const DashboardNavbar = (props) => {
                 <h1 className='my-[30px] md:my-[40px] font-bold text-[20px] md:text-[30px]'>{capitalizeFirstLetter(fname)}</h1>
             </div>
             <ul className=''>
-                <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
+                {/* <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Dashboard</h1></li>
-                </LinkRouter>
+                </LinkRouter> */}
+                {dashboard && (
+                    <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>
+                        <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>
+                            <h1 className='mx-[20px]'>Dashboard</h1>
+                        </li>
+                    </LinkRouter>
+                )}
                 {/* <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Membership</h1></li>
                 </LinkRouter> */}
-                <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Reservation Management</h1></li>
-                </LinkRouter>
-                <LinkRouter to='/dashboard/pos' state={userID} onClick={handleNav}>
-                    <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Window Payment (Walk-ins)</h1></li>
-                </LinkRouter>
+                { reservation && (
+                    <LinkRouter to="/dashboard/reservation" state={userID} onClick={handleNav}>
+                        <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Reservation Management</h1></li>
+                    </LinkRouter>
+                )}
+                { windowPayment && (
+                    <LinkRouter to='/dashboard/pos' state={userID} onClick={handleNav}>
+                        <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Window Payment (Walk-ins)</h1></li>
+                    </LinkRouter>
+                )}
                 {/* <LinkRouter to='/dashboard/inventory' state={userID} onClick={handleNav}>
                     <li className='p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Inventory Management</h1></li>
                 </LinkRouter>
                  <LinkRouter to='/dashboard/expenses' state={userID} onClick={handleNav}>
                     <li className='hidden md:flex p-4 md:py-6 hover:text-[#93F4D3] hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Expenses Management</h1></li>
                 </LinkRouter> */}
-                <LinkRouter to='/dashboard/salesreport' state={userID} onClick={handleNav}>
-                    <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Sales Report</h1></li>
-                </LinkRouter>
-                <div className={!navSettings ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavSettings}>
-                    <li className='p-4 md:py-6'><h1 className='mx-[20px]'>Settings</h1></li>
-                    <div className='mr-[30px] md:mr-[20px]'>
-                        {!navSettings ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
+                {salesReport && (
+                    <LinkRouter to='/dashboard/salesreport' state={userID} onClick={handleNav}>
+                        <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Sales Report</h1></li>
+                    </LinkRouter>
+                )}
+                {settings && (
+                    <div className={!navSettings ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavSettings}>
+                        <li className='p-4 md:py-6'><h1 className='mx-[20px]'>Settings</h1></li>
+                        <div className='mr-[30px] md:mr-[20px]'>
+                            {!navSettings ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
+                        </div>
                     </div>
-                </div>
+                )}
                 {navSettings && (
                     <ul className='ease-in-out duration-300'>
                         <LinkRouter to='/dashboard/gcash' state={userID} onClick={handleNav}>
@@ -139,12 +216,14 @@ const DashboardNavbar = (props) => {
                         </LinkRouter>
                     </ul>
                 )}
-                <div className={!navUser ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavUser}>
-                    <li className='p-4 md:py-6'><h1 className='mx-[20px]'>User Account</h1></li>
-                    <div className='mr-[30px] md:mr-[20px]'>
-                        {!navUser ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
+                {userAccount && (
+                    <div className={!navUser ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavUser}>
+                        <li className='p-4 md:py-6'><h1 className='mx-[20px]'>User Account</h1></li>
+                        <div className='mr-[30px] md:mr-[20px]'>
+                            {!navUser ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
+                        </div>
                     </div>
-                </div>
+                )}
                 {navUser && (
                     <ul className='ease-in-out duration-300'>
                         <LinkRouter to='/dashboard/employee' state={userID} onClick={handleNav}>
@@ -158,18 +237,26 @@ const DashboardNavbar = (props) => {
                         </LinkRouter>
                     </ul>
                 )}
-                <LinkRouter to='/dashboard/audit' state={userID} onClick={handleNav}>
-                    <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Audit Trail</h1></li>
-                </LinkRouter>
-                <LinkRouter to='/dashboard/attendance' state={userID} onClick={handleNav}>
-                    <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Attendance Log</h1></li>
-                </LinkRouter>
-                <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Guide</h1></li>
-                </LinkRouter>
-                <LinkRouter to="/dashboard/announcement" state={userID} onClick={handleNav}>
-                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
-                </LinkRouter>
+                {audit && (
+                    <LinkRouter to='/dashboard/audit' state={userID} onClick={handleNav}>
+                        <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Audit Trail</h1></li>
+                    </LinkRouter>
+                )}
+                {attendanceLog && (
+                    <LinkRouter to='/dashboard/attendance' state={userID} onClick={handleNav}>
+                        <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Attendance Log</h1></li>
+                    </LinkRouter>
+                )}
+                {healthGuide && (
+                    <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
+                        <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Guide</h1></li>
+                    </LinkRouter>
+                )}
+                {announcement && (
+                    <LinkRouter to="/dashboard/announcement" state={userID} onClick={handleNav}>
+                        <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>
+                    </LinkRouter>
+                )}
                 <LinkRouter to='/'>
                     <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300' onClick={handleLogout}><h1 className='mx-[20px] font-bold'>Logout</h1></li>
                 </LinkRouter>
