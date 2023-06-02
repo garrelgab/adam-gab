@@ -15,6 +15,12 @@ const FAQs = () => {
   const [selectOption, setSelectedOption] = useState(null);
   const [selectOptionName, setSelectedOptionName] = useState(null);
   const [rows, setRows] = useState([]);
+
+  const renderInstructionCell = (params) => {
+    const descriptionText = params.value
+    .replace(/<[^>]+>/g, '') // Remove HTML tags
+  return <div style={{ whiteSpace: 'pre-wrap', overflow: 'auto', maxHeight:250}}>{descriptionText}</div>;
+};
   const columns = [
     { field: 'id', headerName: 'ID', width: 150 },
     // { field: 'name', headerName: 'Question', width: 350 },
@@ -29,15 +35,13 @@ const FAQs = () => {
     {
       field: 'description',
       headerName: 'Description',
-      width: 500, // Set the desired width
-      renderCell: (params) => (
-        <div style={{ width: '100%', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>{params.value}</div>
-      ),
+      flex: 1, // Set the desired width
+      renderCell: renderInstructionCell,
 
     }
     // { field: 'description', headerName: 'Description', width: 650 },
   ];
-  useEffect(() => {
+  const fetchOptions = () => {
     axios.get('http://localhost:3001/api/option-faq')
     .then((response) => {
       setOptions(response.data);
@@ -45,6 +49,9 @@ const FAQs = () => {
     .catch((error) => {
       console.log(error);
     });
+  }
+  useEffect(() => {
+    fetchOptions();
     fetchData();
   },[]);
 
@@ -115,6 +122,7 @@ const FAQs = () => {
     .then((response) => {
         alert('Successfully Added.', name);
         fetchData();
+        fetchOptions();
     })
     .catch((error) => {
         console.error('Error saving data.', error)
@@ -126,6 +134,10 @@ const FAQs = () => {
 
   //FAQ's
   
+  const clearText = () => {
+    setName('');
+    setEditorContent('');
+  }
 
   const fetchData = () => {
     axios.get("http://localhost:3001/api/faqs")

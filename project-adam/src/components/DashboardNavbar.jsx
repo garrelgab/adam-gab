@@ -128,9 +128,7 @@ const DashboardNavbar = (props) => {
               const isAnnouncementChecked = Boolean(announcementValue);
               setAnnounce(isAnnouncementChecked);
             }
-            // console.log(response);
-
-            })
+        })
         .catch(error => {
             console.log(error);
         });

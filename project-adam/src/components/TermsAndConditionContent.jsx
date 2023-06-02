@@ -1,14 +1,41 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
 const TermsAndConditionContent = () => {
+  const [terms, setTerms] = useState([]);
+  const fetchTermsAndConditions = () => {
+    axios.get('http://localhost:3001/api/terms')
+    .then(response => {
+      setTerms(response.data)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+  useEffect(() => {
+    fetchTermsAndConditions();
+  }, []);
   return (
     <div className='bg-[#d3d3d3] flex flex-col justify-center items-center py-[50px] drop-shadow-md'>
         {/* <h1 className='text-[30px] text-white'>ADAM Fitness Center</h1> */}
         <h1 className='flex md:flex md:text-[50px] text-[30px]  md:mt-[50px] font-extrabold '>ADAM<p className='text-[#1ca350] px-[5px]'>FITNESS</p>CENTER</h1>
         <div className='flex flex-col mx-[40px] md:w-[1240px] mt-[40px] '>
             <h1 className='mt-[50px] text-[30px] md:text-[35px] font-extrabold'>Terms and Conditions</h1>
+            {terms.map(term => (
+              <div key={term.terms_id} className='mx-[20px] text-justify'>
+                <h1 className='text-[20px] text-[#1ca350] mt-[30px]'>{term.name}</h1>
+                {/* <p className='mt-[10px]'>{term.description.replace(/<[^>]+>/g, '')}</p> */}
+                <p className='mt-[10px]' dangerouslySetInnerHTML={{__html: term.description.replace(/(\. )(?=[A-Z])/g, '.\n\n')}}></p>
 
-            <div className='ml-[50px] mt-[50px] text-justify'>
+              </div>
+            ))}
+            
+        </div>
+    </div>
+  )
+}
+
+{/* <div className='ml-[50px] mt-[50px] text-justify'>
                 <h1 className='text-[20px] text-[#1ca350]'>Provision of Personal Data</h1>
                 <p className='mt-[10px]'>A. ADAM Fitness recognizes the importance of the personal data you have entrusted to us and believes that it is our responsibility to properly manage, protect and process your personal data.</p>
                 <p className='mt-[10px]'>B. You understand, acknowledge and consent to the Company processing, collecting, and using your personal data for the following purposes: Processing, administering, and managing your ADAM Fitness Contract and any membership benefit programs. Processing any transactions or payments made by you and maintaining payment records. Record-keeping purposes.</p>
@@ -70,10 +97,5 @@ const TermsAndConditionContent = () => {
                 <p className='mt-[10px]'>10. Please always use a towel and wipe down equipment after use with cleaning items provided in fitness gym.</p>
                 <p className='mt-[10px]'>11. Members should be considerate of other Members and wipe down equipment with a hand towel and not unduly spend time using any specific equipment to allow other Members use thereof especially when the fitness gym is full.</p>
 
-            </div>
-        </div>
-    </div>
-  )
-}
-
+            </div> */}
 export default TermsAndConditionContent

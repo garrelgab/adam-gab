@@ -1015,6 +1015,17 @@ app.put('/api/update-desc-privacy', (req, res) => {
   });
 });
 
+app.get('/api/privacy-policy', (req, res) => {
+  const getPolicy = 'select * from tbl_privacy';
+  connection.query(getPolicy, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 //Terms and Condition Section
 app.post('/api/add-terms', (req, res) => {
   const addTerms = req.body.addTerms;
@@ -1073,6 +1084,17 @@ app.put('/api/update-desc-terms', (req, res) => {
     }
   });
 });
+
+app.get('/api/terms', (req, res) => {
+  const getTerms = `select * from tbl_terms`;
+  connection.query(getTerms, (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+})
 
 //About Us (Gym Info) Section
 app.post('/api/add-about', (req, res) => {
