@@ -6,7 +6,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 const DashboardSalesReport = () => {
-    const columns = [
+    const gridColumns = [
       { field: 'id', headerName: 'ID', width:200},
       // { field: 'order_number', headerName: 'Order Number', width: 400},
       { field: 'description', headerName: 'Description', flex: 1},
@@ -15,7 +15,7 @@ const DashboardSalesReport = () => {
       { field: 'time', headerName: 'Time', width: 300},
 
     ]
-    const[rows, setRows] = useState([]);
+    const[gridRows, setRows] = useState([]);
 
     const dailyColums = [
       {field: 'day', headerName: 'Day', flex: 1},
@@ -129,19 +129,132 @@ const DashboardSalesReport = () => {
     const formatPrice = (price) => {
       return Number(price).toFixed(2);
     };
-
+    
     // Export data to PDF
-    const handleExportPDF = () => {
+    const exportToPdfAll = () => {
+      // Create a new instance of jsPDF
       const doc = new jsPDF();
-      doc.autoTable({ html: '#data-grid' });
-      doc.save('data-grid.pdf');
+    
+      // Define the columns and rows for the PDF table
+      const columns = gridColumns
+        .filter((column) => column.field !== 'id') // Exclude the "Actions" and "Status" columns
+        .map((column) => ({
+          header: column.headerName,
+          dataKey: column.field,
+        }));
+      const rows = gridRows.map((row) =>
+        gridColumns
+          .filter((column) => column.field !== 'id') // Exclude the "Actions" and "Status" columns
+          .map((column) => row[column.field])
+      );
+    
+      // Add the table to the PDF document
+      doc.autoTable({
+        columns,
+        body: rows,
+      });
+    
+      // Save the PDF file
+      doc.save('Sales Report.pdf');
+    };
+
+    const exportToPdfDaily = () => {
+      // Create a new instance of jsPDF
+      const doc = new jsPDF();
+    
+      // Define the columns and rows for the PDF table
+      const columns = dailyColums.map((column) => ({
+          header: column.headerName,
+          dataKey: column.field,
+        }));
+      const rows = dailyRows.map((row) =>
+        dailyColums.map((column) => row[column.field])
+      );
+    
+      // Add the table to the PDF document
+      doc.autoTable({
+        columns,
+        body: rows,
+      });
+    
+      // Save the PDF file
+      doc.save('Sales Report Daily.pdf');
+    };
+
+    const exportToPdfWeekly = () => {
+      // Create a new instance of jsPDF
+      const doc = new jsPDF();
+    
+      // Define the columns and rows for the PDF table
+      const columns = weekColums.map((column) => ({
+          header: column.headerName,
+          dataKey: column.field,
+        }));
+      const rows = weekRows.map((row) =>
+        weekColums.map((column) => row[column.field])
+      );
+    
+      // Add the table to the PDF document
+      doc.autoTable({
+        columns,
+        body: rows,
+      });
+    
+      // Save the PDF file
+      doc.save('Sales Report Weekly.pdf');
+    };
+
+    const exportToPdfMonthly = () => {
+      // Create a new instance of jsPDF
+      const doc = new jsPDF();
+    
+      // Define the columns and rows for the PDF table
+      const columns = monthColumns.map((column) => ({
+          header: column.headerName,
+          dataKey: column.field,
+        }));
+      const rows = monthRows.map((row) =>
+        monthColumns.map((column) => row[column.field])
+      );
+    
+      // Add the table to the PDF document
+      doc.autoTable({
+        columns,
+        body: rows,
+      });
+    
+      // Save the PDF file
+      doc.save('Sales Report Monthly.pdf');
+    };
+
+    const exportToPdfYearly = () => {
+      // Create a new instance of jsPDF
+      const doc = new jsPDF();
+    
+      // Define the columns and rows for the PDF table
+      const columns = yearColumns.map((column) => ({
+          header: column.headerName,
+          dataKey: column.field,
+        }));
+      const rows = yearRows.map((row) =>
+        yearColumns.map((column) => row[column.field])
+      );
+    
+      // Add the table to the PDF document
+      doc.autoTable({
+        columns,
+        body: rows,
+      });
+    
+      // Save the PDF file
+      doc.save('Sales Report Yearly.pdf');
     };
 
     // Export data to Excel
     const handleExportExcel = () => {
-      const data = rows.map(row => {
+      const data = gridRows.map(row => {
         const rowData = {};
-        columns.forEach(column => {
+        gridColumns.forEach(column => {
           rowData[column.field] = row[column.field];
         });
         return rowData;
@@ -158,37 +271,69 @@ const DashboardSalesReport = () => {
       {
         title: 'All',
         content:
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
-            <DataGrid rows={rows} columns={columns} className='text-center' disableExtendRowFullWidth/>
+        <div>
+          <div className='flex justify-end'>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfAll}>Export to PDF</button>
+          </div>
+          <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
+            <DataGrid rows={gridRows} columns={gridColumns} className='text-center' disableExtendRowFullWidth/>
+          </div>
         </div>
       },
       {
         title: 'Daily',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
-          <DataGrid rows={dailyRows} columns={dailyColums} className='text-center' disableExtendRowFullWidth/>
+        <div>
+          <div className='flex justify-end'>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfDaily}>Export to PDF</button>
+          </div>
+          <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
+            <DataGrid rows={dailyRows} columns={dailyColums} className='text-center' disableExtendRowFullWidth/>
+          </div>
         </div>
       },
       {
         title: 'Weekly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
-          <DataGrid rows={weekRows} columns={weekColums} className='text-center' disableExtendRowFullWidth/>
+        <div>
+          <div className='flex justify-end'>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfWeekly}>Export to PDF</button>
+          </div>
+          <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
+            <DataGrid rows={weekRows} columns={weekColums} className='text-center' disableExtendRowFullWidth/>
+          </div>
         </div>
+        
       },
       {
         title: 'Monthly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
-          <DataGrid rows={monthRows} columns={monthColumns} className='text-center' disableExtendRowFullWidth/>
+        <div>
+          <div className='flex justify-end'>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfMonthly}>Export to PDF</button>
+          </div>
+          <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
+            <DataGrid rows={monthRows} columns={monthColumns} className='text-center' disableExtendRowFullWidth/>
+          </div>
         </div>
       },
       {
         title: 'Yearly',
         content: 
-        <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
-          <DataGrid rows={yearRows} columns={yearColumns} className='text-center' disableExtendRowFullWidth/>
+        <div>
+          <div className='flex justify-end'>
+            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfYearly}>Export to PDF</button>
+          </div>
+          <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
+            <DataGrid rows={yearRows} columns={yearColumns} className='text-center' disableExtendRowFullWidth/>
+          </div>
         </div>
+        
       },
     ];
   return (
@@ -196,10 +341,7 @@ const DashboardSalesReport = () => {
       <div className='flex justify-between'>
         <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Sales Report</h1>  
 
-        <div>
-            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
-            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportPDF}>Export to PDF</button>
-        </div>
+        
       </div>
         <div className=''>
           <PosTabs tabs={tabs}/>

@@ -339,7 +339,7 @@ const CreateAccount = (props) => {
                     </div>
                 </form>
             </div>
-            <div className='flex items-center flex-col mx-[30px] mt-[50px] py-5 rounded-md shadow-lg text-black bg-gray-100 justify-center'>
+            <div className='hidden items-center flex-col mx-[30px] mt-[50px] py-5 rounded-md shadow-lg text-black bg-gray-100 justify-center'>
                 <h1 className='mb-[30px] text-[30px] text-center font-bold'>Health Conditions Issues</h1>
                 <div className='flex flex-col md:flex-row'>
                 <FormGroup>
