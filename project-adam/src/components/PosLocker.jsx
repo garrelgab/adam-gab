@@ -63,14 +63,17 @@ const PosLocker = () => {
   };
   const handleDateChange1 = (date) => {
     setSelectedStartDate(date);
+    const endDate = new Date(date);
+    endDate.setMonth(endDate.getMonth() + 1);
+    setSelectedEndDate(endDate);
     setShowCalendar1(false);
     setShowCalendar2(false);
   };
-  const handleDateChange2 = (date) => {
-    setSelectedEndDate(date);
-    setShowCalendar1(false);
-    setShowCalendar2(false);
-  };
+  // const handleDateChange2 = (date) => {
+  //   setSelectedEndDate(date);
+  //   setShowCalendar1(false);
+  //   setShowCalendar2(false);
+  // };
 
   const [selectOption, setSelectOption] = useState(null);
   const handleOptionChange = (selectedOption) => {
@@ -132,6 +135,9 @@ const PosLocker = () => {
 
   useEffect(() => {
     fetchLocker();
+    const endDate = new Date(selectedEndDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    setSelectedEndDate(endDate);
   },[])
   return (
     <div className='text-[#1ca350]'>
@@ -154,14 +160,14 @@ const PosLocker = () => {
             </div>
             <div className='ml-[40px]'>
               <label className="block mb-1 text-md md:text-lg text-left font-extrabold">End Date</label>
-              <button onClick={handleButtonClick2} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required>
+              <button onClick={handleButtonClick2} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required readOnly>
                 {selectedEndDate ? moment(selectedEndDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
               </button>
-              {showCalendar2 && (
+              {/* {showCalendar2 && (
                 <div className='relative z-10'>
-                    <Calendar value={selectedEndDate} onChange={handleDateChange2} minDate={minDate} className='fixed bg-white rounded-lg font-light shadow-xl text-black focus:outline-none'/>
+                    <Calendar value={selectedEndDate} minDate={minDate} className='fixed bg-white rounded-lg font-light shadow-xl text-black focus:outline-none'/>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>

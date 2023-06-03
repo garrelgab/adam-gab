@@ -7,7 +7,7 @@ const ImageModal = ({ open, onClose, imageData }) => {
   useEffect(() => {
     if (imageData) {
       setBase64Image(imageData);
-      console.log(imageData);
+      // console.log(imageData);
     } else {
       setBase64Image('');
     }
@@ -18,7 +18,7 @@ const ImageModal = ({ open, onClose, imageData }) => {
         {base64Image ? (
           <img
             src={base64Image}
-            alt="Proof of Payment"
+            alt="Image Modal"
             // style={{ width: '40%', height: 'auto'}}
             className='w-[40%] h-auto rounded-md'
           />

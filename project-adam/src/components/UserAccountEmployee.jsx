@@ -24,7 +24,7 @@ const UserAccountEmployee = (props) => {
     {field: 'date', headerName: 'Date Account Created', width: 200},
     {
       field: 'access',
-      headerName: 'Access',
+      headerName: 'Module',
       width: 150,
       renderCell: (params) => (
         <Button

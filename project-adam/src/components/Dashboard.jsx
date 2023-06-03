@@ -19,6 +19,9 @@ import DashboardHealthTips from './DashboardHealthTips'
 import SettingsTermsConditions from './SettingsTermsConditions'
 import DashboardAnnouncement from './DashboardAnnouncement'
 import DashboardMembershipModule from './DashboardMembershipModule'
+// import SettingsAboutUs from './SettingsAboutUs'
+import SettingsAboutUsGym from './SettingsAboutUsGym'
+import SettingsServiceOffer from './SettingsServiceOffer'
 // import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
@@ -46,7 +49,10 @@ const Dashboard = () => {
           <Route path='/audit' element={<DashboardAuditTrail/>}/>
           <Route path='/health-tips' element={<DashboardHealthTips id={id}/>}/>
           <Route path='/announcement' element={<DashboardAnnouncement id={id}/>}/>
-          
+          {/* <Route path='/about-us' element={<SettingsAboutUs id={id}/>}/> */}
+          <Route path='/about-us' element={<SettingsAboutUsGym id={id}/>}/>
+          <Route path='/service-offer' element={<SettingsServiceOffer id={id}/>}/>
+
         </Routes>
     </>
   )

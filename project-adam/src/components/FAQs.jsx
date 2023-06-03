@@ -22,7 +22,7 @@ const FAQs = () => {
   return <div style={{ whiteSpace: 'pre-wrap', overflow: 'auto', maxHeight:250}}>{descriptionText}</div>;
 };
   const columns = [
-    { field: 'id', headerName: 'ID', width: 150 },
+    // { field: 'id', headerName: 'ID', width: 150 },
     // { field: 'name', headerName: 'Question', width: 350 },
     {
       field: 'name',

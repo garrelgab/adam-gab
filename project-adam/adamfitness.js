@@ -5,7 +5,8 @@ const cors = require('cors')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const fs = require('fs');
-// const moment = require('moment')
+const qrcode = require('qrcode');
+const moment = require('moment')
 const app = express();
 const bcrypt = require('bcrypt');
 const port = process.env.PORT || 3001
@@ -1097,23 +1098,61 @@ app.get('/api/terms', (req, res) => {
 })
 
 //About Us (Gym Info) Section
+// app.post('/api/add-about', (req, res) => {
+//   // const addAbout = req.body.addAbout;
+//   const addDescription = req.body.addDescription;
+//   const addStatus = req.body.addStatus;
+//   const insertAbout = "insert into tbl_about (description, status) values (?, ?)";
+//   connection.query(insertAbout, [addDescription, addStatus], (err, result) => {
+//     if(err) {
+//       console.log("Failed to insert About Us", err);
+//     }
+//     else{
+//       res.send(result);
+//     }
+//   });
+// });
+
 app.post('/api/add-about', (req, res) => {
-  const addAbout = req.body.addAbout;
   const addDescription = req.body.addDescription;
-  const addStatus = req.body.addStatus;
-  const insertAbout = "insert into tbl_about (name, description, status) values (?, ?, ?)";
-  connection.query(insertAbout, [addAbout, addDescription, addStatus], (err, result) => {
-    if(err) {
-      console.log("Failed to insert About Us", err);
-    }
-    else{
-      res.send(result);
+  // const addStatus = req.body.addStatus;
+  const selectAbout = "SELECT * FROM tbl_about";
+  const insertAbout = "INSERT INTO tbl_about (description, status) VALUES (?, 'Active')";
+  const updateAbout = "UPDATE tbl_about SET description = ?, status = 'Active'";
+
+  connection.query(selectAbout, (err, rows) => {
+    if (err) {
+      console.log("Failed to fetch data from tbl_about", err);
+      res.sendStatus(500);
+    } else {
+      if (rows.length === 0) {
+        // No existing data, insert new record
+        connection.query(insertAbout, [addDescription], (err, result) => {
+          if (err) {
+            console.log("Failed to insert About Us", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Added.');
+          }
+        });
+      } else {
+        // Existing data, update the record
+        connection.query(updateAbout, [addDescription], (err, result) => {
+          if (err) {
+            console.log("Failed to update About Us", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Updated.');
+          }
+        });
+      }
     }
   });
 });
 
+
 app.get('/api/option-about', (req, res) => {
-  const optionAbout = "select about_id, name from tbl_about";
+  const optionAbout = "select about_id from tbl_about";
   connection.query(optionAbout, (err, results) => {
     if(err) {
       console.log("Failed to get option", err);
@@ -1128,14 +1167,25 @@ app.get('/api/option-about', (req, res) => {
   });
 });
 
+// app.get('/api/desc-about', (req, res) => {
+//   const descAboutID = req.query.descAboutID;
+//   const descAbout = "select description from tbl_about where about_id = ?";
+//   connection.query(descAbout, [descAboutID], (err, result) => {
+//     if(err){
+//       console.log("Failed to get description", err);
+//     }
+//     else{
+//       res.send(result);
+//     }
+//   });
+// });
+
 app.get('/api/desc-about', (req, res) => {
-  const descAboutID = req.query.descAboutID;
-  const descAbout = "select description from tbl_about where about_id = ?";
-  connection.query(descAbout, [descAboutID], (err, result) => {
-    if(err){
-      console.log("Failed to get description", err);
-    }
-    else{
+  const descAbout = 'select description from tbl_about';
+  connection.query(descAbout, (err, result) => {
+    if (err) {
+      console.log('Failed to get description', err);
+    } else {
       res.send(result);
     }
   });
@@ -1150,6 +1200,31 @@ app.put('/api/update-desc-about', (req, res) => {
       console.log("Failed to update description", err);
     }
     else{
+      res.send(result);
+    }
+  });
+});
+
+//Service Offer
+app.post('/api/add-service-offer', (req, res) => {
+  const name = req.body.name;
+  const desc = req.body.desc;
+  const add = 'insert into tbl_service_offer (name, description) values (?, ?)';
+  connection.query(add, [name, desc], (err, result) => {
+    if (err) {
+      console.log('Failed to add service offer', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/service-offer', (req, res) => {
+  const get = 'select * from tbl_service_offer';
+  connection.query(get, (err, result) => {
+    if (err) {
+      console.log('Failed to get service offer', err);
+    } else {
       res.send(result);
     }
   });
@@ -1605,7 +1680,7 @@ app.post('/api/add-locker', (req, res) => {
   const enddate = req.body.enddate;
 
   // Check if the key is already used
-  const checkKeyQuery = `SELECT * FROM tbl_locker WHERE key_no = '${key}' AND start_date < '${startdate}' AND end_date >= '${enddate}'`;
+  const checkKeyQuery = `SELECT * FROM tbl_locker WHERE key_no = '${key}' AND start_date <= '${enddate}' AND end_date >= '${startdate}'`;
   connection.query(checkKeyQuery, (err, rows) => {
     if (err) {
       console.log('Error checking key:', err);
@@ -1613,7 +1688,7 @@ app.post('/api/add-locker', (req, res) => {
     } else {
       if (rows.length > 0) {
         // The key is already used and not available until the end date
-        res.status(400).json({ error: 'The selected key is not available until the end date' });
+        res.status(400).json({ error: 'The selected key is not available' });
       } else {
         // The key is available, proceed with adding the locker
         const currentDate = new Date().toISOString().slice(0, 10);
@@ -2098,6 +2173,57 @@ app.get('/api/gcash', (req, res) => {
   });
 });
 
+// app.post('/api/add-membership', (req, res) => {
+//   const accID = req.body.accID;
+//   const proofID = req.body.proofID;
+//   const amount = req.body.amount;
+//   const membershipType = req.body.membershipType;
+//   const currentDate = new Date();
+//   const startDate = currentDate.toISOString().slice(0, 10);
+//   currentDate.setMonth(currentDate.getMonth() + 1);
+//   const endDate = currentDate.toISOString().slice(0, 10);
+//   const currentTime = new Date().toTimeString().slice(0, 8);
+
+//   const getAccountInfo = `select * from tbl_account_info where account_info_id = '${accID}'`;
+//   connection.query(getAccountInfo, (err, accountInfoResult) => {
+//     if(err){
+//       console.log('Failed to get account info', err);
+//     }else{
+//       const fname = accountInfoResult[0].fname + " " + accountInfoResult[0].lname;
+//       const accName = accountInfoResult[0].fname;
+//       const email = accountInfoResult[0].email;
+//       // const name = fname + lname;
+//       const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')`
+//       connection.query(insertMembership, [accID, fname, email, membershipType, amount, startDate, endDate, startDate, currentTime], (err, insertMembershipResult) => {
+//         if(err){
+//           console.log('Failed to add membership', err);
+//         }else{
+//           // res.sendStatus(200);
+//           const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
+//           connection.query(updatePayment, [proofID], (err, paymentResult) => {
+//             if(err){
+//               console.log('Failed to update payment', err);
+//             } else {
+//               const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+//               connection.query(
+//                 insertNotification,
+//                 [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
+//                 (err, notificationResult) => {
+//                   if (err) {
+//                     console.log('Failed to insert notification', err);
+//                   } else {
+//                     res.sendStatus(200);
+//                   }
+//                 }
+//               );
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
+// });
+
 app.post('/api/add-membership', (req, res) => {
   const accID = req.body.accID;
   const proofID = req.body.proofID;
@@ -2118,29 +2244,56 @@ app.post('/api/add-membership', (req, res) => {
       const accName = accountInfoResult[0].fname;
       const email = accountInfoResult[0].email;
       // const name = fname + lname;
-      const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')`
+      const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status, qrcode) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', '')`;
       connection.query(insertMembership, [accID, fname, email, membershipType, amount, startDate, endDate, startDate, currentTime], (err, insertMembershipResult) => {
         if(err){
           console.log('Failed to add membership', err);
         }else{
-          // res.sendStatus(200);
-          const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
-          connection.query(updatePayment, [proofID], (err, paymentResult) => {
-            if(err){
-              console.log('Failed to update payment', err);
+          const membershipId = insertMembershipResult.insertId;
+
+          const formattedStartDate = moment(startDate).format('MMMM DD, YYYY');
+          const formattedEndDate = moment(endDate).format('MMMM DD, YYYY');
+          const qrCodeText = `Membership ID: ${membershipId}\nName: ${fname}\nMembership Type: ${membershipType}\nStart Date: ${formattedStartDate}\nEnd Date: ${formattedEndDate}`;
+
+          qrcode.toDataURL(qrCodeText, (err, qrCodeDataUrl) => {
+            if (err) {
+              console.log('Failed to generate QR code', err);
+              // Handle error
             } else {
-              const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
-              connection.query(
-                insertNotification,
-                [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
-                (err, notificationResult) => {
-                  if (err) {
-                    console.log('Failed to insert notification', err);
-                  } else {
-                    res.sendStatus(200);
-                  }
+              // Insert the QR code data into tbl_membership
+              const base64Data = qrCodeDataUrl.replace(/^data:image\/\w+;base64,/, '');
+              const buffer = Buffer.from(base64Data, 'base64');
+            
+              const updateMembership = `UPDATE tbl_membership SET qrcode = ? WHERE membership_id = ?`;
+              connection.query(updateMembership, [buffer, membershipId], (err, updateMembershipResult) => {
+                if (err) {
+                  console.log('Failed to update membership with QR code', err);
+                  // Handle error
+                } else {
+                  // QR code generated and inserted successfully
+                  // res.sendStatus(200);
+                  const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
+                  connection.query(updatePayment, [proofID], (err, paymentResult) => {
+                    if(err){
+                      console.log('Failed to update payment', err);
+                    } else {
+                      const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+                      connection.query(
+                        insertNotification,
+                        [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
+                        (err, notificationResult) => {
+                          if (err) {
+                            console.log('Failed to insert notification', err);
+                          } else {
+                            res.sendStatus(200);
+                          }
+                        }
+                      );
+                    }
+                  });
+                  // res.sendStatus(200);
                 }
-              );
+              });
             }
           });
         }
@@ -2150,11 +2303,12 @@ app.post('/api/add-membership', (req, res) => {
 });
 
 app.get('/api/membership', (req, res) => {
-  const fetchMembershipData = `select membership_id, account_info_id, name, email, membership_type, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_membership`;
+  const fetchMembershipData = `select membership_id, account_info_id, name, email, membership_type, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status, qrcode from tbl_membership`;
   connection.query(fetchMembershipData, (err, result) => {
     if (err) {
       console.log('Failed to fetch membership data', err);
     } else {
+      // console.log(result[0].qrcode);
       res.send(result);
     }
   });
@@ -2162,7 +2316,7 @@ app.get('/api/membership', (req, res) => {
 
 app.get('/api/notification', (req, res) => {
   const accID = req.query.accID;
-  const fetchNotifData = `select notification_id, account_info_id, description, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_notification where account_info_id = ?`;
+  const fetchNotifData = `select notification_id, account_info_id, description, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_notification where account_info_id = ? order by notification_id desc`;
   connection.query(fetchNotifData, [accID], (err, result) => {
     if (err) {
       console.log('Failed to fetch notif data', err);
