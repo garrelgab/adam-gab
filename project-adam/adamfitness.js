@@ -602,6 +602,7 @@ app.post("/api/reservation", (req, res) => {
   const customerEndTime = req.body.customerEndTime;
   const customerDate = req.body.customerDate;
   const customerStatus = req.body.customerStatus;
+  const noPax = req.body.noPax;
   const customerID = req.body.customerID;
 
   const getCustomerName = `SELECT fname FROM tbl_account_info WHERE account_info_id = '${customerID}'`;
@@ -612,8 +613,8 @@ app.post("/api/reservation", (req, res) => {
     } else {
       const fname = results[0].fname; // Assuming the query returns a single row
 
-      const sqlInsert = "INSERT INTO tbl_reservation (name, time_start, time_end, customer_date, status) VALUES (?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
-      connection.query(sqlInsert, [fname, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
+      const sqlInsert = "INSERT INTO tbl_reservation (name, pax, time_start, time_end, customer_date, status) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?)";
+      connection.query(sqlInsert, [fname, noPax, customerStartTime, customerEndTime, customerDate, customerStatus], (err, result) => {
         if (err) {
           console.log("Error inserting reservation:", err);
           res.status(500).json({ error: "Failed to insert reservation" });
@@ -627,7 +628,7 @@ app.post("/api/reservation", (req, res) => {
 
 
 app.get("/api/events", (req, res) => {
-  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation";
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation";
   connection.query(fetchEvents, (err, result) => {
     if(err){
       console.log("Error fetching events:", err);
@@ -636,7 +637,7 @@ app.get("/api/events", (req, res) => {
     else{
       const events = result.map((event) => ({
         id: event.reservation_id,
-        title: `${event.name} - ${event.status}`,
+        title: `${event.name} - ${event.pax} Pax - ${event.status}`,
         start: `${event.start} ${event.time_start_formatted}`,
         end: `${event.start} ${event.time_end_formatted}`,
         backgroundColor: event.status === 'Pending' ? 'red' : 'green'
@@ -646,7 +647,7 @@ app.get("/api/events", (req, res) => {
   });
 });
 app.get("/api/events/approved", (req, res) => {
-  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation where status = 'Approved'";
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation where status = 'Approved'";
   connection.query(fetchEvents, (err, result) => {
     if(err){
       console.log("Error fetching events:", err);
@@ -655,7 +656,7 @@ app.get("/api/events/approved", (req, res) => {
     else{
       const events = result.map((event) => ({
         id: event.reservation_id,
-        title: `${event.status}`,
+        title: `${event.pax} Pax - ${event.status}`,
         start: `${event.start} ${event.time_start_formatted}`,
         end: `${event.start} ${event.time_end_formatted}`,
       }));

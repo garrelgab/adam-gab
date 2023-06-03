@@ -13,9 +13,10 @@ const AddReservation = (props) => {
   const sevenAM = dayjs().set('hour', 7).startOf('hour');
   const tenPM = dayjs().set('hour', 22).startOf('hour');
   
-  const [name, setName] = useState('');
+  // const [name, setName] = useState('');
   const [startTime, setStartTime] = useState(sevenAM);
   const [endTime, setEndTime] = useState(tenPM);
+  const [pax, setPax] = useState('');
   const myDate = props.myDate;
   const status = 'Pending';
 
@@ -32,10 +33,11 @@ const AddReservation = (props) => {
   };
  
   const handleSaveReservation = () => {
-    // if(!name) {
-    //   alert('Field required.');
-    //   return;
-    // }
+    if(pax >= 15) {
+      alert('Maximun of 15 Pax only.');
+      setPax('');
+      return;
+    }
     if (startTime.hour() < 7 || startTime.hour() >= 22 || endTime.hour() < 7 || endTime.hour() >= 22) {
       alert('Reservation can only be made between 7 AM and 10 PM.');
       return;
@@ -49,6 +51,7 @@ const AddReservation = (props) => {
     axios.post("http://localhost:3001/api/reservation", {
       // customerName: name,
       customerID: id,
+      noPax: pax,
       customerStartTime: startTimeFormat,
       customerEndTime: endTimeFormat,
       customerDate: myDate,
@@ -64,6 +67,13 @@ const AddReservation = (props) => {
     props.onClose(false);
   };
 
+  const handleChangeAmount = (event) => {
+    const inputValue = event.target.value;
+    // Validate if the input is a non-negative number
+    if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+      setPax(inputValue);
+    }
+  };
   return (
     <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
         <div className='text-white w-[400px] md:w-[500px] h-[500px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'>
@@ -78,7 +88,7 @@ const AddReservation = (props) => {
                 <form>
                 {/* <h1 className='text-[20px] font-bold'>{id}</h1> */}
 
-                  <input type="text" className=" flex shadow-lg mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={name} onChange={(e) => setName(e.target.value)} required/>
+                  <input type="text" className=" flex shadow-lg mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={pax} onChange={handleChangeAmount} required/>
                 </form>
               </div>
               <div className='flex flex-col mt-[30px]'>
