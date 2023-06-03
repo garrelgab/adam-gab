@@ -9,7 +9,12 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 
 import HomeFAQs from './components/HomeFAQs';
 import TermsAndConditions from './components/TermsAndConditions';
+import { useEffect } from 'react';
 function App()  {
+
+  useEffect(() => {
+    document.title = 'ADAM Fitness Center'
+  }, []);
   return (
   <div>
     <Routes>
