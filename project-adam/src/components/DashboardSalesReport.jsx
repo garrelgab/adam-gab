@@ -5,6 +5,9 @@ import PosTabs from './PosTabs';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import Calendar from 'react-calendar'
+import moment from 'moment-timezone';
+
 const DashboardSalesReport = () => {
     const gridColumns = [
       { field: 'id', headerName: 'ID', width:200},
@@ -58,7 +61,8 @@ const DashboardSalesReport = () => {
       .catch(error => {
         console.error(error);
       });
-
+    };
+    const fetchWeekly = () => {
       //Weekly
       axios.get("http://localhost:3001/api/weekly-sales")
       .then((response) => {
@@ -74,7 +78,8 @@ const DashboardSalesReport = () => {
       .catch(error => {
         console.error(error);
       });
-
+    };
+    const fetchMonthly = () => {
       //Monthly
       axios.get("http://localhost:3001/api/monthly-sales")
       .then((response) => {
@@ -90,7 +95,8 @@ const DashboardSalesReport = () => {
       .catch(error => {
         console.error(error);
       });
-
+    };
+    const fetchYearly = () => {
       //Yearly
       axios.get("http://localhost:3001/api/yearly-sales")
       .then((response) => {
@@ -106,7 +112,8 @@ const DashboardSalesReport = () => {
         console.error(error);
       });
     };
-    useEffect(() => {
+
+    const fetchSalesReport = () => {
       axios.get("http://localhost:3001/api/sales-report")
       .then((response) => {
         const rows = response.data.map(item => ({
@@ -123,12 +130,68 @@ const DashboardSalesReport = () => {
       .catch(error => {
         console.error(error);
       });
+    };
 
+    const [showCalendar1, setShowCalendar1] = useState(false);
+    const [showCalendar2, setShowCalendar2] = useState(false);
+    const [selectedFromDate, setSelectedFromDate] = useState(new Date());
+    const [selectedToDate, setSelectedToDate] = useState(new Date());
+
+    const handleFromDateChange = (date) => {
+      setSelectedFromDate(date);
+      setShowCalendar1(false);
+      fetchSalesReportByDateRange(date, selectedToDate);
+    };
+    const handleToDateChange = (date) => {
+      setSelectedToDate(date);
+      setShowCalendar2(false);
+      fetchSalesReportByDateRange(selectedFromDate, date);
+    };
+    const handleFromButtonClick = () => {
+      setShowCalendar1(!showCalendar1);
+      setShowCalendar2(false);
+    };
+    const handleToButtonClick = () => {
+      setShowCalendar2(!showCalendar2);
+      setShowCalendar1(false);
+    };
+
+    const fetchSalesReportByDateRange = (startDate, endDate) => {
+      axios
+        .get("http://localhost:3001/api/filter-sales-report", {
+          params: {
+            startDate: startDate,
+            endDate: endDate,
+          },
+        })
+        .then((response) => {
+          const rows = response.data.map((item) => ({
+            id: item.sales_report_id,
+            description: item.description,
+            total: formatPrice(item.total),
+            date: item.date,
+            time: item.time,
+            // add more columns as needed
+          }));
+          setRows(rows);
+          // console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };    
+    useEffect(() => {
+      fetchSalesReport();
       fetchSales();
+      fetchWeekly();
+      fetchMonthly();
+      fetchYearly();
     }, []);
     const formatPrice = (price) => {
       return Number(price).toFixed(2);
     };
+
+    
     
     // Export data to PDF
     const exportToPdfAll = () => {
@@ -266,15 +329,41 @@ const DashboardSalesReport = () => {
       XLSX.writeFile(workbook, 'data-grid.xlsx');
     };
 
-
+    
     const tabs = [
       {
         title: 'All',
         content:
         <div>
-          <div className='flex justify-end'>
-            <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
-            <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfAll}>Export to PDF</button>
+          <div className='flex justify-between items-center'>
+            <div className='flex'>
+              <div>
+                <label className="block mb-1 text-md md:text-lg text-left font-bold text-[#1ca350]">Start Date</label>
+                <button onClick={handleFromButtonClick} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required>
+                  {selectedFromDate ? moment(selectedFromDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
+                </button>
+                {showCalendar1 && (
+                  <div className='relative z-10'>
+                      <Calendar value={selectedFromDate} onChange={handleFromDateChange} className='fixed bg-white rounded-lg font-light shadow-xl text-black focus:outline-none'/>
+                  </div>
+                )}
+              </div>
+              <div className='ml-[20px]'>
+                <label className="block mb-1 text-md md:text-lg text-left font-bold text-[#1ca350]">End Date</label>
+                <button onClick={handleToButtonClick} className='font-light shadow-lg w-[280px] text-left bg-gray-50 p-2 rounded-lg text-black focus:outline-none' required>
+                  {selectedToDate ? moment(selectedToDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}
+                </button>
+                {showCalendar2 && (
+                  <div className='relative z-10'>
+                      <Calendar value={selectedToDate} onChange={handleToDateChange} className='fixed bg-white rounded-lg font-light shadow-xl text-black focus:outline-none'/>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div>
+              <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
+              <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfAll}>Export to PDF</button>
+            </div>
           </div>
           <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
             <DataGrid rows={gridRows} columns={gridColumns} className='text-center' disableExtendRowFullWidth/>

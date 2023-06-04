@@ -295,8 +295,8 @@ const CreateAccount = (props) => {
   return (
     <div className='flex align-middle justify-center top-0 left-0 md:pt-[50px] md:bg-[#d3d3d3] drop-shadow-md w-[100%] h-[100%] bg-login'>
         <div className='text-white md:text-black md:max-w-[1240px] md:mx-auto w-[400px] md:w-[100%]'>
-            <h1 className='text-3xl md:text-5xl font-bold text-center md:mb-2 mt-[50px] md:mt-[10px]'>Create Account</h1>
-            <h1 className='text-l md:text-xl pb-[100px] font-light text-center'>Create a new Account</h1>
+            <h1 className='text-3xl md:text-5xl font-bold text-center text-[#1ca350] md:mb-2 mt-[50px] pb-[100px] md:mt-[10px]'>Create Account</h1>
+            {/* <h1 className='text-l md:text-xl pb-[100px] font-light text-center'>Create a new Account</h1> */}
             <div>
                 <form className='md:flex md:flex-col-3'>
                     <div className='mt-[100px] md:mt-[10px] max-w-[350px] md:max-w-[100%] mx-auto'>
@@ -377,7 +377,7 @@ const CreateAccount = (props) => {
                     <FormControlLabel required control={<Checkbox checked={terms} onChange={handleTermsChecked}/>}/>
                     <h1 className='ml-[-10px] text-[18px]'>I agree to the <a href='/terms-of-use' className='underline'>Terms and Conditions</a></h1>
                 </div>
-                <button className='w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={btnCreateAccount}>Create Account</button>
+                <button className='w-[350px] p-3 text-xl font-bold rounded-xl bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={btnCreateAccount}>Create Account</button>
             </div>
         </div>
     </div>

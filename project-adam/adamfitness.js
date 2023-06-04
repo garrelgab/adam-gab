@@ -1525,6 +1525,20 @@ app.get('/api/sales-report', (req, res) => {
   }); 
 });
 
+app.get('/api/filter-sales-report', (req, res) => {
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+
+  const filterDate = `select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report where date between ? and ?`;
+  connection.query(filterDate, [startDate, endDate], (err, result) => {
+    if (err) {
+      console.log('Failed to fetch filtered date', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 //Sum Daily
 app.get('/api/daily-sales', (req, res) => {
   const dailySales = `SELECT sales_report_id, DATE_FORMAT(date, '%M %d, %Y') AS day, SUM(total) AS daily_total FROM tbl_sales_report GROUP BY DAY(date) order by sales_report_id desc`;
