@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import {DataGrid} from '@mui/x-data-grid'
 import Axios from 'axios'
+import Button from '@mui/material/Button';
+import axios from 'axios';
 const DashboardMembership = () => {
 
   const columns = [
@@ -12,12 +14,37 @@ const DashboardMembership = () => {
     { field: 'bday', headerName: 'Birthday', width: 200},
     { field: 'email', headerName: 'Email', width: 300},
     { field: 'datecreated', headerName: 'Account Date Created', width: 200},
-
+    {
+      field: 'account',
+      headerName: 'Account',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: 'white',
+            color: 'gray',
+            '&:hover': {
+              backgroundColor: 'gray',
+              color: 'white',
+            },
+            marginTop: '3px',
+            marginBottom: '3px',
+            width: '100px'
+          }}
+          onClick={() => handleAccount(params.row.id, params.row.status, params.row.fname, params.row.lname)}
+          >
+            {/* Archive */}
+            {params.row.status === 'Active' ? 'Disable' : 'Enable'}
+        </Button>
+      ),
+    },
   ]
 
   const[rows, setRows] = useState([]);
 
-  useEffect(() => {
+  const fetchCustomerUser = () => {
     Axios.get("http://localhost:3001/api/members")
     .then((response) => {
       const rows = response.data.map(item => ({
@@ -29,6 +56,7 @@ const DashboardMembership = () => {
         bday: item.bday,
         email: item.email,
         datecreated: item.date_created,
+        status: item.status,
         // add more columns as needed
       }));
       setRows(rows);
@@ -36,8 +64,44 @@ const DashboardMembership = () => {
     .catch(error => {
       console.error(error);
     });
+  }
+  useEffect(() => {
+    fetchCustomerUser();
   }, []);
 
+  const active = 'Active';
+  const inactive = 'In-Active'
+  const handleAccount = (id, status, fname, lname) => {
+
+    // alert(`${status}`);
+    if(status === 'Active'){
+      axios.put('http://localhost:3001/api/update-account-status', {
+        accID: id,
+        status: inactive,
+      })
+      .then(response => {
+        alert(`User: ${fname} ${lname} account has been disable.`);
+        fetchCustomerUser();
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    } else {
+      axios.put('http://localhost:3001/api/update-account-status', {
+          accID: id,
+          status: active,
+        })
+        .then(response => {
+          alert(`User: ${fname} ${lname} account has been enable.`);
+          fetchCustomerUser();
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
+  };
   return (
     <div className='flex justify-center flex-col px-[50px] py-[90px] bg-[#d3d3d3] text-black'>
       <h1 className='text-[30px] text-[#1ca350] font-extrabold mb-[30px]'>Customer User Account</h1>  

@@ -4,7 +4,7 @@ import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from 'axios';
 import CustomerReservationDetails from './CustomerReservationDetails';
-
+import { Line, Pie } from 'react-chartjs-2';
 const DashboardContent = () => {
 
   const localizer = momentLocalizer(moment);
@@ -112,6 +112,35 @@ const DashboardContent = () => {
       }
     };
   };
+
+  const [showCharts, setShowCharts] = useState(true);
+
+  const toggleCharts = () => {
+    setShowCharts(!showCharts);
+  };
+
+  const pieChartData = {
+    labels: ['Red', 'Blue', 'Yellow'],
+    datasets: [
+      {
+        data: [300, 50, 100],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      },
+    ],
+  };
+
+  const lineGraphData = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    datasets: [
+      {
+        label: 'Sales',
+        data: [12, 19, 3, 5, 2, 3, 10],
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.4)',
+      },
+    ],
+  };
   
   
   return (
@@ -159,6 +188,7 @@ const DashboardContent = () => {
           )}
         </div>
       </div>
+      
       <div className='bg-[#D9D9D9] mt-[20px] rounded-lg'>
         {events.length ? (
             <Calendar

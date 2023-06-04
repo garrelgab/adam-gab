@@ -22,6 +22,7 @@ const UserAccountEmployee = (props) => {
     {field: 'email', headerName: 'Email', width: 150},
     {field: 'role', headerName: 'Role Type', width: 150},
     {field: 'date', headerName: 'Date Account Created', width: 200},
+    // {field: 'status', headerName: 'Status', width: 200},
     {
       field: 'access',
       headerName: 'Module',
@@ -43,7 +44,33 @@ const UserAccountEmployee = (props) => {
           Access
         </Button>
       ),
-  },
+    },
+    {
+      field: 'account',
+      headerName: 'Account',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: 'white',
+            color: 'gray',
+            '&:hover': {
+              backgroundColor: 'gray',
+              color: 'white',
+            },
+            marginTop: '3px',
+            marginBottom: '3px',
+            width: '100px'
+          }}
+          onClick={() => handleAccount(params.row.id, params.row.status, params.row.name)}
+          >
+            {/* Archive */}
+            {params.row.status === 'Active' ? 'Disable' : 'Enable'}
+        </Button>
+      ),
+    },
   ];
 
   const [openModal, setOpenModal] = useState(false);
@@ -55,6 +82,39 @@ const UserAccountEmployee = (props) => {
   setSelectedId(id); 
   setSelectedName(name);
   setOpenModal(true);
+  };
+
+  const active = 'Active';
+  const inactive = 'In-Active'
+  const handleAccount = (id, status, name) => {
+
+    if(status === 'Active'){
+      axios.put('http://localhost:3001/api/update-account-status', {
+        accID: id,
+        status: inactive,
+      })
+      .then(response => {
+        alert(`Employee: ${name} account has been disable.`);
+        fetchEmployee();
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    } else {
+      axios.put('http://localhost:3001/api/update-account-status', {
+          accID: id,
+          status: active,
+        })
+        .then(response => {
+          alert(`Employee: ${name} account has been enable.`);
+          fetchEmployee();
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
   };
   // const [openModal, setOpenModal] = useState(false);
   // const handleOpenModal = () => {
@@ -72,6 +132,7 @@ const UserAccountEmployee = (props) => {
         email: item.email,
         role: capitalizeFirstLetter(item.role),
         date: item.date_created,
+        status: item.status,
         // add more columns as needed
       }));
       setRows(rows);

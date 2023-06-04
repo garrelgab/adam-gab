@@ -11,7 +11,66 @@ const UserAccountCustomer = (props) => {
     {field: 'timein', headerName: 'Time-In', width: 150},
     {field: 'timeout', headerName: 'Time-Out', width: 150},
     {field: 'date', headerName: 'Date', width: 200},
+    {
+      field: 'account',
+      headerName: 'Account',
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: 'white',
+            color: 'gray',
+            '&:hover': {
+              backgroundColor: 'gray',
+              color: 'white',
+            },
+            marginTop: '3px',
+            marginBottom: '3px',
+            width: '100px'
+          }}
+          onClick={() => handleAccount(params.row.id, params.row.status, params.row.name)}
+          >
+            {/* Archive */}
+            {params.row.status === 'Active' ? 'Disable' : 'Enable'}
+        </Button>
+      ),
+    },
   ];
+
+  const active = 'Active';
+  const inactive = 'In-Active'
+  const handleAccount = (id, status, name) => {
+
+    if(status === 'Active'){
+      axios.put('http://localhost:3001/api/update-account-status', {
+        accID: id,
+        status: inactive,
+      })
+      .then(response => {
+        alert(`User: ${name} account has been disable.`);
+        fetchEmployee();
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    } else {
+      axios.put('http://localhost:3001/api/update-account-status', {
+          accID: id,
+          status: active,
+        })
+        .then(response => {
+          alert(`User: ${name} account has been enable.`);
+          fetchEmployee();
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
+  };
 
   return (
     <div className='mx-[50px] mt-[90px]'>

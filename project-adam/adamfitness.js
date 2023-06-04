@@ -555,7 +555,7 @@ app.get('/api/account-name', (req, res) => {
 
 app.get("/api/members", (req, res) => {
   // const members = "select * from tbl_account_info where role = 'customer'";
-  connection.query("select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'customer'", (err, result) => {
+  connection.query("select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, DATE_FORMAT(date_created, '%M %d, %Y') as date_created, status from tbl_account_info where role = 'customer'", (err, result) => {
     if(err){
       res.send({err: err})
     }
@@ -1990,14 +1990,36 @@ app.post("/api/insert-employee", (req, res) => {
 });
 
 
+
+
 app.get('/api/employee-list', (req, res) => {
-  const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created from tbl_account_info where role = 'staff' or role = 'cashier' order by account_info_id desc`;
+  const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created, status from tbl_account_info where role = 'staff' or role = 'cashier' order by account_info_id desc`;
   connection.query(employeeList, (err, result) => {
     if(err){
       console.log('Failed to fetch employee list',err);
     }
     else{
       res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-account-status', (req, res) => {
+  const accID = req.body.accID;
+  const status = req.body.status;
+  const updateAcc = `update tbl_accounts set status = ? where account_id = ?`;
+  connection.query(updateAcc, [status, accID], (err, result) => {
+    if(err){
+      console.log('Failed to update acc', err);
+    } else {
+      const updateAccInfo = `update tbl_account_info set status = ? where account_info_id = ?`;
+      connection.query(updateAccInfo, [status, accID], (err, updateResult) => {
+        if(err) {
+          console.log('Failed to update account info', err);
+        } else {
+          res.send(updateResult.data);
+        }
+      });
     }
   });
 });
@@ -2080,6 +2102,19 @@ app.post('/api/add-health-guide', (req, res) => {
 app.get('/api/health-guide', (req, res) => {
   const getHealthGuide = 'select health_guide_id, name, equipment, instruction, instruction_image from tbl_health_guide';
   connection.query(getHealthGuide, (err, result) => {
+    if(err){
+      console.log('Failed to fetch health guide', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/health-guide-image', (req, res) => {
+  const healthID = req.query.healthID;
+  const getHealthGuide = 'select instruction_image from tbl_health_guide where health_guide_id = ?';
+  connection.query(getHealthGuide, [healthID], (err, result) => {
     if(err){
       console.log('Failed to fetch health guide', err);
     }
@@ -2505,6 +2540,8 @@ app.get('/api/fetch-qr-code', (req, res) => {
     }
   });
 });
+
+
 // const autoInsertData = () => {
 //   const currentDate = new Date();
 //   const threeDaysFromNow = new Date();
