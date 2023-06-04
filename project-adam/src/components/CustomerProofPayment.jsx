@@ -111,6 +111,7 @@ const CustomerProofPayment = (props) => {
       setReference(inputValue);
     }
   };
+  const contactNo = '09123456789'
 
   useEffect(() => {
     fetchPaymentHistory();  
@@ -121,6 +122,10 @@ const CustomerProofPayment = (props) => {
       content:
       <div>
         <div className='flex flex-col'>
+        <div className='my-[5px]'>
+              <h1 className='md:text-[20px] mt-[30px] text-[#1ca350] font-bold'>Gym Number</h1>
+              <input type="text" className="shadow-lg block w-full font-bold p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Reference Number' value={contactNo} onChange={handleChangeReferenceNumber} readOnly required/>
+          </div>
           <div className='my-[5px]'>
               <h1 className='md:text-[20px] mt-[30px] text-[#1ca350] font-bold'>Reference Number</h1>
               <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Reference Number' value={referenceNum} onChange={handleChangeReferenceNumber} required/>

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 // import TimePicker from "react-time-picker";
 // import moment from 'moment';
+import Select from 'react-select';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -11,75 +12,323 @@ import 'react-time-picker/dist/TimePicker.css';
 import { useNavigate } from 'react-router-dom';
 const AddReservation = (props) => {
   const navigate = useNavigate();
-  const sevenAM = dayjs().set('hour', 7).startOf('hour');
-  const tenPM = dayjs().set('hour', 22).startOf('hour');
-  
+  // const sevenAM = dayjs().set('hour', 7).startOf('hour');
+  // const tenPM = dayjs().set('hour', 22).startOf('hour');
+
   // const [name, setName] = useState('');
-  const [startTime, setStartTime] = useState(sevenAM);
-  const [endTime, setEndTime] = useState(tenPM);
+  // const [startTime, setStartTime] = useState(sevenAM);
+  // const [endTime, setEndTime] = useState(tenPM);
   const [pax, setPax] = useState('');
   const myDate = props.myDate;
-  const status = 'Pending';
+  const status = 'Hold';
 
   const id = props.id;
 
-  const startTimeFormat = startTime.format('HH:mm:ss');
-  const endTimeFormat = endTime.format('HH:mm:ss');
+  // const startTimeFormat = startTime.format('HH:mm:ss');
+  // const endTimeFormat = endTime.format('HH:mm:ss');
 
   const handleStartTimeChange = (timeStart) => {
-    setStartTime(timeStart);
+    // setStartTime(timeStart);
   };
   const handleEndTimeChange = (timeEnd) => {
-    setEndTime(timeEnd);
+    // setEndTime(timeEnd);
   };
  
-  const handleSaveReservation = () => {
-    if(pax >= 15) {
-      alert('Maximun of 15 Pax only.');
-      setPax('');
-      return;
-    }
-    if (startTime.hour() < 7 || startTime.hour() >= 22 || endTime.hour() < 7 || endTime.hour() >= 22) {
-      alert('Reservation can only be made between 7 AM and 10 PM.');
-      return;
-    }
+  
+  // const handleSaveReservation = () => {
+  //   if(pax >= 15) {
+  //     alert('Maximun of 15 Pax only.');
+  //     setPax('');
+  //     return;
+  //   }
+  //   if (startTime.hour() < 7 || startTime.hour() >= 22 || endTime.hour() < 7 || endTime.hour() >= 22) {
+  //     alert('Reservation can only be made between 7 AM and 10 PM.');
+  //     return;
+  //   }
 
-    const durationHours = endTime.diff(startTime, 'hours');
-    if (durationHours > 3) {
-      alert('Reservation duration cannot exceed 3 hours.');
-      return;
-    }  
-    axios.post("http://localhost:3001/api/reservation", {
-      // customerName: name,
-      customerID: id,
-      noPax: pax,
-      customerStartTime: startTimeFormat,
-      customerEndTime: endTimeFormat,
-      customerDate: myDate,
-      customerStatus: status,
-    })
-    .then(response => {
-      alert('Reservation saved.', response.data);
-    })
-    .catch(error => {
-      console.error('Error saving data.', error)
-    })
-    // setName('');
+  //   const durationHours = endTime.diff(startTime, 'hours');
+  //   if (durationHours > 3) {
+  //     alert('Reservation duration cannot exceed 3 hours.');
+  //     return;
+  //   }  
+  //   axios.post("http://localhost:3001/api/reservation", {
+  //     // customerName: name,
+  //     customerID: id,
+  //     noPax: pax,
+  //     customerStartTime: startTimeFormat,
+  //     customerEndTime: endTimeFormat,
+  //     customerDate: myDate,
+  //     customerStatus: status,
+  //   })
+  //   .then(response => {
+  //     alert('Reservation saved.', response.data);
+  //   })
+  //   .catch(error => {
+  //     console.error('Error saving data.', error)
+  //   })
+  //   // setName('');
 
-    props.onClose(false);
-  };
+  //   props.onClose(false);
+  // };
 
-  const handleChangeAmount = (event) => {
+  const handleChangePax = (event) => {
     const inputValue = event.target.value;
     // Validate if the input is a non-negative number
     if (!isNaN(inputValue) && Number(inputValue) >= 0) {
       setPax(inputValue);
+
+      const totalAmount = inputValue * 70; // Assuming the amount is calculated as 10 times the number of pax
+      setAmount(totalAmount);
     }
   };
+
+  //New Time Selection
+  //Session 1
+  const sevAM = dayjs().set('hour', 7).startOf('hour');
+  const tenAM = dayjs().set('hour', 10).startOf('hour');
+  //Session 2
+  const onePM = dayjs().set('hour', 13).startOf('hour');
+  //Session 3
+  const fourPM = dayjs().set('hour', 16).startOf('hour');
+  //Session 4
+  const sevPM = dayjs().set('hour', 19).startOf('hour');
+  //Session 5
+  const tenPM = dayjs().set('hour', 22).startOf('hour');
+
+  
+
+  const options = [
+    {value: 'session1', label: 'Session 1 (7:00 AM to 10:00 AM)'},
+    {value: 'session2', label: 'Session 2 (10:00 AM to 1:00 PM)'},
+    {value: 'session3', label: 'Session 3 (1:00 PM to 4:00 PM)'},
+    {value: 'session4', label: 'Session 4 (4:00 PM to 7:00 PM)'},
+    {value: 'session5', label: 'Session 5 (7:00 PM to 10:00 PM)'},
+  ]
+  const [mySelectedOption, setMySelectedOption] = useState('');
+  const [showPayment, setShowPayment] = useState(false);
+
+  const [amount, setAmount] = useState('');
+  const [referenceNum, setReference] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const inputFileRef = useRef(null);
+
+  const formatPrice = (price) => {
+    return Number(price).toFixed(2);
+  };
+  const handleSaveReservation = () => {
+    // alert(mySelectedOption);
+    const description = 'Reservation Payment'
+
+    if(!pax || !amount || !referenceNum || !selectedImage){
+      alert('Please fill up the empty fields.');
+      return;
+    }
+    if(mySelectedOption === 'session1'){
+
+      axios.post('http://localhost:3001/api/add-proof-of-payment', {
+        userID: id,
+        refNum: referenceNum,
+        amount: formatPrice(amount),
+        imageData: selectedImage,
+        desc: description,
+      })
+      .then(response => {
+        axios.post("http://localhost:3001/api/reservation", {
+          // customerName: name,
+          customerID: id,
+          noPax: pax,
+          customerStartTime: sevAM.format('HH:mm:ss'),
+          customerEndTime: tenAM.format('HH:mm:ss'),
+          customerDate: myDate,
+          customerStatus: status,
+          lastProofID: response.data.insertedId,
+          })
+          .then(response => {
+            alert('Reservation saved.', response.data);
+          })
+          .catch(error => {
+            console.error('Error saving data.', error)
+          })
+        })
+      .catch(error => {
+        console.log('445', error);
+      });
+      props.onClose(false);
+
+    } else if (mySelectedOption === 'session2') {
+
+      axios.post('http://localhost:3001/api/add-proof-of-payment', {
+        userID: id,
+        refNum: referenceNum,
+        amount: formatPrice(amount),
+        imageData: selectedImage,
+        desc: description,
+      })
+      .then(response => {
+        axios.post("http://localhost:3001/api/reservation", {
+          // customerName: name,
+          customerID: id,
+          noPax: pax,
+          customerStartTime: tenAM.format('HH:mm:ss'),
+          customerEndTime: onePM.format('HH:mm:ss'),  
+          customerDate: myDate,
+          customerStatus: status,
+          lastProofID: response.data.insertedId,
+          })
+          .then(response => {
+            alert('Reservation saved.', response.data);
+          })
+          .catch(error => {
+            console.error('Error saving data.', error)
+          })
+        })
+      .catch(error => {
+        console.log('445', error);
+      });
+      props.onClose(false);
+
+    } else if (mySelectedOption === 'session3') {
+
+      axios.post('http://localhost:3001/api/add-proof-of-payment', {
+        userID: id,
+        refNum: referenceNum,
+        amount: formatPrice(amount),
+        imageData: selectedImage,
+        desc: description,
+      })
+      .then(response => {
+        axios.post("http://localhost:3001/api/reservation", {
+          // customerName: name,
+          customerID: id,
+          noPax: pax,
+          customerStartTime: onePM.format('HH:mm:ss'),
+          customerEndTime: fourPM.format('HH:mm:ss'),  
+          customerDate: myDate,
+          customerStatus: status,
+          lastProofID: response.data.insertedId,
+          })
+          .then(response => {
+            alert('Reservation saved.', response.data);
+          })
+          .catch(error => {
+            console.error('Error saving data.', error)
+          })
+        })
+      .catch(error => {
+        console.log('445', error);
+      });
+      props.onClose(false);
+
+    } else if (mySelectedOption === 'session4') {
+
+      axios.post('http://localhost:3001/api/add-proof-of-payment', {
+        userID: id,
+        refNum: referenceNum,
+        amount: formatPrice(amount),
+        imageData: selectedImage,
+        desc: description,
+      })
+      .then(response => {
+        axios.post("http://localhost:3001/api/reservation", {
+          // customerName: name,
+          customerID: id,
+          noPax: pax,
+          customerStartTime: fourPM.format('HH:mm:ss'),
+          customerEndTime: sevPM.format('HH:mm:ss'),  
+          customerDate: myDate,
+          customerStatus: status,
+          lastProofID: response.data.insertedId,
+          })
+          .then(response => {
+            alert('Reservation saved.', response.data);
+          })
+          .catch(error => {
+            console.error('Error saving data.', error)
+          })
+        })
+      .catch(error => {
+        console.log('445', error);
+      });
+      props.onClose(false);
+
+    } else if (mySelectedOption === 'session5') {
+
+      axios.post('http://localhost:3001/api/add-proof-of-payment', {
+        userID: id,
+        refNum: referenceNum,
+        amount: formatPrice(amount),
+        imageData: selectedImage,
+        desc: description,
+      })
+      .then(response => {
+        axios.post("http://localhost:3001/api/reservation", {
+          // customerName: name,
+          customerID: id,
+          noPax: pax,
+          customerStartTime: sevPM.format('HH:mm:ss'),
+          customerEndTime: tenPM.format('HH:mm:ss'),  
+          customerDate: myDate,
+          customerStatus: status,
+          lastProofID: response.data.insertedId,
+          })
+          .then(response => {
+            alert('Reservation saved.', response.data);
+          })
+          .catch(error => {
+            console.error('Error saving data.', error)
+          })
+        })
+      .catch(error => {
+        console.log('445', error);
+      });
+      props.onClose(false);
+    }
+  };
+  const handleChange = (selectedOption) => {
+    setMySelectedOption(selectedOption.value);
+    setShowPayment(true);
+  };
+  const handleChangeAmount = (event) => {
+    const inputValue = event.target.value;
+    // Validate if the input is a non-negative number
+    if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+      setAmount(inputValue);
+    }
+  };
+  const handleChangeReferenceNumber = (event) => {
+    const inputValue = event.target.value;
+    // Validate if the input is a non-negative number
+    if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+      setReference(inputValue);
+    }
+  };
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+    if (file && isFileSupported(file)) {
+      const imageData = reader.result.split(',')[1];
+      setSelectedImage(imageData);
+    } else {
+      alert('Please upload a PNG or JPEG (JPG) file.');
+      setSelectedImage(null);
+    }
+    };
+    reader.readAsDataURL(file);
+  };
+  const isFileSupported = (file) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    return allowedTypes.includes(file.type);
+  };
+
+  useEffect(() => {
+
+  }, []);
   return (
     <div className='fixed flex items-center align-middle justify-center top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
         {/* <div className='text-white w-[400px] md:w-[500px] h-[500px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'> */}
-        <div className='text-white flex flex-col mt-[0px] md:w-[500px] overflow-auto bg-[#1ca350] rounded-md shadow-xl'>
+        <div className='text-white flex flex-col mt-[0px] md:w-[500px] bg-[#1ca350] rounded-md shadow-xl'>
             <button className='ml-[90%] mt-[5%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>
@@ -90,11 +339,29 @@ const AddReservation = (props) => {
               <div className='my-[20px] flex'>
                 <form>
                 {/* <h1 className='text-[20px] font-bold'>{id}</h1> */}
-
-                  <input type="text" className=" flex shadow-lg mt-[30px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={pax} onChange={handleChangeAmount} required/>
+                  <input type="text" className=" flex shadow-lg mt-[30px] p-3 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={pax} onChange={handleChangePax} required/>
                 </form>
               </div>
-              <div className='flex flex-col mt-[30px]'>
+              <div>
+                <Select options={options} className='text-black' placeholder='Please select a session' onChange={handleChange}/>
+                {showPayment && (
+                  <div className='flex flex-col'>
+                    <div className='my-[2px]'>
+                        <h1 className='md:text-[20px] mt-[0px] text-[#1ca350] font-bold'>Reference Number</h1>
+                        <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Reference Number' value={referenceNum} onChange={handleChangeReferenceNumber} required/>
+                    </div>
+                    <div className='my-[2px]'>
+                        <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Amount</h1>
+                        <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} readOnly onChange={handleChangeAmount} required/>
+                    </div>
+                    <div className='my-[2px]'>
+                        <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Upload Image</h1>
+                        <input type="file" ref={inputFileRef} accept='image/*' className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" onChange={handleImageUpload} required/>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* <div className='flex flex-col mt-[30px]'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <label>Start: </label>
                     <TimePicker
@@ -115,7 +382,7 @@ const AddReservation = (props) => {
                       value={endTime}
                     />
                 </LocalizationProvider>
-              </div>
+              </div> */}
               <div className='flex justify-end my-[40px]'>
                 <button className='w-[150px] p-2 text-lg font-bold rounded-md bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white ease-in-out duration-300 shadow-lg hover:shadow-xl' onClick={handleSaveReservation}>Request</button>
               </div>

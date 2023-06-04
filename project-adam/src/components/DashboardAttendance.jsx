@@ -1,8 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios';
+import WebCamm from './WebCamm';
+
+// import QrReader from 'react-qr-reader';
 const DashboardAttendance = () => {
 
+
+  
   const [rows, setRows] = useState([]);
   const rowHeight = 100;
   const columns = [
@@ -33,15 +38,51 @@ const DashboardAttendance = () => {
     });
   };
 
+  const handleQRScanner = () => {
+
+  };
+
+  // const handleScan = (data) => {
+  //   if (data) {
+  //     console.log('QR Code data:', data);
+  //     // Do something with the scanned data
+  //   }
+  // };
+  
+  // const handleError = (error) => {
+  //   console.error('QR Code scanning error:', error);
+  // };
+
+  // const startScan = () => {
+  //   if (webcamRef.current) {
+  //     webcamRef.current.video.play();
+  //   }
+  // };
+
+  const [openWebModal, setOpenWebModal] = useState(false);
+  
+  const handleOpenWebModal = () => {
+    setOpenWebModal(!openWebModal);
+  };
   useEffect(() => {
     fetchData();
   }, []);
   return (
     <div className='px-[50px] bg-[#d3d3d3] py-[90px]'>
-        <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Attendance Log</h1>
+        <div className='flex justify-between'>
+          <h1 className='text-[30px] text-[#1ca350] font-extrabold'>Attendance Log</h1>
+          <button className='w-[150px] p-2 text-lg font-bold rounded-md bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white ease-in-out duration-300 shadow-lg hover:shadow-xl' onClick={handleOpenWebModal}>QR-Scanner</button>
+        </div>
         <div className='hidden bg-white my-[50px] mx-auto w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>
           <DataGrid rows={rows} columns={columns} className='text-center w-full' rowHeight={rowHeight} disableExtendRowFullWidth/>
         </div>
+        {openWebModal && <WebCamm onClose={handleOpenWebModal}/>}
+        {/* <QrReader
+          delay={300} // Delay between scans in milliseconds
+          onError={handleError}
+          onScan={handleScan}
+          style={{ width: '100%' }} // Adjust the style as needed
+        /> */}
     </div>
   )
 }

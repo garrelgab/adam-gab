@@ -19,7 +19,7 @@ const DashboardGCash = () => {
     // { field: 'id', headerName: 'ID', width: 150 },
     // { field: 'accountID', headerName: 'Account ID', width: 150 },
     { field: 'name', headerName: 'Name', width: 150 },
-    // { field: 'desc', headerName: 'Description', width: 150 },
+    { field: 'desc', headerName: 'Description', width: 250 },
     { field: 'amount', headerName: 'Amount', width: 150 },
     { field: 'refNum', headerName: 'Reference Number', width: 300 },
     { field: 'email', headerName: 'Email', width: 300 },
@@ -54,8 +54,9 @@ const DashboardGCash = () => {
       renderCell: (params) => {
         if (params.row.account === 'Activated') {
           return <span>Confirmed</span>;
-        } 
-        else {
+        } else if (params.row.account === 'Confirmed') {
+          return <span>Confirmed</span>;
+        } else {
           return (
             <Button
             variant="contained"
@@ -79,20 +80,41 @@ const DashboardGCash = () => {
   const handleButtonActivate = (row) => {
     // const membershipType = 'Monthly Session';
     // alert(`Button clicked for row with id AccountID: ${row.accountID} and ID: ${row.id}`);
-    axios.post('http://localhost:3001/api/add-membership', {
-      accID: row.accountID,
-      amount: row.amount,
-      referenceNumber: row.refNum,
-      membershipType: row.desc,
-      proofID: row.id,
-    })
-    .then(response => {
-      alert(`${row.desc}: ${row.name}`);
-      fetchData();
-    })
-    .catch(error => {
-      alert(error.response.data);
-    })
+
+    if(row.desc === 'Monthly Session')
+    {
+      axios.post('http://localhost:3001/api/add-membership', {
+        accID: row.accountID,
+        amount: row.amount,
+        referenceNumber: row.refNum,
+        membershipType: row.desc,
+        proofID: row.id,
+      })
+      .then(response => {
+        alert(`${row.desc}: ${row.name}`);
+        fetchData();
+      })
+      .catch(error => {
+        alert(error.response.data);
+      })
+    }
+    else if(row.desc === 'Reservation Payment') {
+      const status = 'Pending';
+      axios.put('http://localhost:3001/api/hold', {
+        proofID: row.id,
+        reservationStatus: status,
+        accID: row.accountID,
+        accName: row.name,
+        referenceNumber: row.refNum,
+      })
+      .then(response => {
+        alert('Reservation can now approved in Reservation Management');
+        fetchData();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
   };
   const fetchData = () => {
     axios.get('http://localhost:3001/api/gcash')
