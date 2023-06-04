@@ -80,7 +80,7 @@ const CustomerAccount = (props) => {
                         </div>                    
                     </div>
 
-                    ) : <h1>No QR-Code</h1>}
+                    ) : <h1 className='text-[30px] text-[#1ca350] font-extrabold'>QR-Code Not Available</h1>}
                 </div>
             </div>
         }

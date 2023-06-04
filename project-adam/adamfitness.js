@@ -2464,17 +2464,26 @@ app.post('/api/add-membership', (req, res) => {
                 res.sendStatus(500);
                 return;
               }
-
-              const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
-              connection.query(insertNotification, [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime], (err, notificationResult) => {
-                if (err) {
-                  console.log('Failed to insert notification', err);
-                  res.sendStatus(500);
-                  return;
-                }
-
-                res.sendStatus(200);
-              });
+              else {
+                const payment = `Reference Number: ${referenceNumber}`;
+                const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${payment}', '${amount}', '${startDate}', '${currentTime}', 'Payment')`;
+                connection.query(insertSales, (err, insertSalesResult) => {
+                  if(err){
+                    console.log('Failed to add sales workout', err);
+                  }
+                  else{
+                    const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+                    connection.query(insertNotification, [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime], (err, notificationResult) => {
+                      if (err) {
+                        console.log('Failed to insert notification', err);
+                        res.sendStatus(500);
+                        return;
+                      }
+                      res.sendStatus(200);
+                    });
+                  }
+                });
+              }
             });
           });
         });
