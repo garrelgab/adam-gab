@@ -68,6 +68,7 @@ const CustomerProofPayment = (props) => {
     return Number(price).toFixed(2);
   };
   const handleConfirm = () => {
+    const description = 'Monthly Session';
     if(!referenceNum || !amount || !selectedImage)
     {
       alert('Please fill up the empty fields.');
@@ -75,6 +76,7 @@ const CustomerProofPayment = (props) => {
     }
     axios.post('http://localhost:3001/api/add-proof-of-payment', {
       userID: userID,
+      desc: description,
       refNum: referenceNum,
       amount: formatPrice(amount),
       imageData: selectedImage,
@@ -92,7 +94,7 @@ const CustomerProofPayment = (props) => {
       fetchPaymentHistory();
     })
     .catch(error => {
-      console.log(error);
+      alert(error.data);
     })
   };
   const handleChangeAmount = (event) => {

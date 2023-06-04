@@ -19,6 +19,7 @@ const DashboardGCash = () => {
     // { field: 'id', headerName: 'ID', width: 150 },
     // { field: 'accountID', headerName: 'Account ID', width: 150 },
     { field: 'name', headerName: 'Name', width: 150 },
+    // { field: 'desc', headerName: 'Description', width: 150 },
     { field: 'amount', headerName: 'Amount', width: 150 },
     { field: 'refNum', headerName: 'Reference Number', width: 300 },
     { field: 'email', headerName: 'Email', width: 300 },
@@ -76,17 +77,17 @@ const DashboardGCash = () => {
     },
   ];
   const handleButtonActivate = (row) => {
-    const membershipType = 'Monthly Session';
+    // const membershipType = 'Monthly Session';
     // alert(`Button clicked for row with id AccountID: ${row.accountID} and ID: ${row.id}`);
     axios.post('http://localhost:3001/api/add-membership', {
       accID: row.accountID,
       amount: row.amount,
       referenceNumber: row.refNum,
-      membershipType: membershipType,
+      membershipType: row.desc,
       proofID: row.id,
     })
     .then(response => {
-      alert(`${membershipType}: ${row.name}`);
+      alert(`${row.desc}: ${row.name}`);
       fetchData();
     })
     .catch(error => {
@@ -99,6 +100,7 @@ const DashboardGCash = () => {
       const rows = response.data.map(item => ({
         id: item.proof_of_payment_id,
         accountID: item.account_info_id,
+        desc: item.description,
         name: item.name,
         amount: formatPrice(item.amount),
         refNum: item.reference_number,
