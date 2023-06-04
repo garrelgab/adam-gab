@@ -49,31 +49,39 @@ const DashboardGCash = () => {
     {
       field: 'account',
       headerName: 'Account',
-      width: 150,
-      renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            backgroundColor: 'white',
-            color: 'gray',
-            '&:hover': {
-              backgroundColor: 'gray',
-              color: 'white',
-            },
-          }}
-          onClick={() => handleButtonActivate(params.row)}>
-        Activate
-        </Button>
-      ),
+      width: 100,
+      renderCell: (params) => {
+        if (params.row.account === 'Activated') {
+          return <span>Activated</span>;
+        } 
+        else {
+          return (
+            <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: 'white',
+              color: 'gray',
+              '&:hover': {
+                backgroundColor: 'gray',
+                color: 'white',
+              },
+            }}
+            onClick={() => handleButtonActivate(params.row)}>
+            Activate
+            </Button>
+          )
+        }
+      }
     },
   ];
   const handleButtonActivate = (row) => {
     const membershipType = 'Monthly Session';
-    alert(`Button clicked for row with id AccountID: ${row.accountID} and ID: ${row.id}`);
+    // alert(`Button clicked for row with id AccountID: ${row.accountID} and ID: ${row.id}`);
     axios.post('http://localhost:3001/api/add-membership', {
       accID: row.accountID,
       amount: row.amount,
+      referenceNumber: row.refNum,
       membershipType: membershipType,
       proofID: row.id,
     })
@@ -98,6 +106,7 @@ const DashboardGCash = () => {
         date: item.date,
         time: item.time,
         proof: item.image ? bufferToBase64(Buffer.from(item.image.data)) : null,
+        account: item.status,
       }));
       setRows(rows);
     })

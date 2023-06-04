@@ -114,7 +114,7 @@ const AddReservation = (props) => {
                 </LocalizationProvider>
               </div>
               <div className='flex justify-end mt-[40px]'>
-                <button className='w-[150px] p-2 text-lg font-light rounded-md bg-gray-600 hover:bg-gray-800 text-white shadow-lg hover:shadow-xl' onClick={handleSaveReservation}>Request</button>
+                <button className='w-[150px] p-2 text-lg font-bold rounded-md bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white ease-in-out duration-300 shadow-lg hover:shadow-xl' onClick={handleSaveReservation}>Request</button>
               </div>
             </div>
         </div>

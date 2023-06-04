@@ -2163,8 +2163,21 @@ app.post('/api/add-proof-of-payment', (req, res) => {
 
 
 app.get('/api/gcash', (req, res) => {
-  const getGcashData = `select proof_of_payment_id, account_info_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image from tbl_proof_of_payment where status = 'Pending'`;
+  const getGcashData = `select proof_of_payment_id, account_info_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment`;
   connection.query(getGcashData, (err, result) => {
+    if(err){
+      console.log('Failed to fetch proof of payment', err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.get('/api/customer-payment-history', (req, res) => {
+  const accID = req.query.accID;
+  const getGcashData = `select proof_of_payment_id, account_info_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment where account_info_id = ?`;
+  connection.query(getGcashData, [accID], (err, result) => {
     if(err){
       console.log('Failed to fetch proof of payment', err);
     }
@@ -2230,6 +2243,7 @@ app.post('/api/add-membership', (req, res) => {
   const proofID = req.body.proofID;
   const amount = req.body.amount;
   const membershipType = req.body.membershipType;
+  const referenceNumber = req.body.referenceNumber;
   const currentDate = new Date();
   const startDate = currentDate.toISOString().slice(0, 10);
   currentDate.setMonth(currentDate.getMonth() + 1);
@@ -2281,7 +2295,7 @@ app.post('/api/add-membership', (req, res) => {
                       const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
                       connection.query(
                         insertNotification,
-                        [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
+                        [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime],
                         (err, notificationResult) => {
                           if (err) {
                             console.log('Failed to insert notification', err);
