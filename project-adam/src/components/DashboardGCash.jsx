@@ -48,11 +48,11 @@ const DashboardGCash = () => {
     },
     {
       field: 'account',
-      headerName: 'Account',
+      headerName: 'Action',
       width: 100,
       renderCell: (params) => {
         if (params.row.account === 'Activated') {
-          return <span>Activated</span>;
+          return <span>Confirmed</span>;
         } 
         else {
           return (
@@ -68,7 +68,7 @@ const DashboardGCash = () => {
               },
             }}
             onClick={() => handleButtonActivate(params.row)}>
-            Activate
+            Confirm
             </Button>
           )
         }
@@ -90,7 +90,7 @@ const DashboardGCash = () => {
       fetchData();
     })
     .catch(error => {
-
+      alert(error.response.data);
     })
   };
   const fetchData = () => {

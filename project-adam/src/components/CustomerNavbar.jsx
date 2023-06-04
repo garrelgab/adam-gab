@@ -103,11 +103,11 @@ const CustomerNavbar = (props) => {
                 <LinkRouter to='/customer' state={userID} onClick={handleNav}>
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Reservation</li>            
                 </LinkRouter>
-                <LinkRouter to='/customer/personalinfo' state={userID} onClick={handleNav}>
+                {/* <LinkRouter to='/customer/personalinfo' state={userID} onClick={handleNav}>
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Personal Information</li>            
-                </LinkRouter>
+                </LinkRouter> */}
                 <LinkRouter to='/customer/account' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Change Password</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Account</li>
                 </LinkRouter>
                 <LinkRouter to='/customer/health-tips' state={userID} onClick={handleNav}>
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Health Guide</li>

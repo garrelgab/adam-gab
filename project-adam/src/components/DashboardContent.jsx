@@ -60,6 +60,38 @@ const DashboardContent = () => {
       .catch(error => console.log(error));
   }, []);
 
+  const [totalSales, setTotalSales] = useState(null);
+
+  const fetchSumSales = () => {
+    axios.get('http://localhost:3001/api/fetch-total-sales')
+    .then(response => {
+      setTotalSales(formatPrice(response.data[0].total));
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  };
+  
+  const [totalSalesToday, setTotalSalesToday] = useState(null);
+
+  const fetchSumSalesToday = () => {
+    axios.get('http://localhost:3001/api/fetch-total-sales-today')
+    .then(response => {
+      setTotalSalesToday(formatPrice(response.data[0].total));
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  };
+
+  const formatPrice = (price) => {
+    return Number(price).toFixed(2);
+  };
+
+  useEffect(() => {
+    fetchSumSales();
+    fetchSumSalesToday();
+  }, []);
   const views = {
     month: true,
     agenda: true,
@@ -86,24 +118,40 @@ const DashboardContent = () => {
     <div className='px-[50px] bg-[#d3d3d3] py-[90px] text-white'>
       <h1 className='text-[30px] font-extrabold text-[#1ca350]'>Dashboard</h1>
       <div className='blocked flex flex-col md:flex-row md:justify-between  mt-[20px] mx-[0px]'>
-        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Members</h1>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[10px] md:my-0 md:shadow-lg'>
+          <h1 className='p-[0px] md:text-[25px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Members</h1>
           {membersCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{membersCount}</h1>
           ) : (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
           )}
         </div>
-        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[30px] md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Pending Reservation</h1>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[10px] md:my-0 md:shadow-lg'>
+          <h1 className='p-[0px] md:text-[25px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Sales</h1>
+          {totalSales !== null ? (
+            <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{totalSales}</h1>
+          ) : (
+            <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
+          )}
+        </div>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[10px] md:my-0 md:shadow-lg'>
+          <h1 className='p-[0px] md:text-[25px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Sales Today</h1>
+          {totalSalesToday !== null ? (
+            <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{totalSalesToday}</h1>
+          ) : (
+            <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
+          )}
+        </div>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[10px] md:my-0 md:shadow-lg'>
+          <h1 className='p-[0px] md:text-[25px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Pending Reservation</h1>
           {pendingCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{pendingCount}</h1>
           ) : (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>0</h1>
           )}
         </div>
-        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-0 md:my-0 md:shadow-lg'>
-          <h1 className='p-[0px] md:text-[30px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Reservation</h1>
+        <div className='bg-[#1ca350] h-[100px] md:h-[130px] md:w-[550px] rounded-lg flex flex-col justify-center my-4 md:mx-[10px] md:my-0 md:shadow-lg'>
+          <h1 className='p-[0px] md:text-[25px] text-[20px] text-center font-bold mt-[-50px] mb-[0px]'>Total Reservation</h1>
           {eventCount !== null ? (
             <h1 className='p-[0px] md:text-[40px] text-center font-light mb-[-50px]'>{eventCount}</h1>
           ) : (

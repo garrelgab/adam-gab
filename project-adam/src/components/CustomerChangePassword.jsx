@@ -10,6 +10,7 @@ const CustomerChangePassword = (props) => {
   const [newPword, setNewPword] = useState('');
   const [confirmPword, setConfirmPword] = useState('');
 
+  const userID = props.id;
   const handleUpdateCustomerPassword = () => {
     if (newPword !== confirmPword) {
       alert('New password and confirm password must match!');
@@ -81,7 +82,7 @@ const CustomerChangePassword = (props) => {
               <input type="password" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Confirm New Password' value={confirmPword} onChange={(e) => setConfirmPword(e.target.value)}/>
             </div>
             <div className='mt-[50px] md:mt-[150px] text-center'>
-                <button className='w-[350px] p-3 text-xl font-light rounded-xl bg-gray-600 hover:bg-gray-800 text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={handleUpdateCustomerPassword}>Confirm</button>
+                <button className='w-[350px] p-3 text-xl font-bold ease-in-out duration-300 rounded-xl bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white mb-[50px] shadow-lg hover:shadow-xl' onClick={handleUpdateCustomerPassword}>Confirm</button>
             </div>
         </div>
     </div>

@@ -10,7 +10,7 @@ import moment from 'moment-timezone';
 
 const DashboardSalesReport = () => {
     const gridColumns = [
-      { field: 'id', headerName: 'ID', width:200},
+      { field: 'id', headerName: 'ID', width:100},
       // { field: 'order_number', headerName: 'Order Number', width: 400},
       { field: 'description', headerName: 'Description', flex: 1},
       { field: 'total', headerName: 'Total', width: 300},
@@ -329,7 +329,9 @@ const DashboardSalesReport = () => {
       XLSX.writeFile(workbook, 'data-grid.xlsx');
     };
 
-    
+    const handleAllPage = () => {
+      fetchSalesReport();
+    };
     const tabs = [
       {
         title: 'All',
@@ -368,7 +370,8 @@ const DashboardSalesReport = () => {
           <div className='bg-white rounded-lg h-[700px] w-[100%] shadow-lg mt-[30px]'>
             <DataGrid rows={gridRows} columns={gridColumns} className='text-center' disableExtendRowFullWidth/>
           </div>
-        </div>
+        </div>,
+        // onActive: handleAllPage(),
       },
       {
         title: 'Daily',

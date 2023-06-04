@@ -1460,6 +1460,8 @@ app.post('/api/add-sales', (req, res) => {
   });
 });
 
+
+
 app.delete('/api/clean-order-temp', (req, res) => {
   const cleanTemp = "truncate table tbl_orders_temp";
   connection.query(cleanTemp, (err, result) => {
@@ -1513,6 +1515,31 @@ app.delete('/api/void', (req, res) => {
   });
 });
 //Sales Report
+
+app.get('/api/fetch-total-sales', (req, res) => {
+  const totalSales = `select SUM(total) as total from tbl_sales_report`;
+  connection.query(totalSales, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch total sales', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+const currentDate = new Date().toISOString().slice(0, 10);
+
+app.get('/api/fetch-total-sales-today', (req, res) => {
+  const totalSales = `select SUM(total) as total from tbl_sales_report where date = '${currentDate}'`;
+  connection.query(totalSales, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch total sales', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.get('/api/sales-report', (req, res) => {
   const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report order by sales_report_id desc";
   connection.query(viewSales, (err, result) => {
@@ -2206,6 +2233,7 @@ app.get('/api/customer-payment-history', (req, res) => {
 //   const proofID = req.body.proofID;
 //   const amount = req.body.amount;
 //   const membershipType = req.body.membershipType;
+//   const referenceNumber = req.body.referenceNumber;
 //   const currentDate = new Date();
 //   const startDate = currentDate.toISOString().slice(0, 10);
 //   currentDate.setMonth(currentDate.getMonth() + 1);
@@ -2221,29 +2249,56 @@ app.get('/api/customer-payment-history', (req, res) => {
 //       const accName = accountInfoResult[0].fname;
 //       const email = accountInfoResult[0].email;
 //       // const name = fname + lname;
-//       const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active')`
+//       const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status, qrcode) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', '')`;
 //       connection.query(insertMembership, [accID, fname, email, membershipType, amount, startDate, endDate, startDate, currentTime], (err, insertMembershipResult) => {
 //         if(err){
 //           console.log('Failed to add membership', err);
 //         }else{
-//           // res.sendStatus(200);
-//           const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
-//           connection.query(updatePayment, [proofID], (err, paymentResult) => {
-//             if(err){
-//               console.log('Failed to update payment', err);
+//           const membershipId = insertMembershipResult.insertId;
+
+//           const formattedStartDate = moment(startDate).format('MMMM DD, YYYY');
+//           const formattedEndDate = moment(endDate).format('MMMM DD, YYYY');
+//           const qrCodeText = `Membership ID: ${membershipId}\nName: ${fname}\nMembership Type: ${membershipType}\nStart Date: ${formattedStartDate}\nEnd Date: ${formattedEndDate}`;
+
+//           qrcode.toDataURL(qrCodeText, (err, qrCodeDataUrl) => {
+//             if (err) {
+//               console.log('Failed to generate QR code', err);
+//               // Handle error
 //             } else {
-//               const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
-//               connection.query(
-//                 insertNotification,
-//                 [accID, `${accName}, Your payment has been confirmed.`, startDate, currentTime],
-//                 (err, notificationResult) => {
-//                   if (err) {
-//                     console.log('Failed to insert notification', err);
-//                   } else {
-//                     res.sendStatus(200);
-//                   }
+//               // Insert the QR code data into tbl_membership
+//               const base64Data = qrCodeDataUrl.replace(/^data:image\/\w+;base64,/, '');
+//               const buffer = Buffer.from(base64Data, 'base64');
+            
+//               const updateMembership = `UPDATE tbl_membership SET qrcode = ? WHERE membership_id = ?`;
+//               connection.query(updateMembership, [buffer, membershipId], (err, updateMembershipResult) => {
+//                 if (err) {
+//                   console.log('Failed to update membership with QR code', err);
+//                   // Handle error
+//                 } else {
+//                   // QR code generated and inserted successfully
+//                   // res.sendStatus(200);
+//                   const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
+//                   connection.query(updatePayment, [proofID], (err, paymentResult) => {
+//                     if(err){
+//                       console.log('Failed to update payment', err);
+//                     } else {
+//                       const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+//                       connection.query(
+//                         insertNotification,
+//                         [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime],
+//                         (err, notificationResult) => {
+//                           if (err) {
+//                             console.log('Failed to insert notification', err);
+//                           } else {
+//                             res.sendStatus(200);
+//                           }
+//                         }
+//                       );
+//                     }
+//                   });
+//                   // res.sendStatus(200);
 //                 }
-//               );
+//               });
 //             }
 //           });
 //         }
@@ -2251,7 +2306,6 @@ app.get('/api/customer-payment-history', (req, res) => {
 //     }
 //   });
 // });
-
 app.post('/api/add-membership', (req, res) => {
   const accID = req.body.accID;
   const proofID = req.body.proofID;
@@ -2264,72 +2318,95 @@ app.post('/api/add-membership', (req, res) => {
   const endDate = currentDate.toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
 
-  const getAccountInfo = `select * from tbl_account_info where account_info_id = '${accID}'`;
-  connection.query(getAccountInfo, (err, accountInfoResult) => {
-    if(err){
-      console.log('Failed to get account info', err);
-    }else{
+  // Check if the user already has a membership of the same type
+  const checkExistingMembership = `SELECT membership_id FROM tbl_membership WHERE account_info_id = ? AND membership_type = ?`;
+  connection.query(checkExistingMembership, [accID, membershipType], (err, existingMembershipResult) => {
+    if (err) {
+      console.log('Failed to check existing membership', err);
+      res.sendStatus(500);
+      return;
+    }
+
+    if (existingMembershipResult.length > 0) {
+      // User already has a membership of the same type, handle the error or provide appropriate response
+      res.status(400).send('User already has a membership of the same type.');
+      return;
+    }
+
+    // Proceed with adding the new membership
+    const getAccountInfo = `SELECT * FROM tbl_account_info WHERE account_info_id = ?`;
+    connection.query(getAccountInfo, [accID], (err, accountInfoResult) => {
+      if (err) {
+        console.log('Failed to get account info', err);
+        res.sendStatus(500);
+        return;
+      }
+
       const fname = accountInfoResult[0].fname + " " + accountInfoResult[0].lname;
       const accName = accountInfoResult[0].fname;
       const email = accountInfoResult[0].email;
-      // const name = fname + lname;
-      const insertMembership = `insert into tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status, qrcode) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', '')`;
+
+      const insertMembership = `INSERT INTO tbl_membership (account_info_id, name, email, membership_type, amount, start_date, end_date, date, time, status, qrcode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Active', '')`;
       connection.query(insertMembership, [accID, fname, email, membershipType, amount, startDate, endDate, startDate, currentTime], (err, insertMembershipResult) => {
-        if(err){
+        if (err) {
           console.log('Failed to add membership', err);
-        }else{
-          const membershipId = insertMembershipResult.insertId;
-
-          const formattedStartDate = moment(startDate).format('MMMM DD, YYYY');
-          const formattedEndDate = moment(endDate).format('MMMM DD, YYYY');
-          const qrCodeText = `Membership ID: ${membershipId}\nName: ${fname}\nMembership Type: ${membershipType}\nStart Date: ${formattedStartDate}\nEnd Date: ${formattedEndDate}`;
-
-          qrcode.toDataURL(qrCodeText, (err, qrCodeDataUrl) => {
-            if (err) {
-              console.log('Failed to generate QR code', err);
-              // Handle error
-            } else {
-              // Insert the QR code data into tbl_membership
-              const base64Data = qrCodeDataUrl.replace(/^data:image\/\w+;base64,/, '');
-              const buffer = Buffer.from(base64Data, 'base64');
-            
-              const updateMembership = `UPDATE tbl_membership SET qrcode = ? WHERE membership_id = ?`;
-              connection.query(updateMembership, [buffer, membershipId], (err, updateMembershipResult) => {
-                if (err) {
-                  console.log('Failed to update membership with QR code', err);
-                  // Handle error
-                } else {
-                  // QR code generated and inserted successfully
-                  // res.sendStatus(200);
-                  const updatePayment = `update tbl_proof_of_payment set status = 'Activated' where proof_of_payment_id = ?`;
-                  connection.query(updatePayment, [proofID], (err, paymentResult) => {
-                    if(err){
-                      console.log('Failed to update payment', err);
-                    } else {
-                      const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
-                      connection.query(
-                        insertNotification,
-                        [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime],
-                        (err, notificationResult) => {
-                          if (err) {
-                            console.log('Failed to insert notification', err);
-                          } else {
-                            res.sendStatus(200);
-                          }
-                        }
-                      );
-                    }
-                  });
-                  // res.sendStatus(200);
-                }
-              });
-            }
-          });
+          res.sendStatus(500);
+          return;
         }
+
+        const membershipId = insertMembershipResult.insertId;
+        const formattedStartDate = moment(startDate).format('MMMM DD, YYYY');
+        const formattedEndDate = moment(endDate).format('MMMM DD, YYYY');
+        const qrCodeText = `Membership ID: ${membershipId}\nName: ${fname}\nMembership Type: ${membershipType}\nStart Date: ${formattedStartDate}\nEnd Date: ${formattedEndDate}`;
+
+        qrcode.toDataURL(qrCodeText, (err, qrCodeDataUrl) => {
+          if (err) {
+            console.log('Failed to generate QR code', err);
+            // Handle error
+            res.sendStatus(500);
+            return;
+          }
+
+          // Insert the QR code data into tbl_membership
+          const base64Data = qrCodeDataUrl.replace(/^data:image\/\w+;base64,/, '');
+          const buffer = Buffer.from(base64Data, 'base64');
+
+          const updateMembership = `UPDATE tbl_membership SET qrcode = ? WHERE membership_id = ?`;
+          connection.query(updateMembership, [buffer, membershipId], (err, updateMembershipResult) => {
+            if (err) {
+              console.log('Failed to update membership with QR code', err);
+              // Handle error
+              res.sendStatus(500);
+              return;
+            }
+
+            // QR code generated and inserted successfully
+            const updatePayment = `UPDATE tbl_proof_of_payment SET status = 'Activated' WHERE proof_of_payment_id = ?`;
+            connection.query(updatePayment, [proofID], (err, paymentResult) => {
+              if (err) {
+                console.log('Failed to update payment', err);
+                res.sendStatus(500);
+                return;
+              }
+
+              const insertNotification = `INSERT INTO tbl_notification (account_info_id, description, date, time, status) VALUES (?, ?, ?, ?, 'Unread')`;
+              connection.query(insertNotification, [accID, `${accName}, Your payment has been confirmed. Ref No. ${referenceNumber}`, startDate, currentTime], (err, notificationResult) => {
+                if (err) {
+                  console.log('Failed to insert notification', err);
+                  res.sendStatus(500);
+                  return;
+                }
+
+                res.sendStatus(200);
+              });
+            });
+          });
+        });
       });
-    }
+    });
   });
 });
+
 
 app.get('/api/membership', (req, res) => {
   const fetchMembershipData = `select membership_id, account_info_id, name, email, membership_type, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status, qrcode from tbl_membership`;
@@ -2413,6 +2490,18 @@ app.get('/api/modules', (req, res) => {
       console.log('Failed to fetch access module', err);
     } else {
       res.status(200).send(result);
+    }
+  });
+});
+
+app.get('/api/fetch-qr-code', (req, res) => {
+  const accID = req.query.accID;
+  const fetchQR = `select qrcode, name from tbl_membership where account_info_id = ?`;
+  connection.query(fetchQR, [accID], (err, result) => {
+    if (err) {
+      console.log('Failed to fetch qr code', err);
+    } else {
+      res.send(result);
     }
   });
 });
