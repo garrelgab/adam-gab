@@ -2,7 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import PosTabs from './PosTabs';
 import { DataGrid } from '@mui/x-data-grid';
+import { useLocation } from 'react-router';
 const CustomerProofPayment = (props) => {
+
+  
   const userID = props.id;
   // const [name, setName] = useState('');
   const [referenceNum, setReference] = useState('');
@@ -28,7 +31,7 @@ const CustomerProofPayment = (props) => {
       const rows = response.data.map(item => ({
         id: item.proof_of_payment_id,
         refNo: item.reference_number,
-        amount: item.amount,
+        amount: formatPrice(item.amount),
         date: item.date,
         time: item.time,
       }));
@@ -57,6 +60,9 @@ const CustomerProofPayment = (props) => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     return allowedTypes.includes(file.type);
   };
+
+  const handle =() => {
+  }
   
   const formatPrice = (price) => {
     return Number(price).toFixed(2);

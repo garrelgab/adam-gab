@@ -145,7 +145,7 @@ const DashboardHealthTips = (props) => {
           .catch(error => {
             console.log('Failed to fetch health guide', error);
           });
-      };
+    };
       
     
     const handleImageUpload = (event) => {

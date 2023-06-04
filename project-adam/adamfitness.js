@@ -1231,6 +1231,49 @@ app.get('/api/service-offer', (req, res) => {
   });
 });
 
+app.get('/api/option-service', (req, res) => {
+  const optionPrivacy = "select service_offer_id, name from tbl_service_offer";
+  connection.query(optionPrivacy, (err, results) => {
+    if(err) {
+      console.log("Failed to get option", err);
+    }
+    else{
+      const formattedOptions = results.map((options) => ({
+        value: options.service_offer_id,
+        label: options.name,
+      }));
+      res.json(formattedOptions);
+    }
+  });
+});
+
+app.get('/api/desc-service', (req, res) => {
+  const descServiceID = req.query.descServiceID;
+  const descPrivacy = "select description from tbl_service_offer where service_offer_id = ?";
+  connection.query(descPrivacy, [descServiceID], (err, result) => {
+    if(err){
+      console.log("Failed to get description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
+app.put('/api/update-desc-service', (req, res) => {
+  const ServiceDescription = req.body.ServiceDescription;
+  const serviceID = req.body.serviceID;
+  const updateAboutDesc = "update tbl_service_offer set description = ? where service_offer_id = ?";
+  connection.query(updateAboutDesc, [ServiceDescription, serviceID], (err, result) => {
+    if(err){
+      console.log("Failed to update description", err);
+    }
+    else{
+      res.send(result);
+    }
+  });
+});
+
 //Invetory Management
 app.get('/api/inventory', (req, res) => {
   const products = "select product_id, product_name, product_desc, category, price, stock,  DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, product_status from tbl_products order by product_id desc";

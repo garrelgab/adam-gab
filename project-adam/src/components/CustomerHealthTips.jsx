@@ -9,6 +9,7 @@ const CustomerHealthTips = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalImageData, setModalImageData] = useState(null);  
   const [rows, setRows] = useState([]);
+  const [imageSrc, setImageSrc] = useState('');
 
   const renderInstructionCell = (params) => {
       const instructionText = params.value
@@ -41,23 +42,33 @@ const CustomerHealthTips = () => {
       {
           field: 'image',
           headerName: 'Image',
-          width: 150,
+          width: 450,
           renderCell: (params) => (
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{
-                backgroundColor: 'white',
-                color: 'gray',
-                '&:hover': {
-                  backgroundColor: 'gray',
-                  color: 'white',
-                },
-              }}
-              onClick={() => handleButtonClick(params.row)}
-            >
-              View Image
-            </Button>
+            // <Button
+            //   variant="contained"
+            //   color="primary"
+            //   sx={{
+            //     backgroundColor: 'white',
+            //     color: 'gray',
+            //     '&:hover': {
+            //       backgroundColor: 'gray',
+            //       color: 'white',
+            //     },
+            //   }}
+            //   onClick={() => handleButtonClick(params.row)}
+            // >
+            //   View Image
+            // </Button>
+            <img
+                src={imageSrc} // Assuming the 'image' field contains the URL of the image
+                alt="Image"
+                style={{
+                width: '400px',
+                height: 'auto',
+                cursor: 'pointer',
+                }}
+                // onClick={() => handleImageClick(params.row)}
+            />
           ),
         },
   ];
@@ -84,22 +95,62 @@ const CustomerHealthTips = () => {
     const base64String = buffer.toString('base64');
     return `data:${mimeType};base64,${base64String}`;
   };
+  // const fetchHealthGuide = () => {
+  //   axios.get('http://localhost:3001/api/health-guide')
+  //   .then(response => {
+  //     const rows = response.data.map(item => ({
+  //         id: item.health_guide_id,
+  //         name: item.name,
+  //         equipment: item.equipment,
+  //         instruction: item.instruction.replace(/<\/?p>/g, ''),
+  //         image: item.instruction_image ? bufferToBase64(Buffer.from(item.instruction_image)) : null,
+  //     }));
+  //     setRows(rows);
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+  // };
   const fetchHealthGuide = () => {
     axios.get('http://localhost:3001/api/health-guide')
-    .then(response => {
-      const rows = response.data.map(item => ({
-          id: item.health_guide_id,
-          name: item.name,
-          equipment: item.equipment,
-          instruction: item.instruction.replace(/<\/?p>/g, ''),
-          image: item.instruction_image ? bufferToBase64(Buffer.from(item.instruction_image)) : null,
-      }));
-      setRows(rows);
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  };
+      .then(response => {
+        const rows = response.data.map(async item => {
+          const row = {
+            id: item.health_guide_id,
+            name: item.name,
+            equipment: item.equipment,
+            instruction: item.instruction.replace(/<\/?p>/g, ''),
+            image: null, // Initially set the image as null
+          };
+  
+          if (item.instruction_image) {
+            try {
+              const imageResponse = await axios.get('http://localhost:3001/api/health-guide-image', {
+                params: { healthID: item.health_guide_id }
+              });
+              const imageData = imageResponse.data[0].instruction_image;
+              row.image = bufferToBase64(Buffer.from(imageData));
+              setImageSrc(row.image)
+            } catch (error) {
+              console.log('Failed to fetch image for health guide', error);
+            }
+          }
+  
+          return row;
+        });
+  
+        Promise.all(rows)
+          .then(completedRows => {
+            setRows(completedRows);
+          })
+          .catch(error => {
+            console.log('Failed to fetch health guide rows', error);
+          });
+      })
+      .catch(error => {
+        console.log('Failed to fetch health guide', error);
+      });
+};
     useEffect(() => {
         fetchHealthGuide();
     },[]);

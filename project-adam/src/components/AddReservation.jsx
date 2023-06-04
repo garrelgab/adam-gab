@@ -8,8 +8,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import axios from 'axios';
 import 'react-time-picker/dist/TimePicker.css';
+import { useNavigate } from 'react-router-dom';
 const AddReservation = (props) => {
-
+  const navigate = useNavigate();
   const sevenAM = dayjs().set('hour', 7).startOf('hour');
   const tenPM = dayjs().set('hour', 22).startOf('hour');
   
@@ -64,6 +65,7 @@ const AddReservation = (props) => {
       console.error('Error saving data.', error)
     })
     // setName('');
+
     props.onClose(false);
   };
 
