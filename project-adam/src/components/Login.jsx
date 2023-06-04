@@ -76,12 +76,12 @@ const Login = (props) => {
             } else {
               if (response.data[0].role === 'customer') {
                 const id = response.data[0].account_id;
-                console.log(id);
+                // console.log(id);
                 navigate('/customer', { replace: true, state: id });
                 props.setTrigger(false);
               } else {
                 const id = response.data[0].account_id;
-                console.log(id);
+                // console.log(id);
                 navigate('/dashboard', { replace: true, state: id });
                 props.setTrigger(false);
               }

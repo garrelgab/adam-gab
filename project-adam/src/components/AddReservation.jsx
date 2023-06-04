@@ -77,8 +77,9 @@ const AddReservation = (props) => {
     }
   };
   return (
-    <div className='fixed flex align-middle justify-center pt-[90px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
-        <div className='text-white w-[400px] md:w-[500px] h-[500px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'>
+    <div className='fixed flex items-center align-middle justify-center top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
+        {/* <div className='text-white w-[400px] md:w-[500px] h-[500px] mt-[50px] z-50 bg-[#1ca350] rounded-md shadow-xl'> */}
+        <div className='text-white flex flex-col mt-[0px] md:w-[500px] overflow-auto bg-[#1ca350] rounded-md shadow-xl'>
             <button className='ml-[90%] mt-[5%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>
@@ -115,7 +116,7 @@ const AddReservation = (props) => {
                     />
                 </LocalizationProvider>
               </div>
-              <div className='flex justify-end mt-[40px]'>
+              <div className='flex justify-end my-[40px]'>
                 <button className='w-[150px] p-2 text-lg font-bold rounded-md bg-white hover:bg-gray-500 text-[#1ca350] hover:text-white ease-in-out duration-300 shadow-lg hover:shadow-xl' onClick={handleSaveReservation}>Request</button>
               </div>
             </div>

@@ -625,8 +625,6 @@ app.post("/api/reservation", (req, res) => {
     }
   });
 });
-
-
 app.get("/api/events", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation";
   connection.query(fetchEvents, (err, result) => {
