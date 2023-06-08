@@ -15,6 +15,7 @@ const DashboardNavbar = (props) => {
         setNav(!nav)
         setNavSettings(false);
         setNavUser(false);
+        setWebNav(false);
     }
     const [currentTime, setCurrentTime] = useState('');
     const [currentDateTime, setCurrentDateTime] = useState('');
@@ -36,6 +37,11 @@ const DashboardNavbar = (props) => {
     const handleNavSettings = () => {
         setNavSettings(!navSettings);
         setNavUser(false);
+    };
+
+    const [webNav, setWebNav] = useState(false);
+    const handleWebNav = () => {
+        setWebNav(!webNav);
     };
     const handleNavUser = () => {
         setNavUser(!navUser);
@@ -134,6 +140,8 @@ const DashboardNavbar = (props) => {
         });
     };
 
+
+
     useEffect(() => {
         handleRunningDate();
         fetchAccountName();
@@ -198,28 +206,42 @@ const DashboardNavbar = (props) => {
                         </div>
                     </div>
                 )}
+                
                 {navSettings && (
-                    <ul className='ease-in-out duration-300'>
+                    <div>
                         <LinkRouter to='/dashboard/gcash' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Payment Settings</h1></li>
                         </LinkRouter>
+                        <div className={!webNav ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleWebNav}>
+                        
+                            <li className='p-4 md:py-6'><h1 className='mx-[35px]'>Website</h1></li>
+                            <div className='mr-[30px] md:mr-[20px]'>
+                                {!webNav ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
+                            </div>  
+                        </div>
+                    </div>
+                    
+                )}
+                { webNav && (
+                    <ul className='ease-in-out duration-300'>
+                        
                         <LinkRouter to='/dashboard/faq' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>FAQ's</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>FAQ's</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/privacy-policy' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Privacy Policy</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Privacy Policy</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/terms-of-use' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Terms and Conditions</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Terms and Conditions</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/about-us' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>About Us</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>About Us</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/service-offer' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Service Offers</h1></li>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Service Offers</h1></li>
                         </LinkRouter>
                     </ul>
-                )}
+                    )}
                 {userAccount && (
                     <div className={!navUser ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleNavUser}>
                         <li className='p-4 md:py-6'><h1 className='mx-[20px]'>User Account</h1></li>

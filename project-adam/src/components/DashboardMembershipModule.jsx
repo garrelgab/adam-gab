@@ -54,7 +54,7 @@ const DashboardMembershipModule = () => {
     ];
 
     const fetchMembershipData = () => {
-        axios.get('http://localhost:3001/api/membership')
+        axios.get('http://localhost:3001/membership')
         .then(response => {
             const rows = response.data.map(item => ({
                 id: item.membership_id,

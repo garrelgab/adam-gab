@@ -7,8 +7,11 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import Calendar from 'react-calendar'
 import moment from 'moment-timezone';
-
+import Select from 'react-select';
 const DashboardSalesReport = () => {
+
+  
+
     const gridColumns = [
       { field: 'id', headerName: 'ID', width:100},
       // { field: 'order_number', headerName: 'Order Number', width: 400},
@@ -16,7 +19,7 @@ const DashboardSalesReport = () => {
       { field: 'total', headerName: 'Total', width: 300},
       { field: 'date', headerName: 'Date', width: 300},
       { field: 'time', headerName: 'Time', width: 300},
-
+      { field: 'category', headerName: 'Category', width: 200}
     ]
     const[gridRows, setRows] = useState([]);
 
@@ -123,6 +126,7 @@ const DashboardSalesReport = () => {
           total: formatPrice(item.total),
           date: item.date,
           time: item.time,
+          category: item.category,
           // add more columns as needed
         }));
         setRows(rows);
@@ -171,6 +175,7 @@ const DashboardSalesReport = () => {
             total: formatPrice(item.total),
             date: item.date,
             time: item.time,
+            category: item.category,
             // add more columns as needed
           }));
           setRows(rows);
@@ -179,13 +184,57 @@ const DashboardSalesReport = () => {
         .catch((error) => {
           console.error(error);
         });
-    };    
+    };   
+
+    const options = [
+      { value: 'all', label: 'All'},
+      { value: 'Locker', label: 'Locker Rent'},
+      { value: 'Work-out', label: 'Work-out'},
+      { value: 'Membership', label: 'Membership'},
+      { value: 'Reservation', label: 'Dance Studio Reservation'},
+    ];
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleChangeCategory = selectedOption => {
+      // setSelectedOption(selectedOption);
+      if(selectedOption.value === 'all'){
+        fetchSalesReport();
+      } else {
+        axios.get('http://localhost:3001/filter-sales-report-category', {
+          params: {
+            category: selectedOption.value,
+          },
+        })
+        .then(response => {
+          const rows = response.data.map((item) => ({
+            id: item.sales_report_id,
+            description: item.description,
+            total: formatPrice(item.total),
+            date: item.date,
+            time: item.time,
+            category: item.category,
+            // add more columns as needed
+          }));
+          setRows(rows);
+          // console.log(response);
+        })
+        .catch(error => {
+          
+        });
+      }
+    };
+
+    // const fetchSalesReportByCategory = () => {
+      // const category = selectedOption ? selectedOption.value : 'all';
+      
+    // };
     useEffect(() => {
       fetchSalesReport();
       fetchSales();
       fetchWeekly();
       fetchMonthly();
       fetchYearly();
+      // fetchSalesReportByCategory();
     }, []);
     const formatPrice = (price) => {
       return Number(price).toFixed(2);
@@ -362,7 +411,8 @@ const DashboardSalesReport = () => {
                 )}
               </div>
             </div>
-            <div>
+            <div className='flex'>
+              <Select options={options} className='mx-[30px] w-[250px] z-50 ' onChange={handleChangeCategory}/>
               <button className='py-2 px-[40px]  md:mr-[30px] rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleExportExcel}>Export to Excel</button>
               <button className='py-2 px-[40px]  rounded-md bg-gray-50 text-[#1ca350] font-bold ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={exportToPdfAll}>Export to PDF</button>
             </div>

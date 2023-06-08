@@ -12,6 +12,7 @@ const DashboardHealthTips = (props) => {
     const [name, setName] = useState('');
     const [equipment, setEquipment] = useState('');
     const [editorContent, setEditorContent] = useState('');
+
     const [selectedImage, setSelectedImage] = useState(null);
     const fileRef = useRef(null);
     const [openModal, setOpenModal] = useState(false);
@@ -107,44 +108,44 @@ const DashboardHealthTips = (props) => {
     // };
 
     const fetchHealthGuide = () => {
-        axios.get('http://localhost:3001/api/health-guide')
-          .then(response => {
-            const rows = response.data.map(async item => {
-              const row = {
-                id: item.health_guide_id,
-                name: item.name,
-                equipment: item.equipment,
-                instruction: item.instruction.replace(/<\/?p>/g, ''),
-                image: null, // Initially set the image as null
-              };
-      
-              if (item.instruction_image) {
-                try {
-                  const imageResponse = await axios.get('http://localhost:3001/api/health-guide-image', {
-                    params: { healthID: item.health_guide_id }
-                  });
-                  const imageData = imageResponse.data[0].instruction_image;
-                  row.image = bufferToBase64(Buffer.from(imageData));
-                  setImageSrc(row.image)
-                } catch (error) {
-                  console.log('Failed to fetch image for health guide', error);
-                }
+      axios.get('http://localhost:3001/api/health-guide')
+        .then(response => {
+          const rows = response.data.map(async item => {
+            const row = {
+              id: item.health_guide_id,
+              name: item.name,
+              equipment: item.equipment,
+              instruction: item.instruction.replace(/<\/?p>/g, ''),
+              image: null, // Initially set the image as null
+            };
+    
+            if (item.instruction_image) {
+              try {
+                const imageResponse = await axios.get('http://localhost:3001/api/health-guide-image', {
+                  params: { healthID: item.health_guide_id }
+                });
+                const imageData = imageResponse.data[0].instruction_image;
+                row.image = bufferToBase64(Buffer.from(imageData));
+                setImageSrc(row.image)
+              } catch (error) {
+                console.log('Failed to fetch image for health guide', error);
               }
-      
-              return row;
-            });
-      
-            Promise.all(rows)
-              .then(completedRows => {
-                setRows(completedRows);
-              })
-              .catch(error => {
-                console.log('Failed to fetch health guide rows', error);
-              });
-          })
-          .catch(error => {
-            console.log('Failed to fetch health guide', error);
+            }
+    
+            return row;
           });
+    
+          Promise.all(rows)
+            .then(completedRows => {
+              setRows(completedRows);
+            })
+            .catch(error => {
+              console.log('Failed to fetch health guide rows', error);
+            });
+        })
+        .catch(error => {
+          console.log('Failed to fetch health guide', error);
+        });
     };
       
     

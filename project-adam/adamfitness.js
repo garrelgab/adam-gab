@@ -1,24 +1,38 @@
-const mysql = require('mysql')
-const bodyParser = require('body-parser')
-const express = require('express')
-const cors = require('cors')
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
+const mysql = require('mysql');
+const bodyParser = require('body-parser');
+const express = require('express');
+const cors = require('cors');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const qrcode = require('qrcode');
-const moment = require('moment')
+const moment = require('moment');
+const path = require('path');
 const app = express();
 const bcrypt = require('bcrypt');
 const port = process.env.PORT || 3001
 
 const connection = mysql.createPool({
-    host: 'localhost',
-    user: 'root', // this is the default username for XAMPP
-    password: '', // this is the default password for XAMPP
-    database: 'db_adamfitness', // replace with the name of your database
-  });
+  host: 'localhost',
+  user: 'root', // this is the default username for XAMPP
+  password: '', // this is the default password for XAMPP
+  database: 'db_adamfitness', // replace with the name of your database
+});
+// const connection = mysql.createPool({
+//   host: 'localhost',
+//   user: 'u994941609_root', // this is the default username for XAMPP
+//   password: 'Password1', // this is the default password for XAMPP
+//   database: 'u994941609_db_adamfitness', // replace with the name of your database
+// });
+// const connection = mysql.createPool({
+//   host: 'srv608.hstgr.io',
+//   user: 'u994941609_root', // this is the default username for XAMPP
+//   password: 'Password1', // this is the default password for XAMPP
+//   database: 'u994941609_db_adamfitness', // replace with the name of your database
+// });
 
-app.use(express.json())
+app.use(express.json());
+
 app.use(cors({
   origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -30,7 +44,6 @@ app.use(cors({
 app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
-
 
 // app.use(session({
 //   key: 'account_id',
@@ -46,202 +59,74 @@ app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
 });
 
-// app.post("/api/insert", (req, res) => {
-//   const currentDate = new Date().toISOString().slice(0, 10);
-//   const userFname = req.body.userFname;
-//   const userLname = req.body.userLname;
-//   const userAge = req.body.userAge;
-//   const userGender = req.body.userGender;
-//   const userBday = req.body.userBday;
-//   const userEmail = req.body.userEmail;
-//   const userPword = req.body.userPword;
-//   const userCPword = req.body.userCPword;
-  
-//   bcrypt.hash(userPword, 10, (err, hashUserPword) => {
-//     if(err){
-//       console.log('Error hashing password', err);
-//       res.sendStatus(500);
-//       return;
-//     }
-//     bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
-//       if(err){
-//         console.log('Error hashing confirm password', err);
-//         res.sendStatus(500);
-//         return;
-//       }
-//       const userRole = req.body.userRole;
+// app.use(express.static(path.join(__dirname, 'build')));
 
-//       const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
-//       connection.query(checkEmailQuery, [userEmail], (err, results) => {
-//         if (err) {
-//           console.log('Failed to query email', err);
-//           res.sendStatus(500);
-//         } else if (results.length > 0) {
-//           // Email already exists
-//           res.status(400).json({ error: 'Email already exists' });
-//         } else {
-//           // Email does not exist, proceed with insertion
-//           const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
-//           connection.query(
-//             sqlInsert,
-//             [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
-//             (err, result) => {
-//               if (err) {
-//                 console.log('Failed to add account info', err);
-//                 res.sendStatus(500);
-//               } else {
-//                 const accountId = result.insertId;
-//                 console.log('Last Inserted Account ID:', accountId);
-//                 const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
-//                 connection.query(sqlAccount, [userEmail, userPword, userRole], (err, result) => {
-//                   if (err) {
-//                     console.log('Failed to add account', err);
-//                     res.sendStatus(500);
-//                   } else {
-//                     const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-//                     connection.query(
-//                       sqlHealth,
-//                       [
-//                         req.body.diabetes,
-//                         req.body.chest,
-//                         req.body.bones,
-//                         req.body.heartmur,
-//                         req.body.epilepsy,
-//                         req.body.oedema,
-//                         req.body.recent,
-//                         req.body.highblood,
-//                         req.body.asthma,
-//                         req.body.fainting,
-//                         req.body.heartdisease,
-//                         req.body.shortbreath,
-//                         req.body.allergies,
-//                         req.body.pneumonia,
-//                         req.body.tachy,
-//                         req.body.heartattack,
-//                         req.body.palpitation,
-//                         req.body.lowblood,
-//                         req.body.seizure,
-//                         req.body.other,
-//                         accountId,
-//                       ],
-//                       (err, result) => {
-//                         if (err) {
-//                           console.log('Failed to add health conditions', err);
-//                           res.sendStatus(500);
-//                         } else {
-//                           res.sendStatus(200);
-//                         }
-//                       }
-//                     );
-//                   }
-//                 });
-//               }
-//             }
-//           );
-//         }
-//       });
-//     })
-//   })
+// // Serve the index.html file for all other requests
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 // });
 
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
-// app.post("/api/insert", (req, res) => {
-//   const currentDate = new Date().toISOString().slice(0, 10);
-//   const userFname = req.body.userFname;
-//   const userLname = req.body.userLname;
-//   const userAge = req.body.userAge;
-//   const userGender = req.body.userGender;
-//   const userBday = req.body.userBday;
-//   const userEmail = req.body.userEmail;
-//   const userPword = req.body.userPword;
-//   const userCPword = req.body.userCPword;
-//   const userRole = req.body.userRole;
+app.post("/login", (req, res) => {
+  const userEmail = req.body.userEmail;
+  const userPword = req.body.userPword;
+  connection.query(
+    "SELECT * FROM tbl_accounts WHERE email = ? AND status = 'Active'",
+    [userEmail],
+    (err, result) => {
+      if (err) {
+        res.send({ err: err });
+      } else if (result.length > 0) {
+        const hashedPassword = result[0].password;
+        bcrypt.compare(userPword, hashedPassword, (err, isMatch) => {
+          if (err) {
+            res.send({ err: err });
+          } else if (isMatch) {
+            const accountId = result[0].account_id;
+            connection.query(
+              "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
+              [accountId],
+              (err, accountInfoResult) => {
+                if (err) {
+                  res.send({ err: err });
+                } else if (accountInfoResult.length > 0) {
+                  const firstName = accountInfoResult[0].fname;
+                  // Insert fname into tbl_attendance
+                  const currentDate = new Date().toISOString().slice(0, 10);
+                  const currentTime = new Date().toTimeString().slice(0, 8);
+                  connection.query(
+                    `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
+                    [firstName, currentTime, currentDate],
+                    (err, insertionResult) => {
+                      if (err) {
+                        res.send({ err: err });
+                      } else {
+                        const role = result[0].role; // Retrieve the role from tbl_accounts
+                        // res.send({ message: "Login successful.", account_id: accountId, role: role });
+                        // res.send(insertionResult);
+                        res.send(result);
+                      }
+                    }
+                  );
+                } else {
+                  res.send({ message: "Incorrect username/password." });
+                }
+              }
+            );
+          } else {
+            res.send({ message: "Incorrect username/password." });
+          }
+        });
+      } else {
+        res.send({ message: "Account not found or inactive." });
+      }
+    }
+  );
+});
 
-//   // Hash the passwords
-//   bcrypt.hash(userPword, 10, (err, hashUserPword) => {
-//     if (err) {
-//       console.log('Error hashing password', err);
-//       res.sendStatus(500);
-//       return;
-//     }
-//     bcrypt.hash(userCPword, 10, (err, hashConfirmPword) => {
-//       if (err) {
-//         console.log('Error hashing confirm password', err);
-//         res.sendStatus(500);
-//         return;
-//       }
-//       const checkEmailQuery = 'SELECT * FROM tbl_account_info WHERE email = ?';
-//       connection.query(checkEmailQuery, [userEmail], (err, results) => {
-//         if (err) {
-//           console.log('Failed to query email', err);
-//           res.sendStatus(500);
-//         } else if (results.length > 0) {
-//           // Email already exists
-//           res.status(400).json({ error: 'Email already exists' });
-//         } else {
-//           // Email does not exist, proceed with insertion
-//           const sqlInsert = `INSERT INTO tbl_account_info (fname, lname, age, gender, bday, email, pword, cpword, role, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '${currentDate}', 'Active')`;
-//           connection.query(
-//             sqlInsert,
-//             [userFname, userLname, userAge, userGender, userBday, userEmail, hashUserPword, hashConfirmPword, userRole],
-//             (err, result) => {
-//               if (err) {
-//                 console.log('Failed to add account info', err);
-//                 res.sendStatus(500);
-//               } else {
-//                 const accountId = result.insertId;
-//                 console.log('Last Inserted Account ID:', accountId);
-//                 const sqlAccount = `INSERT INTO tbl_accounts (email, password, role, status) VALUES (?, ?, ?, 'Active')`;
-//                 connection.query(sqlAccount, [userEmail, hashUserPword, userRole], (err, result) => {
-//                   if (err) {
-//                     console.log('Failed to add account', err);
-//                     res.sendStatus(500);
-//                   } else {
-//                     const sqlHealth = `INSERT INTO tbl_health_conditions (diabetes, chest_pains, broken_bones, heart_murmur, epilepsy, oedema, recentsurgery, highblood, asthma, fainting, heartdisease, shortofbreath, allergies, pneumonia, tachycardia, heartattack, palpitate, lowblood, seizure, other, account_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-//                     connection.query(
-//                       sqlHealth,
-//                       [
-//                         req.body.diabetes,
-//                         req.body.chest,
-//                         req.body.bones,
-//                         req.body.heartmur,
-//                         req.body.epilepsy,
-//                         req.body.oedema,
-//                         req.body.recent,
-//                         req.body.highblood,
-//                         req.body.asthma,
-//                         req.body.fainting,
-//                         req.body.heartdisease,
-//                         req.body.shortbreath,
-//                         req.body.allergies,
-//                         req.body.pneumonia,
-//                         req.body.tachy,
-//                         req.body.heartattack,
-//                         req.body.palpitation,
-//                         req.body.lowblood,
-//                         req.body.seizure,
-//                         req.body.other,
-//                         accountId,
-//                       ],
-//                       (err, result) => {
-//                         if (err) {
-//                           console.log('Failed to add health conditions', err);
-//                           res.sendStatus(500);
-//                         } else {
-//                           res.sendStatus(200);
-//                         }
-//                       }
-//                     );
-//                   }
-//                 });
-//               }
-//             }
-//           );
-//         }
-//       });
-//     });
-//   });
-// });
 
 app.post("/api/insert", (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -482,63 +367,6 @@ app.post("/api/insert", (req, res) => {
 //   );
 // });
 
-app.post("/api/login", (req, res) => {
-  const userEmail = req.body.userEmail;
-  const userPword = req.body.userPword;
-  connection.query(
-    "SELECT * FROM tbl_accounts WHERE email = ? AND status = 'Active'",
-    [userEmail],
-    (err, result) => {
-      if (err) {
-        res.send({ err: err });
-      } else if (result.length > 0) {
-        const hashedPassword = result[0].password;
-        bcrypt.compare(userPword, hashedPassword, (err, isMatch) => {
-          if (err) {
-            res.send({ err: err });
-          } else if (isMatch) {
-            const accountId = result[0].account_id;
-            connection.query(
-              "SELECT fname FROM tbl_account_info WHERE account_info_id = ?",
-              [accountId],
-              (err, accountInfoResult) => {
-                if (err) {
-                  res.send({ err: err });
-                } else if (accountInfoResult.length > 0) {
-                  const firstName = accountInfoResult[0].fname;
-                  // Insert fname into tbl_attendance
-                  const currentDate = new Date().toISOString().slice(0, 10);
-                  const currentTime = new Date().toTimeString().slice(0, 8);
-                  connection.query(
-                    `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
-                    [firstName, currentTime, currentDate],
-                    (err, insertionResult) => {
-                      if (err) {
-                        res.send({ err: err });
-                      } else {
-                        const role = result[0].role; // Retrieve the role from tbl_accounts
-                        // res.send({ message: "Login successful.", account_id: accountId, role: role });
-                        // res.send(insertionResult);
-                        res.send(result);
-                      }
-                    }
-                  );
-                } else {
-                  res.send({ message: "Incorrect username/password." });
-                }
-              }
-            );
-          } else {
-            res.send({ message: "Incorrect username/password." });
-          }
-        });
-      } else {
-        res.send({ message: "Account not found or inactive." });
-      }
-    }
-  );
-});
-
 
 app.get('/api/account-name', (req, res) => {
   const accID = req.query.accID;
@@ -574,9 +402,7 @@ app.get("/api/members", (req, res) => {
 //   }
 // });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+
 
 // app.post("/api/reservation", (req, res) => {
 //   const customerName = req.body.customerName;
@@ -596,7 +422,37 @@ app.listen(port, () => {
 //   });
 // });
 
-app.post("/api/reservation", (req, res) => {
+// app.post("/reservation", (req, res) => {
+//   const customerName = req.body.customerName;
+//   const customerStartTime = req.body.customerStartTime;
+//   const customerEndTime = req.body.customerEndTime;
+//   const customerDate = req.body.customerDate;
+//   const customerStatus = req.body.customerStatus;
+//   const noPax = req.body.noPax;
+//   const customerID = req.body.customerID;
+//   const lastProofID = req.body.lastProofID
+//   const getCustomerName = `SELECT fname FROM tbl_account_info WHERE account_info_id = '${customerID}'`;
+//   connection.query(getCustomerName, (err, results) => {
+//     if (err) {
+//       console.log("Error fetching customer name:", err);
+//       res.status(500).json({ error: "Failed to fetch customer name" });
+//     } else {
+//       const fname = results[0].fname; // Assuming the query returns a single row
+
+//       const sqlInsert = "INSERT INTO tbl_reservation (name, pax, time_start, time_end, customer_date, status, proof_of_payment_id) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?, ?)";
+//       connection.query(sqlInsert, [fname, noPax, customerStartTime, customerEndTime, customerDate, customerStatus, lastProofID], (err, result) => {
+//         if (err) {
+//           console.log("Error inserting reservation:", err);
+//           res.status(500).json({ error: "Failed to insert reservation" });
+//         } else {
+//           res.send(result);
+//         }
+//       });
+//     }
+//   });
+// });
+
+app.post("/reservation", (req, res) => {
   const customerName = req.body.customerName;
   const customerStartTime = req.body.customerStartTime;
   const customerEndTime = req.body.customerEndTime;
@@ -604,27 +460,91 @@ app.post("/api/reservation", (req, res) => {
   const customerStatus = req.body.customerStatus;
   const noPax = req.body.noPax;
   const customerID = req.body.customerID;
-  const lastProofID = req.body.lastProofID
-  const getCustomerName = `SELECT fname FROM tbl_account_info WHERE account_info_id = '${customerID}'`;
-  connection.query(getCustomerName, (err, results) => {
-    if (err) {
-      console.log("Error fetching customer name:", err);
-      res.status(500).json({ error: "Failed to fetch customer name" });
-    } else {
-      const fname = results[0].fname; // Assuming the query returns a single row
+  const lastProofID = req.body.lastProofID;
 
-      const sqlInsert = "INSERT INTO tbl_reservation (name, pax, time_start, time_end, customer_date, status, proof_of_payment_id) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?, ?)";
-      connection.query(sqlInsert, [fname, noPax, customerStartTime, customerEndTime, customerDate, customerStatus, lastProofID], (err, result) => {
-        if (err) {
-          console.log("Error inserting reservation:", err);
-          res.status(500).json({ error: "Failed to insert reservation" });
-        } else {
-          res.send(result);
-        }
-      });
+
+  const refNum = req.body.refNum;
+  const amount = req.body.amount;
+  const imageData = req.body.imageData;
+  const desc = req.body.desc;
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+  const buffer = Buffer.from(base64Data, 'base64');
+
+
+  // Check if there is already a booking for the given customer_date
+  const checkBookingQuery = "SELECT * FROM tbl_reservation WHERE customer_date = STR_TO_DATE(?, '%m-%d-%Y') and account_info_id = ?";
+  connection.query(checkBookingQuery, [customerDate, customerID], (err, CheckResults) => {
+    if (err) {
+      console.log("Error checking booking:", err);
+      res.status(500).json({ error: "Failed to check booking" });
+    } else {
+      if (CheckResults.length > 0) {
+        // A booking already exists for the given customer_date
+        res.status(400).json({ error: "Booking already exists for the specified date" });
+      } else {
+        // No existing booking for the given customer_date, proceed with the reservation
+        const totalPaxQuery = "SELECT SUM(pax) AS total_pax FROM tbl_reservation WHERE customer_date = STR_TO_DATE(?, '%m-%d-%Y') AND time_start = ? AND time_end = ?";
+        connection.query(totalPaxQuery, [customerDate, customerStartTime, customerEndTime], (err, paxResult) => {
+          if (err) {
+            console.log("Error calculating total pax:", err);
+            res.status(500).json({ error: "Failed to calculate total pax" });
+          } else {
+            const totalPax = paxResult[0].total_pax || 0; // Default to 0 if no rows returned
+
+            // Validate if the total pax exceeds 15 for the session
+            if (totalPax + parseInt(noPax) > 15) {
+              res.status(200).json({ error: `The session ${customerStartTime}-${customerEndTime} is full`, totalPax });
+            }
+            // else if (totalPax + parseInt(noPax) < 15) {
+            //   res.status(300).json({ error: `${totalPax} is already in this session.`, totalPax });
+            // }
+            else {
+              // Proceed with the reservation
+              const getCustomerName = "SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?";
+              connection.query(getCustomerName, [customerID], (err, results) => {
+                if (err) {
+                  console.log("Error fetching customer name:", err);
+                  res.status(500).json({ error: "Failed to fetch customer name" });
+                } else {
+                  const fname = results[0].fname; // Assuming the query returns a single row
+                  const email = results[0].email;
+
+                  // Insert the proof of payment
+                  const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
+                  connection.query(
+                    addProof,
+                    [customerID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
+                    (err, proofResult) => {
+                      if (err) {
+                        console.log('Failed to insert proof of payment', err);
+                        res.status(500).send('Failed to insert proof of payment');
+                      } else {
+                        const insertedId = proofResult.insertId;
+                        // Insert the reservation into the database
+                        const sqlInsert = "INSERT INTO tbl_reservation (name, account_info_id, pax, time_start, time_end, customer_date, status, proof_of_payment_id) VALUES (?, ?, ?, ?, ?, STR_TO_DATE(?, '%m-%d-%Y'), ?, ?)";
+                        connection.query(sqlInsert, [fname, customerID, noPax, customerStartTime, customerEndTime, customerDate, customerStatus, insertedId], (err, result) => {
+                          if (err) {
+                            console.log("Error inserting reservation:", err);
+                            res.status(500).json({ error: "Failed to insert reservation" });
+                          } else {
+                            res.send({totalPax, insertedId});
+                          }
+                        });
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          }
+        });
+      }
     }
   });
 });
+
 
 app.get("/api/events", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation";
@@ -702,6 +622,7 @@ app.put('/api/hold', (req, res) => {
   const reservationStatus = req.body.reservationStatus;
   const accID = req.body.accID;
   const accName = req.body.accName;
+  const amount = req.body.amount;
   const referenceNumber = req.body.referenceNumber;
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
@@ -730,7 +651,16 @@ app.put('/api/hold', (req, res) => {
                   res.sendStatus(500);
                   return;
                 }
-                res.sendStatus(200);
+                // res.sendStatus(200);
+                const payment = `Reference Number: ${referenceNumber}`;
+                const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${payment}', '${amount}', '${currentDate}', '${currentTime}', 'Reservation')`;
+                connection.query(insertSales, (err, salesResult) => {
+                  if(err){
+                    console.log('Failed to add sales', err);
+                  } else {
+                    res.sendStatus(200);
+                  }
+                });
               });
               // res.send("Event updated successfully");
             }
@@ -1614,9 +1544,10 @@ app.get('/api/fetch-total-sales', (req, res) => {
   });
 });
 
-const currentDate = new Date().toISOString().slice(0, 10);
 
 app.get('/api/fetch-total-sales-today', (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+
   const totalSales = `select SUM(total) as total from tbl_sales_report where date = '${currentDate}'`;
   connection.query(totalSales, (err, result) => {
     if (err) {
@@ -1628,7 +1559,7 @@ app.get('/api/fetch-total-sales-today', (req, res) => {
 });
 
 app.get('/api/sales-report', (req, res) => {
-  const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report order by sales_report_id desc";
+  const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, category from tbl_sales_report order by sales_report_id desc";
   connection.query(viewSales, (err, result) => {
     if(err){
       console.log('Failed to fetch sales report', err);
@@ -1643,7 +1574,7 @@ app.get('/api/filter-sales-report', (req, res) => {
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
 
-  const filterDate = `select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_sales_report where date between ? and ?`;
+  const filterDate = `select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, category from tbl_sales_report where date between ? and ?`;
   connection.query(filterDate, [startDate, endDate], (err, result) => {
     if (err) {
       console.log('Failed to fetch filtered date', err);
@@ -1652,6 +1583,20 @@ app.get('/api/filter-sales-report', (req, res) => {
     }
   });
 });
+
+app.get('/filter-sales-report-category', (req, res) => {
+  const category = req.query.category;
+
+  const filterDate = `select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, category from tbl_sales_report where category = ?`;
+  connection.query(filterDate, [category], (err, result) => {
+    if (err) {
+      console.log('Failed to fetch filtered date', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 
 //Sum Daily
 app.get('/api/daily-sales', (req, res) => {
@@ -1708,8 +1653,10 @@ app.get('/api/yearly-sales', (req, res) => {
 //Workouts
 app.post('/api/add-workout', (req, res) => {
   const name = req.body.name;
-  const type = req.body.type;
-  const price = req.body.price;
+  // const type = req.body.type;
+  // const price = req.body.price;
+  const type = 'Daily Session';
+  const price = 70;
   const formattedPrice = Number(price).toFixed(2);
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date();
@@ -2347,169 +2294,6 @@ app.post('/api/add-proof-of-payment', (req, res) => {
   });
 });
 
-// app.post('/api/add-proof-of-payment', (req, res) => {
-//   const userID = req.body.userID;
-//   const refNum = req.body.refNum;
-//   const amount = req.body.amount;
-//   const imageData = req.body.imageData;
-//   const desc = req.body.desc;
-//   const currentDate = new Date().toISOString().slice(0, 10);
-//   const currentTime = new Date().toTimeString().slice(0, 8);
-//   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-//   const buffer = Buffer.from(base64Data, 'base64');
-
-//   const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
-//   connection.query(getFname, [userID], (err, fnameResult) => {
-//     if (err) {
-//       console.log('Failed to get first name', err);
-//       res.status(500).send('Failed to get first name');
-//     } else {
-//       const fname = fnameResult[0].fname;
-//       const email = fnameResult[0].email;
-
-//       const checkMembership = `SELECT * FROM tbl_membership WHERE account_info_id = ? and end_date > ${currentDate}`;
-//       connection.query(checkMembership, [userID], (err, membershipResult) => {
-//         if (err) {
-//           console.log('Failed to check membership', err);
-//           res.status(500).send('Failed to check membership');
-//         } else if (membershipResult.length === 0) {
-//           res.status(400).send('User does not have a membership');
-//         } else {
-//           const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
-//           connection.query(
-//             addProof,
-//             [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
-//             (err, proofResult) => {
-//               if (err) {
-//                 console.log('Failed to insert proof of payment', err);
-//                 res.status(500).send('Failed to insert proof of payment');
-//               } else {
-//                 res.send('Proof of payment added successfully');
-//               }
-//             }
-//           );
-//         }
-//       });
-//     }
-//   });
-// });
-
-
-// app.post('/api/add-proof-of-payment', (req, res) => {
-//   const userID = req.body.userID;
-//   const refNum = req.body.refNum;
-//   const amount = req.body.amount;
-//   const imageData = req.body.imageData;
-//   const desc = req.body.desc;
-//   const currentDate = new Date().toISOString().slice(0, 10);
-//   const currentTime = new Date().toTimeString().slice(0, 8);
-//   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-//   const buffer = Buffer.from(base64Data, 'base64');
-
-//   const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
-//   connection.query(getFname, [userID], (err, fnameResult) => {
-//     if (err) {
-//       console.log('Failed to get first name', err);
-//       res.status(500).send('Failed to get first name');
-//     } else {
-//       const fname = fnameResult[0].fname;
-//       const email = fnameResult[0].email;
-      
-//       // Validate if the user ID exists in tbl_membership
-//       const checkMembershipQuery = `SELECT membership_type FROM tbl_membership WHERE account_info_id = ?`;
-//       connection.query(checkMembershipQuery, [userID], (err, membershipResult) => {
-//         if (err) {
-//           console.log('Failed to check membership', err);
-//           res.status(500).send('Failed to check membership');
-//         } else if (membershipResult.length === 0) {
-//           res.status(400).send('User ID does not have a membership');
-//         } else {
-//           const membershipType = membershipResult[0].membership_type;
-          
-//           // Validate if the current time is less than the end_date of the membership
-//           const checkMembershipExpirationQuery = `SELECT end_date FROM tbl_membership WHERE account_info_id = ? AND end_date > NOW()`;
-//           connection.query(checkMembershipExpirationQuery, [userID], (err, expirationResult) => {
-//             if (err) {
-//               console.log('Failed to check membership expiration', err);
-//               res.status(500).send('Failed to check membership expiration');
-//             } else if (expirationResult.length === 0) {
-//               res.status(400).send('Membership has expired');
-//             } else {
-//               const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
-//               connection.query(
-//                 addProof,
-//                 [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
-//                 (err, proofResult) => {
-//                   if (err) {
-//                     console.log('Failed to insert proof of payment', err);
-//                     res.status(500).send('Failed to insert proof of payment');
-//                   } else {
-//                     res.send('Proof of payment added successfully');
-//                   }
-//                 }
-//               );
-//             }
-//           });
-//         }
-//       });
-//     }
-//   });
-// });
-
-// app.post('/api/add-proof-of-payment', (req, res) => {
-//   const userID = req.body.userID;
-//   const refNum = req.body.refNum;
-//   const amount = req.body.amount;
-//   const imageData = req.body.imageData;
-//   const desc = req.body.desc;
-//   const currentDate = new Date().toISOString().slice(0, 10);
-//   const currentTime = new Date().toTimeString().slice(0, 8);
-//   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-//   const buffer = Buffer.from(base64Data, 'base64');
-
-//   // Check if the user ID exists in tbl_membership and membership_type is the same as tbl_proof_of_payment
-//   const validateMembershipQuery = `
-//     SELECT *
-//     FROM tbl_membership
-//     WHERE account_info_id = ? AND membership_type IN (
-//       SELECT membership_type
-//       FROM tbl_proof_of_payment
-//       WHERE end_date > NOW()
-//     )
-//   `;
-//   connection.query(validateMembershipQuery, [userID], (err, membershipResult) => {
-//     if (err) {
-//       console.log('Error validating membership:', err);
-//       res.status(500).send('Failed to validate membership');
-//     } else if (membershipResult.length === 0) {
-//       res.status(400).send('Invalid user ID or membership type');
-//     } else {
-//       const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
-//       connection.query(getFname, [userID], (err, fnameResult) => {
-//         if (err) {
-//           console.log('Failed to get first name', err);
-//           res.status(500).send('Failed to get first name');
-//         } else {
-//           const fname = fnameResult[0].fname;
-//           const email = fnameResult[0].email;
-//           const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
-//           connection.query(
-//             addProof,
-//             [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
-//             (err, proofResult) => {
-//               if (err) {
-//                 console.log('Failed to insert proof of payment', err);
-//                 res.status(500).send('Failed to insert proof of payment');
-//               } else {
-//                 res.send('Proof of payment added successfully');
-//               }
-//             }
-//           );
-//         }
-//       });
-//     }
-//   });
-// });
 
 app.get('/api/gcash', (req, res) => {
   const getGcashData = `select proof_of_payment_id, account_info_id, email, description, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment`;
@@ -2689,7 +2473,7 @@ app.post('/api/add-membership', (req, res) => {
             }
 
             // QR code generated and inserted successfully
-            const updatePayment = `UPDATE tbl_proof_of_payment SET status = 'Activated' WHERE proof_of_payment_id = ?`;
+            const updatePayment = `UPDATE tbl_proof_of_payment SET status = 'Confirmed' WHERE proof_of_payment_id = ?`;
             connection.query(updatePayment, [proofID], (err, paymentResult) => {
               if (err) {
                 console.log('Failed to update payment', err);
@@ -2698,7 +2482,7 @@ app.post('/api/add-membership', (req, res) => {
               }
               else {
                 const payment = `Reference Number: ${referenceNumber}`;
-                const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${payment}', '${amount}', '${startDate}', '${currentTime}', 'Payment')`;
+                const insertSales = `insert into tbl_sales_report (description, total, date, time, category) values ('${payment}', '${amount}', '${startDate}', '${currentTime}', 'Membership')`;
                 connection.query(insertSales, (err, insertSalesResult) => {
                   if(err){
                     console.log('Failed to add sales workout', err);
@@ -2725,7 +2509,7 @@ app.post('/api/add-membership', (req, res) => {
 });
 
 
-app.get('/api/membership', (req, res) => {
+app.get('/membership', (req, res) => {
   const fetchMembershipData = `select membership_id, account_info_id, name, email, membership_type, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status, qrcode from tbl_membership`;
   connection.query(fetchMembershipData, (err, result) => {
     if (err) {
@@ -2824,24 +2608,43 @@ app.get('/api/fetch-qr-code', (req, res) => {
 });
 
 
-// const autoInsertData = () => {
-//   const currentDate = new Date();
-//   const threeDaysFromNow = new Date();
-//   threeDaysFromNow.setDate(currentDate.getDate() + 3);
+const autoInsertData = () => {
+  const currentDate = new Date();
+  const fiveDaysFromNow = new Date();
+  fiveDaysFromNow.setDate(currentDate.getDate() + 5);
 
-//   const endDateCondition = threeDaysFromNow.toISOString().slice(0, 10);
+  const endDateCondition = fiveDaysFromNow.toISOString().slice(0, 10);
 
-//   const insertQuery = `INSERT INTO your_table (column1, column2, ...) SELECT value1, value2, ... FROM another_table WHERE end_date < '${endDateCondition}'`;
+  const insertQuery = `INSERT INTO tbl_notification (account_info_id, description, date, time) SELECT account_info_id, 'Membership ending soon', CURDATE(), CURTIME() FROM tbl_membership WHERE end_date < '${endDateCondition}'`;
 
-//   connection.query(insertQuery, (err, result) => {
-//     if (err) {
-//       console.error('Error inserting data:', err);
-//     } else {
-//       console.log('Data inserted successfully:', result.affectedRows, 'rows inserted.');
-//     }
-//   });
-// };
+  connection.query(insertQuery, (err, result) => {
+    if (err) {
+      console.error('Error inserting data:', err);
+    } else {
+      console.log('Data inserted successfully:', result.affectedRows, 'rows inserted.');
+    }
+  });
+};
 
-// // Run the auto-insert function periodically (e.g., every day)
-// setInterval(autoInsertData, 24 * 60 * 60 * 1000); // Run once every 24 hours
+// Run the auto-insert function periodically (e.g., every day)
+setInterval(autoInsertData, 24 * 60 * 60 * 1000); // Run once every 24 hours
+
+const autoUpdateData = () => {
+  const currentDate = new Date();
+  const endDateCondition = currentDate.toISOString().slice(0, 10);
+
+  const updateQuery = `UPDATE tbl_membership SET status = 'Expired' WHERE end_date = '${endDateCondition}'`;
+
+  connection.query(updateQuery, (err, result) => {
+    if (err) {
+      console.error('Error updating data:', err);
+    } else {
+      console.log('Data updated successfully:', result.affectedRows, 'rows updated.');
+    }
+  });
+};
+
+// Run the auto-update function once every day
+setInterval(autoUpdateData, 24 * 60 * 60 * 1000);
+
 module.exports = connection;

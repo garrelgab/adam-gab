@@ -153,6 +153,19 @@ const CreateAccount = (props) => {
     const handleTermsChecked = (e) => {
         setTerms(e.target.checked);
     }
+
+    const handleInputChangeFirstName = (event) => {
+        const value = event.target.value;
+        const sanitizedValue = value.replace(/[^a-zA-Z]/g, ''); // Remove non-letter characters
+        setFname(sanitizedValue.trim()); // Trim leading and trailing spaces
+        // You can perform additional validation here or update state with an error message if needed
+    };
+    const handleInputChangeLastName = (event) => {
+        const value = event.target.value;
+        const sanitizedValue = value.replace(/[^a-zA-Z]/g, ''); // Remove non-letter characters
+        setLname(sanitizedValue.trim()); // Trim leading and trailing spaces
+        // You can perform additional validation here or update state with an error message if needed
+    };
     const btnCreateAccount = () => {
         // if(age < 18){
         //     alert('18 years old below is not allowed to create account. Waiver Required.');
@@ -186,6 +199,10 @@ const CreateAccount = (props) => {
         }
         if(!cpword){
             alert('Please fill out the empty field.');
+            return;
+        }
+        if(pword.length < 8) {
+            alert('Password must be at least 8 characters long');
             return;
         }
         if(age < 18){
@@ -301,23 +318,39 @@ const CreateAccount = (props) => {
                 <form className='md:flex md:flex-col-3'>
                     <div className='mt-[100px] md:mt-[10px] max-w-[350px] md:max-w-[100%] mx-auto'>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">First Name</label>
-                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='First Name' value={fname} onChange={(e) => setFname(e.target.value)} required/>
+                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='First Name' value={fname} onChange={handleInputChangeFirstName} required/>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
-                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={(e) => setLname(e.target.value)} required/>
-                        <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label>
-                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder={age ? age : 'Age'} value={age} readOnly required/>
+                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={handleInputChangeLastName} required/>
+                        {/* <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label> */}
+                        {/* <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md cursor-default focus:outline-none" placeholder={age ? age : 'Age'} value={age} readOnly required/> */}
                     </div>
 
                     <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light">Gender</label>
                         <select id="gender-select" className="font-light shadow-lg mb-1 block w-[350px] rounded-lg p-4 bg-gray-50 text-black focus:outline-none" placeholder='Select Gender' value={selectedGender} onChange={handleChange} required>
-                            {genderOptions.map((option) => (
+                            {/* {genderOptions.map((option) => (
                             <option className='p-4 text-lg font-light' key={option.value} value={option.value}>
                                 {option.label}
                             </option>
-                            ))}
+                            ))} */}
+                            {genderOptions.map((option) =>
+                                option.value === selectedGender ? (
+                                <option className="p-4 text-lg font-light" key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                                ) : (
+                                <option
+                                    className="p-4 text-lg font-light"
+                                    key={option.value}
+                                    value={option.value}
+                                    disabled={option.value === '' && selectedGender !== ''}
+                                >
+                                    {option.label}
+                                </option>
+                                )
+                            )}
                         </select>
-
+                        
                         <label className="block text-md md:text-lg mx-auto text-left font-light">Birthday</label>
                         <button onClick={handleButtonClick} className='font-light shadow-lg w-[350px] text-left bg-gray-50 p-4 rounded-lg text-black focus:outline-none' value={bday} onChange={(e) => setBday(e.target.value)} required>
                             {selectedDate ? moment(selectedDate).tz('Asia/Manila').format('MMMM DD, YYYY') : 'Select Date'}

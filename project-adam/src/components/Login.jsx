@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 import { Link as LinkRouter } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import Axios from 'axios'
+import axios from 'axios'
 
 const Login = (props) => {
 
     let navigate = useNavigate();
     // const location = useLocation();
 
-    Axios.defaults.withCredentials = true;
+    axios.defaults.withCredentials = true;
 
     const [email, setEmail] = useState('');
     const [pword, setPword] = useState('');
@@ -57,52 +57,45 @@ const Login = (props) => {
     //     setPword('');
     // };
     const userLogin = () => {
-        if (!email) {
-          alert('Please fill out the empty field.');
-          return;
-        }
-        if (!pword) {
-          alert('Please fill out the empty field.');
-          return;
-        }
-        Axios.post("http://localhost:3001/api/login", {
-          userEmail: email,
-          userPword: pword,
-        })
-          .then((response) => {
-            console.log(response.data); // Add this line for debugging
-            if (response.data.message) {
-              setLoginStatus(response.data.message);
+      if (!email) {
+        alert('Please fill out the empty field.');
+        return;
+      }
+      if (!pword) {
+        alert('Please fill out the empty field.');
+        return;
+      }
+      axios.post("http://localhost:3001/login", {
+        userEmail: email,
+        userPword: pword,
+      })
+        .then((response) => {
+          console.log(response.data); // Add this line for debugging
+          if (response.data.message) {
+            setLoginStatus(response.data.message);
+          } else {
+            if (response.data[0].role === 'customer') {
+              const id = response.data[0].account_id;
+              // console.log(id);
+              navigate('/customer', { replace: true, state: id });
+              props.setTrigger(false);
             } else {
-              if (response.data[0].role === 'customer') {
-                const id = response.data[0].account_id;
-                // console.log(id);
-                navigate('/customer', { replace: true, state: id });
-                props.setTrigger(false);
-              } else {
-                const id = response.data[0].account_id;
-                // console.log(id);
-                navigate('/dashboard', { replace: true, state: id });
-                props.setTrigger(false);
-              }
+              const id = response.data[0].account_id;
+              // console.log(id);
+              navigate('/dashboard', { replace: true, state: id });
+              props.setTrigger(false);
             }
-            setEmail('');
-            setPword('');
-          })
-          .catch((error) => {
-            console.error('Failed to login', error);
-          });
-      };
+          }
+          setEmail('');
+          setPword('');
+        })
+        .catch((error) => {
+          console.error('Failed to login', error);
+        });
+    };
       
 
   return (props.trigger) ? (
-    // <>
-    //     {isLoggedIn ? (
-    //         <p>Logged in</p>
-    //     ) : (
-            
-    //     )};
-    // </>
     <div className='fixed flex align-middle justify-center pt-[20px] top-0 left-0 w-[100%] h-[100%] bg-modal'>
         <div className='text-black md:text-black shadow-md bg-[#1ca350] max-h-[670px] md:max-h-[600px] w-[400px] md:w-[500px] rounded-xl'>
             <div className='text-white'>

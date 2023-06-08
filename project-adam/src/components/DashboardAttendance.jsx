@@ -13,7 +13,7 @@ const DashboardAttendance = () => {
   const columns = [
     {field: 'id', headerName: 'ID', width: 100},
     {field: 'name', headerName: 'Account Name', width: 450},
-    {field: 'status', headerName: 'Status', width: 150},
+    // {field: 'status', headerName: 'Status', width: 150},
     {field: 'timein', headerName: 'Time-In', width: 150},
     {field: 'timeout', headerName: 'Time-Out', width: 150},
     {field: 'date', headerName: 'Date', width: 200},

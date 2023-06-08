@@ -1,4 +1,5 @@
 {
+  "homepage": "https://adamfitness.me/",
   "dependencies": {
     "react-router-dom": "^6.10.0"
   }

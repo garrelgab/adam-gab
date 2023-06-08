@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
+import { IoMdNotifications } from "react-icons/io";
 import { Link as LinkRouter } from 'react-router-dom';
 import axios from 'axios';
 // import moment from 'moment';
@@ -61,7 +62,6 @@ const CustomerNavbar = (props) => {
         });
     };
     const [unreadNotifications, setUnreadNotifications] = useState(0);
-
     const fetchUnreadNotifications = async () => {
         try {
           const response = await axios.get('http://localhost:3001/api/unread-notif', {
@@ -82,13 +82,22 @@ const CustomerNavbar = (props) => {
     }, []);
   return (
     <div className='fixed top-0 left-0 w-[100%] md:py-[20px] py-[20px] bg-[#1ca350] z-50'>
-        <div className='blocked  text-white flex justify-between'>
+        <div className='blocked  text-white flex justify-between items-center'>
             <div className='flex cursor-pointer ml-[3%] md:ml-[1%]' onClick={fetchUnreadNotifications}>
                 <AiOutlineMenu size={30} className='' onClick={handleNav}/>
             </div>
-            <div className='md:flex text-lg font-light hidden'>
+            <div className='md:flex text-lg font-light hidden items-center'>
+                
                 <h1 className='border-r border-white px-5'>{currentTime}</h1>
                 <h1 className='px-5'>{currentDateTime}</h1>
+            </div>
+            <div className='fixed right-0 items-center md:mr-[260px] mr-[20px] '>
+                <LinkRouter to='/customer/announcement' state={userID}>
+                    <IoMdNotifications size={25}/>
+                    {unreadNotifications > 0 && (
+                        <h1 className="bg-red-600 fixed top-2 mx-[10px] items-center mr-[10px] px-[10px] py-[0px] text-[15px] rounded-full text-white">{unreadNotifications}</h1>
+                    )}
+                </LinkRouter>
             </div>
         </div>
         
@@ -112,16 +121,19 @@ const CustomerNavbar = (props) => {
                 <LinkRouter to='/customer/health-tips' state={userID} onClick={handleNav}>
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Health Guide</li>
                 </LinkRouter>
-                <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
+                {/* <LinkRouter to='/customer/announcement' state={userID} onClick={handleNav}>
                     <div className='flex hover:bg-gray-500 items-center hover:text-white cursor-pointer ease-in-out duration-300'>
                         <li className='p-6 '>Announcement</li>
                         {unreadNotifications > 0 && (
                             <h1 className="bg-red-600 items-center px-2 text-[13px] rounded-full text-white">{unreadNotifications}</h1>
                         )}
                     </div>
+                </LinkRouter> */}
+                <LinkRouter to='/customer/membership' state={userID} onClick={handleNav}>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Membership</li>
                 </LinkRouter>
                 <LinkRouter to='/customer/proof-of-payment' state={userID} onClick={handleNav}>
-                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Payment</li>
+                    <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Payment History</li>
                 </LinkRouter>
                 <LinkRouter to='/'>
                     <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0 ease-in-out duration-300' onClick={handleLogout}>Logout</h1>

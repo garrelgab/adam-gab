@@ -148,11 +148,27 @@ const UserEmployeeModal = ({fetchEmployee, id}) => {
               <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>
                 <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold">Gender</label>
                 <select id="gender-select" className="font-light shadow-lg mb-1 block w-[350px] rounded-lg p-4 bg-gray-50 text-black focus:outline-none" placeholder='Select Gender' value={selectedGender} onChange={handleChange} required>
-                    {genderOptions.map((option) => (
+                    {/* {genderOptions.map((option) => (
                     <option className='p-4 text-lg font-light' key={option.value} value={option.value}>
                         {option.label}
                     </option>
-                    ))}
+                    ))} */}
+                    {genderOptions.map((option) =>
+                      option.value === selectedGender ? (
+                      <option className="p-4 text-lg font-light" key={option.value} value={option.value}>
+                          {option.label}
+                      </option>
+                      ) : (
+                      <option
+                          className="p-4 text-lg font-light"
+                          key={option.value}
+                          value={option.value}
+                          disabled={option.value === '' && selectedGender !== ''}
+                      >
+                          {option.label}
+                      </option>
+                      )
+                    )}
                 </select>
                 <label className="block text-md md:text-lg mx-auto text-left font-bold">Birthday</label>
                 <button onClick={handleButtonClick} className='font-light shadow-lg w-[350px] text-left bg-gray-50 p-4 rounded-lg text-black focus:outline-none' value={bday} onChange={(e) => setBday(e.target.value)} required>
@@ -165,11 +181,27 @@ const UserEmployeeModal = ({fetchEmployee, id}) => {
                 )}
                 <label className="block mb-1 text-md md:text-lg mx-auto text-left font-bold">Role Type</label>
                 <select id="role-select" className="font-light shadow-lg mb-1 block w-[350px] rounded-lg p-4 bg-gray-50 text-black focus:outline-none" placeholder='Role Type' value={selectedRole} onChange={handleChangeRole} required>
-                    {roleType.map((option) => (
+                    {/* {roleType.map((option) => (
                     <option className='p-4 text-lg font-light' key={option.value} value={option.value}>
                         {option.label}
                     </option>
-                    ))}
+                    ))} */}
+                    {roleType.map((option) =>
+                      option.value === selectedRole ? (
+                      <option className="p-4 text-lg font-light" key={option.value} value={option.value}>
+                          {option.label}
+                      </option>
+                      ) : (
+                      <option
+                          className="p-4 text-lg font-light"
+                          key={option.value}
+                          value={option.value}
+                          disabled={option.value === '' && selectedRole !== ''}
+                      >
+                          {option.label}
+                      </option>
+                      )
+                    )}
                 </select>
               </div>
 

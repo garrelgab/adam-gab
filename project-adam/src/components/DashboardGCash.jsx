@@ -52,7 +52,7 @@ const DashboardGCash = () => {
       headerName: 'Action',
       width: 100,
       renderCell: (params) => {
-        if (params.row.account === 'Activated') {
+        if (params.row.account === 'Confirmed') {
           return <span>Confirmed</span>;
         } else if (params.row.account === 'Confirmed') {
           return <span>Confirmed</span>;
@@ -105,6 +105,7 @@ const DashboardGCash = () => {
         reservationStatus: status,
         accID: row.accountID,
         accName: row.name,
+        amount: row.amount,
         referenceNumber: row.refNum,
       })
       .then(response => {

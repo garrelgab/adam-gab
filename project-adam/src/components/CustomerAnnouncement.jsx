@@ -129,7 +129,7 @@ const CustomerAnnouncement = (props) => {
             ),
             content: 
             <div>
-                <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]'>
+                <div className='w-[100%] h-[600px] bg-white rounded-md my-[50px]'>
                     {/* <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]' getRowClassName={getRowClassName}/> */}
                     <DataGrid rows={rows} columns={columns} rowHeight={300} className='w-[100%]'/>
                 </div>
@@ -146,7 +146,7 @@ const CustomerAnnouncement = (props) => {
                 </div>
             ),
             content:
-            <div className='w-[100%] h-[700px] bg-white rounded-md my-[50px]' onClick={handleUpdateNotif}>
+            <div className='w-[100%] h-[600px] bg-white rounded-md my-[50px]' onClick={handleUpdateNotif}>
                 <DataGrid rows={notifRows} columns={notifColums} getRowClassName={getRowClassName} className='w-[100%]'/>
             </div>
         }

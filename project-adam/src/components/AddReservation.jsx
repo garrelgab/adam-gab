@@ -123,164 +123,235 @@ const AddReservation = (props) => {
       alert('Please fill up the empty fields.');
       return;
     }
+    if(pax > 15) {
+      alert('Maximum of 15 pax only.');
+      return;
+    }
     if(mySelectedOption === 'session1'){
-
-      axios.post('http://localhost:3001/api/add-proof-of-payment', {
-        userID: id,
+      axios.post("http://localhost:3001/reservation", {
+        // customerName: name,
+        customerID: id,
+        noPax: pax,
+        customerStartTime: sevAM.format('HH:mm:ss'),
+        customerEndTime: tenAM.format('HH:mm:ss'),
+        customerDate: myDate,
+        customerStatus: status,
         refNum: referenceNum,
         amount: formatPrice(amount),
         imageData: selectedImage,
         desc: description,
       })
       .then(response => {
-        axios.post("http://localhost:3001/api/reservation", {
-          // customerName: name,
-          customerID: id,
-          noPax: pax,
-          customerStartTime: sevAM.format('HH:mm:ss'),
-          customerEndTime: tenAM.format('HH:mm:ss'),
-          customerDate: myDate,
-          customerStatus: status,
-          lastProofID: response.data.insertedId,
-          })
-          .then(response => {
-            alert('Reservation saved.', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving data.', error)
-          })
-        })
+        console.log(response.data);
+        if(response.data) {
+          // alert(response.data.error);
+          console.log(response.data.error);
+          if(response.data.totalPax === 15) {
+            alert(response.data.error);
+            const totalPax = response.data.totalPax;
+            const remainingPax = 15 - totalPax;
+            alert(`${remainingPax} pax remaining for this session ${sevAM.format('hh:mm A')} - ${tenAM.format('hh:mm A')}`)
+          }
+          else {
+            alert('Reservation Saved.')
+          }
+        }
+        else {
+          alert('Reservation Saved.')
+        }
+      })
       .catch(error => {
-        console.log('445', error);
-      });
+        if (error.response.status === 400) {
+          alert(`You already booked for ${props.date1}`);
+        } else if (error.response.status === 200) {
+          console.log(error.response.data);
+        } else 
+        {
+          console.log(error)
+        }
+      })
       props.onClose(false);
-
     } else if (mySelectedOption === 'session2') {
-
-      axios.post('http://localhost:3001/api/add-proof-of-payment', {
-        userID: id,
+      axios.post("http://localhost:3001/reservation", {
+        // customerName: name,
+        customerID: id,
+        noPax: pax,
+        customerStartTime: tenAM.format('HH:mm:ss'),
+        customerEndTime: onePM.format('HH:mm:ss'),
+        customerDate: myDate,
+        customerStatus: status,
         refNum: referenceNum,
         amount: formatPrice(amount),
         imageData: selectedImage,
         desc: description,
       })
       .then(response => {
-        axios.post("http://localhost:3001/api/reservation", {
-          // customerName: name,
-          customerID: id,
-          noPax: pax,
-          customerStartTime: tenAM.format('HH:mm:ss'),
-          customerEndTime: onePM.format('HH:mm:ss'),  
-          customerDate: myDate,
-          customerStatus: status,
-          lastProofID: response.data.insertedId,
-          })
-          .then(response => {
-            alert('Reservation saved.', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving data.', error)
-          })
-        })
+        console.log(response.data);
+        if(response.data) {
+          // alert(response.data.error);
+          console.log(response.data.error);
+          if(response.data.totalPax === 15) {
+            alert(response.data.error);
+            const totalPax = response.data.totalPax;
+            const remainingPax = 15 - totalPax;
+            alert(`${remainingPax} pax remaining for this session ${tenAM.format('hh:mm A')} - ${onePM.format('hh:mm A')}`)
+          }
+          else {
+          alert('Reservation Saved.')
+          }
+        }
+        else {
+          alert('Reservation Saved.')
+        }
+      })
       .catch(error => {
-        console.log('445', error);
-      });
+        if (error.response.status === 400) {
+          alert(`You already booked for ${props.date1}`);
+        } else if (error.response.status === 200) {
+          console.log(error.response.data);
+        } else 
+        {
+          console.log(error)
+        }
+      })
       props.onClose(false);
 
     } else if (mySelectedOption === 'session3') {
 
-      axios.post('http://localhost:3001/api/add-proof-of-payment', {
-        userID: id,
+      axios.post("http://localhost:3001/reservation", {
+        // customerName: name,
+        customerID: id,
+        noPax: pax,
+        customerStartTime: onePM.format('HH:mm:ss'),
+        customerEndTime: fourPM.format('HH:mm:ss'),
+        customerDate: myDate,
+        customerStatus: status,
         refNum: referenceNum,
         amount: formatPrice(amount),
         imageData: selectedImage,
         desc: description,
       })
       .then(response => {
-        axios.post("http://localhost:3001/api/reservation", {
-          // customerName: name,
-          customerID: id,
-          noPax: pax,
-          customerStartTime: onePM.format('HH:mm:ss'),
-          customerEndTime: fourPM.format('HH:mm:ss'),  
-          customerDate: myDate,
-          customerStatus: status,
-          lastProofID: response.data.insertedId,
-          })
-          .then(response => {
-            alert('Reservation saved.', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving data.', error)
-          })
-        })
+        console.log(response.data);
+        if(response.data) {
+          // alert(response.data.error);
+          console.log(response.data.error);
+          if(response.data.totalPax === 15) {
+            alert(response.data.error);
+            const totalPax = response.data.totalPax;
+            const remainingPax = 15 - totalPax;
+            alert(`${remainingPax} pax remaining for this session ${onePM.format('hh:mm A')} - ${fourPM.format('hh:mm A')}`)
+          }
+          else {
+            alert('Reservation Saved.')
+          }
+        }
+        else {
+          alert('Reservation Saved.')
+        }
+      })
       .catch(error => {
-        console.log('445', error);
-      });
+        if (error.response.status === 400) {
+          alert(`You already booked for ${props.date1}`);
+        } else if (error.response.status === 200) {
+          console.log(error.response.data);
+        } else 
+        {
+          console.log(error)
+        }
+      })
       props.onClose(false);
 
     } else if (mySelectedOption === 'session4') {
 
-      axios.post('http://localhost:3001/api/add-proof-of-payment', {
-        userID: id,
+      axios.post("http://localhost:3001/reservation", {
+        // customerName: name,
+        customerID: id,
+        noPax: pax,
+        customerStartTime: fourPM.format('HH:mm:ss'),
+        customerEndTime: sevPM.format('HH:mm:ss'),
+        customerDate: myDate,
+        customerStatus: status,
         refNum: referenceNum,
         amount: formatPrice(amount),
         imageData: selectedImage,
         desc: description,
       })
       .then(response => {
-        axios.post("http://localhost:3001/api/reservation", {
-          // customerName: name,
-          customerID: id,
-          noPax: pax,
-          customerStartTime: fourPM.format('HH:mm:ss'),
-          customerEndTime: sevPM.format('HH:mm:ss'),  
-          customerDate: myDate,
-          customerStatus: status,
-          lastProofID: response.data.insertedId,
-          })
-          .then(response => {
-            alert('Reservation saved.', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving data.', error)
-          })
-        })
+        console.log(response.data);
+        if(response.data) {
+          // alert(response.data.error);
+          console.log(response.data.error);
+          if(response.data.totalPax === 15) {
+            alert(response.data.error);
+            const totalPax = response.data.totalPax;
+            const remainingPax = 15 - totalPax;
+            alert(`${remainingPax} pax remaining for this session ${fourPM.format('hh:mm A')} - ${sevPM.format('hh:mm A')}`)
+          }
+          else {
+            alert('Reservation Saved.')
+          }
+        }
+        else {
+          alert('Reservation Saved.')
+        }
+      })
       .catch(error => {
-        console.log('445', error);
-      });
+        if (error.response.status === 400) {
+          alert(`You already booked for ${props.date1}`);
+        } else if (error.response.status === 200) {
+          console.log(error.response.data);
+        } else 
+        {
+          console.log(error)
+        }
+      })
       props.onClose(false);
 
     } else if (mySelectedOption === 'session5') {
 
-      axios.post('http://localhost:3001/api/add-proof-of-payment', {
-        userID: id,
+      axios.post("http://localhost:3001/reservation", {
+        // customerName: name,
+        customerID: id,
+        noPax: pax,
+        customerStartTime: sevPM.format('HH:mm:ss'),
+        customerEndTime: tenPM.format('HH:mm:ss'),
+        customerDate: myDate,
+        customerStatus: status,
         refNum: referenceNum,
         amount: formatPrice(amount),
         imageData: selectedImage,
         desc: description,
       })
       .then(response => {
-        axios.post("http://localhost:3001/api/reservation", {
-          // customerName: name,
-          customerID: id,
-          noPax: pax,
-          customerStartTime: sevPM.format('HH:mm:ss'),
-          customerEndTime: tenPM.format('HH:mm:ss'),  
-          customerDate: myDate,
-          customerStatus: status,
-          lastProofID: response.data.insertedId,
-          })
-          .then(response => {
-            alert('Reservation saved.', response.data);
-          })
-          .catch(error => {
-            console.error('Error saving data.', error)
-          })
-        })
+        console.log(response.data);
+        if(response.data) {
+          // alert(response.data.error);
+          console.log(response.data.error);
+          if(response.data.totalPax === 15) {
+            alert(response.data.error);
+            const totalPax = response.data.totalPax;
+            const remainingPax = 15 - totalPax;
+            alert(`${remainingPax} pax remaining for this session ${sevPM.format('hh:mm A')} - ${tenPM.format('hh:mm A')}`)
+          }
+          else {
+            alert('Reservation Saved.')
+          }
+        }
+        else {
+          alert('Reservation Saved.')
+        }
+      })
       .catch(error => {
-        console.log('445', error);
-      });
+        if (error.response.status === 400) {
+          alert(`You already booked for ${props.date1}`);
+        } else if (error.response.status === 200) {
+          console.log(error.response.data);
+        } else 
+        {
+          console.log(error)
+        }
+      })
       props.onClose(false);
     }
   };
@@ -338,24 +409,24 @@ const AddReservation = (props) => {
               </div>
               <div className='my-[20px] flex'>
                 <form>
-                {/* <h1 className='text-[20px] font-bold'>{id}</h1> */}
-                  <input type="text" className=" flex shadow-lg mt-[30px] p-3 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={pax} onChange={handleChangePax} required/>
+                  <h1 className='md:text-[20px] mt-[30px] text-white font-bold'>No of Pax</h1>
+                  <input type="text" className=" flex shadow-lg  p-3 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='No of PAX' value={pax} onChange={handleChangePax} required/>
                 </form>
               </div>
               <div>
                 <Select options={options} className='text-black' placeholder='Please select a session' onChange={handleChange}/>
                 {showPayment && (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col mt-[10px]'>
                     <div className='my-[2px]'>
-                        <h1 className='md:text-[20px] mt-[0px] text-[#1ca350] font-bold'>Reference Number</h1>
+                        <h1 className='md:text-[20px] mt-[0px] text-white font-bold'>Reference Number</h1>
                         <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Reference Number' value={referenceNum} onChange={handleChangeReferenceNumber} required/>
                     </div>
                     <div className='my-[2px]'>
-                        <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Amount</h1>
-                        <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} readOnly onChange={handleChangeAmount} required/>
+                        <h1 className='md:text-[20px] text-white font-bold'>Amount</h1>
+                        <input type="text" className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={formatPrice(amount)} readOnly onChange={handleChangeAmount} required/>
                     </div>
                     <div className='my-[2px]'>
-                        <h1 className='md:text-[20px] text-[#1ca350] font-bold'>Upload Image</h1>
+                        <h1 className='md:text-[20px] text-white font-bold'>Upload Image</h1>
                         <input type="file" ref={inputFileRef} accept='image/*' className="shadow-lg block w-full  p-3 md:p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" onChange={handleImageUpload} required/>
                     </div>
                   </div>

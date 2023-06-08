@@ -8,6 +8,7 @@ import CustomerHealthTips from './CustomerHealthTips'
 import CustomerAnnouncement from './CustomerAnnouncement'
 import CustomerProofPayment from './CustomerProofPayment'
 import CustomerAccount from './CustomerAccount'
+import CustomerMembership from './CustomerMembership'
 
 const Customer = () => {
 
@@ -23,6 +24,7 @@ const Customer = () => {
             <Route path='/account' element={<CustomerAccount id={id}/>}/>
             <Route path='/health-tips' element={<CustomerHealthTips id={id}/>}/>
             <Route path='/announcement' element={<CustomerAnnouncement id={id}/>}/>
+            <Route path='/membership' element={<CustomerMembership id={id}/>}/>
             <Route path='/proof-of-payment' element={<CustomerProofPayment id={id}/>}/>
         </Routes>
     </>

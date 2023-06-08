@@ -74,17 +74,22 @@ const PosWorkOut = () => {
   };
 
   const handleConfirm = () => {
-    if(!customerName || !selectedOption){
+    if(!customerName){
       alert('Please fill up the empty fields.');
       return;
     }
+    // axios.post('http://localhost:3001/api/add-workout', {
+    //   name: customerName,
+    //   type: selectedOption,
+    //   price: price,
+    // })
     axios.post('http://localhost:3001/api/add-workout', {
       name: customerName,
-      type: selectedOption,
-      price: price,
+      // type: selectedOption,
+      // price: price,
     })
     .then(response => {
-      alert(`${selectedOption}, ${customerName}`);
+      alert(`Daily Session: ${customerName}`);
       fetchData();
     })
     .catch(error => {
@@ -102,17 +107,16 @@ const PosWorkOut = () => {
                 <label className="font-extrabold block mb-1 text-md md:text-lg text-left">Customer Name</label>
                 <input type="text" className="shadow-lg block w-[350px] md:w-[600px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Customer Name' value={customerName} onChange={(e) => setCustomerName(e.target.value)} required/>
             </div>
-            <div className='flex flex-col mx-[30px]'>
+            {/* <div className='flex flex-col mx-[30px]'>
                 <label className="font-extrabold block mb-1 text-md md:text-lg text-left">Type of Work-out</label>
                 <Select className=' text-black w-[350px] z-10 md:w-[400px] shadow-lg' options={options} onChange={handleChange} placeholder="Select type of work-out"/>
             </div>
             <div className='flex flex-col'>
               <label className="font-extrabold block mb-1 text-md md:text-lg text-left">Price</label>
               <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none cursor-default" placeholder='Price' value={price} readOnly required/>
-              <button className='py-2 px-[30px] mt-[30px] md:mt-[31px] md:mx-[0px] shadow-lg font-bold rounded-md bg-gray-50 text-[#1ca350] ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
-            </div>
-            <div>
-            </div>
+            </div> */}
+              <button className='py-2 px-[30px] mt-[30px] md:mt-[31px] md:mx-[20px] shadow-lg font-bold rounded-md bg-gray-50 text-[#1ca350] ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm}>Confirm</button>
+
         </div>
         <div className='hidden bg-white my-[50px] mx-[0px] md:h-[600px] shadow-lg md:flex rounded-md justify-center items-center'>
             <DataGrid rows={rows} columns={columns} rowHeight={rowHeight}  className='w-full text-center' disableExtendRowFullWidth/>

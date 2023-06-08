@@ -7,7 +7,7 @@ import axios from 'axios';
 import moment from 'moment-timezone';
 const PosLocker = () => {
   const [contact, setContact] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(200.00);
   const [customerName, setCustomerName] = useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(new Date());
   const [selectedEndDate, setSelectedEndDate] = useState(new Date());
@@ -16,7 +16,7 @@ const PosLocker = () => {
   const columns = [
     {field: 'id', headerName: 'ID', width: 100},
     {field: 'name', headerName: 'Customer Name', width: 450},
-    {field: 'contact', headerName: 'Contact No.', width: 150},
+    // {field: 'contact', headerName: 'Contact No.', width: 150},
     {field: 'key', headerName: 'Key No.', width: 150},
     {field: 'amount', headerName: 'Amount', width: 150},
     {field: 'start', headerName: 'Start Date', width: 150},
@@ -24,18 +24,23 @@ const PosLocker = () => {
     {field: 'totaldays', headerName: 'Total Days', width: 150},
     {field: 'date', headerName: 'Date and Time', width: 200},
   ];
-  const optionsKey = [
-    { value: 'no1', label: '1'},
-    { value: 'no2', label: '2'},
-    { value: 'no3', label: '3'},
-    { value: 'no4', label: '4'},
-    { value: 'no5', label: '5'},
-    { value: 'no6', label: '6'},
-    { value: 'no7', label: '7'},
-    { value: 'no8', label: '8'},
-    { value: 'no9', label: '9'},
-    { value: 'no10', label: '10'},
-  ];
+  // const optionsKey = [
+  //   { value: 'no1', label: '1'},
+  //   { value: 'no2', label: '2'},
+  //   { value: 'no3', label: '3'},
+  //   { value: 'no4', label: '4'},
+  //   { value: 'no5', label: '5'},
+  //   { value: 'no6', label: '6'},
+  //   { value: 'no7', label: '7'},
+  //   { value: 'no8', label: '8'},
+  //   { value: 'no9', label: '9'},
+  //   { value: 'no10', label: '10'},
+  // ];
+  const optionsKey = [];
+
+  for (let i = 1; i <= 36; i++) {
+    optionsKey.push({ value: `no${i}`, label: `${i}` });
+  }
   const [showCalendar1, setShowCalendar1] = useState(false);
   const [showCalendar2, setShowCalendar2] = useState(false);
   const handleButtonClick = () => {
@@ -78,6 +83,7 @@ const PosLocker = () => {
   const [selectOption, setSelectOption] = useState(null);
   const handleOptionChange = (selectedOption) => {
     setSelectOption(selectedOption.label);
+    // alert(selectedOption.label)
   }
 
   const fetchLocker = () => {
@@ -104,7 +110,7 @@ const PosLocker = () => {
       return Number(price).toFixed(2);
   };
   const handleConfirm = () => {
-    if(!customerName || !amount || !contact || !selectOption || !selectedStartDate || !selectedEndDate){
+    if(!customerName || !amount || !selectOption || !selectedStartDate || !selectedEndDate){
       alert('Please fill up the empty field.');
       return;
     }
@@ -125,7 +131,7 @@ const PosLocker = () => {
     })
     setCustomerName('');
     setContact('');
-    setAmount('');
+    // setAmount('');
     setSelectedStartDate(null);
     setSelectedEndDate(null);
   };
@@ -138,6 +144,7 @@ const PosLocker = () => {
     const endDate = new Date(selectedEndDate);
     endDate.setMonth(endDate.getMonth() + 1);
     setSelectedEndDate(endDate);
+    // formatPrice(amount);
   },[])
   return (
     <div className='text-[#1ca350]'>
@@ -172,14 +179,14 @@ const PosLocker = () => {
           </div>
         </div>
         <div className='flex flex-col mx-[30px]'>
-          <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Contact No.</label>
-          <input type="text" className="shadow-lg block w-[350px] md:w-[300px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Contact No.' maxLength={11} value={contact} onChange={handleChangeContactNo}  required/>
+          {/* <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Contact No.</label>
+          <input type="text" className="shadow-lg block w-[350px] md:w-[300px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Contact No.' maxLength={11} value={contact} onChange={handleChangeContactNo}  required/> */}
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Key No.</label>
           <Select className=' text-black shadow-lg font-light w-[350px] z-50 md:w-[300px]'value={selectOption} options={optionsKey} onChange={handleOptionChange} placeholder={selectOption ? selectOption : 'Select Key No.'}/>
         </div>
         <div className='flex flex-col'>
           <label className="block mb-1 text-md md:text-lg text-left font-extrabold">Amount</label>
-          <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none" placeholder='Amount' value={amount} onChange={handleChangeAmount} required/>
+          <input type="text" className="shadow-lg block w-[350px] md:w-[200px] p-2 text-gray-900 rounded-md bg-gray-50 sm:text-md focus:outline-none cursor-default" placeholder='Amount' readOnly value={amount} onChange={handleChangeAmount} required/>
           <button className='py-2 justify-start px-[50px] shadow-lg mt-[30px] md:mt-[31px] font-bold rounded-md bg-gray-50 text-[#1ca350] ease-in-out duration-300 hover:bg-gray-500 hover:text-white' onClick={handleConfirm} >Confirm</button>
         </div>
         </div>

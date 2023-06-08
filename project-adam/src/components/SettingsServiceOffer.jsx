@@ -41,6 +41,7 @@ const SettingsServiceOffer = (props) => {
             console.log(response);
             setName('');
             setEditorContent('');
+            fetchOption();
         })
         .catch(error => {
             console.log(error);
