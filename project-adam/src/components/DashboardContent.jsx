@@ -133,7 +133,7 @@ const DashboardContent = () => {
 
   const fetchSalesLineGraph = () => {
     axios
-      .get('http://localhost:3001/sales-report')
+      .get('http://localhost:3001/sum-linegraph-sales-report')
       .then(response => {
         const salesData = response.data;
 
@@ -287,7 +287,7 @@ const DashboardContent = () => {
   const [barGraphData, setBarGraphData] = useState(null);
   const fetchSalesBarGraph = () => {
     axios
-      .get('http://localhost:3001/sales-report')
+      .get('http://localhost:3001/category-sales-report')
       .then(response => {
         const salesData = response.data;
 
@@ -318,7 +318,7 @@ const DashboardContent = () => {
       })
       .catch(error => {
         console.log('Failed to fetch sales report', error);
-      });
+    });
   };
   
   

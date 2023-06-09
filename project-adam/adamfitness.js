@@ -102,22 +102,7 @@ app.post("/login", (req, res) => {
                 } else if (accountInfoResult.length > 0) {
                   const firstName = accountInfoResult[0].fname;
                   // Insert fname into tbl_attendance
-                  const currentDate = new Date().toISOString().slice(0, 10);
-                  const currentTime = new Date().toTimeString().slice(0, 8);
-                  connection.query(
-                    `INSERT INTO tbl_attendance (name, status, time_in, date) VALUES (?, 'Active', ?, ?)`,
-                    [firstName, currentTime, currentDate],
-                    (err, insertionResult) => {
-                      if (err) {
-                        res.send({ err: err });
-                      } else {
-                        const role = result[0].role; // Retrieve the role from tbl_accounts
-                        // res.send({ message: "Login successful.", account_id: accountId, role: role });
-                        // res.send(insertionResult);
-                        res.send(result);
-                      }
-                    }
-                  );
+                  res.send(result);
                 } else {
                   res.send({ message: "Incorrect username/password." });
                 }
@@ -1585,6 +1570,30 @@ app.get('/sales-report', (req, res) => {
   }); 
 });
 
+app.get('/sum-linegraph-sales-report', (req, res) => {
+  const lineGraph = "SELECT DATE_FORMAT(date, '%M %d, %Y') AS date, SUM(total) AS total FROM tbl_sales_report GROUP BY date";
+  connection.query(lineGraph, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch sales report', err);
+      res.status(500).send('Failed to fetch sales report');
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.get('/category-sales-report', (req, res) => {
+  const barGraph = `SELECT category, SUM(total) AS total FROM tbl_sales_report GROUP BY category`;
+  connection.query(barGraph, (err, result) => {
+    if(err){
+      console.log('Failed to fetch sales report', err);
+    }
+    else{
+      res.send(result);
+    }
+  }); 
+});
+
 app.get('/filter-sales-report', (req, res) => {
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
@@ -1817,6 +1826,40 @@ app.get('/locker', (req, res) => {
     }
     else{
       res.send(result);
+    }
+  });
+});
+
+app.post('/membership-attendance', (req, res) => {
+  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentTime = new Date().toTimeString().slice(0, 8);
+  const accountName = req.body.accountName;
+  const checkAttendanceQuery = 'SELECT * FROM tbl_attendance WHERE name = ? AND DATE(time_in) = CURDATE()';
+  connection.query(checkAttendanceQuery, [accountName], (err, results) => {
+    if (err) {
+      console.log('Failed to check attendance', err);
+    } else {
+      if (results.length === 0) {
+        // No attendance record exists, insert a new record with time_in
+        const insertAttendanceQuery = 'INSERT INTO tbl_attendance (name, time_in, date) VALUES (?, ?, ?)';
+        connection.query(insertAttendanceQuery, [accountName, currentTime, currentDate], (err) => {
+          if (err) {
+            console.log('Failed to insert attendance record', err);
+          } else {
+            // console.log('Attendance record inserted');
+          }
+        });
+      } else {
+        // Attendance record already exists, update the existing record with time_out
+        const updateAttendanceQuery = 'UPDATE tbl_attendance SET time_out = ? WHERE name = ? AND DATE(time_in) = CURDATE()';
+        connection.query(updateAttendanceQuery, [currentTime, accountName], (err) => {
+          if (err) {
+            console.log('Failed to update attendance record', err);
+          } else {
+            // console.log('Attendance record updated');
+          }
+        });
+      }
     }
   });
 });
@@ -2222,6 +2265,7 @@ app.get('/announcement', (req, res) => {
   });
 });
 
+// Original Code
 // app.post('/add-proof-of-payment', (req, res) => {
 //   const userID = req.body.userID;
 //   const refNum = req.body.refNum;
@@ -2233,85 +2277,89 @@ app.get('/announcement', (req, res) => {
 //   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
 //   const buffer = Buffer.from(base64Data, 'base64');
 
-//   const getFname = `SELECT account_info_id, fname, email FROM tbl_account_info WHERE account_info_id = ?`;
+//   const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
 //   connection.query(getFname, [userID], (err, fnameResult) => {
 //     if (err) {
 //       console.log('Failed to get first name', err);
 //       res.status(500).send('Failed to get first name');
 //     } else {
-      
-//       const ifExisting = `select * from tbl_membership where account_info_id = ? and end_date > '${currentDate}'`;
-//       connection.query(ifExisting, [userID], (err, ExistingResult) => {
-//         if(err){
-//           console.log('Failed to get tbl_membership', err);
-//         } else if (ExistingResult.length === 0) {
-//           const fname = fnameResult[0].fname;
-//           const email = fnameResult[0].email;
-//           const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
-//           connection.query(
-//             addProof,
-//             [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
-//             (err, proofResult) => {
-//               if (err) {
-//                 console.log('Failed to insert proof of payment', err);
-//                 res.status(500).send('Failed to insert proof of payment');
-//               } else {
-//                 res.send('Proof of payment added successfully');
-//               }
-//             }
-//           );
-//         } else {
-//           res.status(3001).send('Existing!');
+//       const fname = fnameResult[0].fname;
+//       const email = fnameResult[0].email;
+//       const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
+//       connection.query(
+//         addProof,
+//         [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
+//         (err, proofResult) => {
+//           if (err) {
+//             console.log('Failed to insert proof of payment', err);
+//             res.status(500).send('Failed to insert proof of payment');
+//           } else {
+//             const insertedId = proofResult.insertId;
+//             res.send({ insertedId });
+//           }
 //         }
-//       });
+//       );
 //     }
 //   });
 // });
 
 
-
-
-// Original Code
 app.post('/add-proof-of-payment', (req, res) => {
   const userID = req.body.userID;
-  const refNum = req.body.refNum;
-  const amount = req.body.amount;
-  const imageData = req.body.imageData;
   const desc = req.body.desc;
-  const currentDate = new Date().toISOString().slice(0, 10);
-  const currentTime = new Date().toTimeString().slice(0, 8);
-  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-  const buffer = Buffer.from(base64Data, 'base64');
 
-  const getFname = `SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?`;
-  connection.query(getFname, [userID], (err, fnameResult) => {
+  // Check if user ID and description already exist in tbl_proof_of_payment
+  const checkProofQuery = "SELECT * FROM tbl_proof_of_payment WHERE account_info_id = ? AND description = 'Monthly Session'";
+  connection.query(checkProofQuery, [userID, desc], (err, result) => {
     if (err) {
-      console.log('Failed to get first name', err);
-      res.status(500).send('Failed to get first name');
+      console.log('Failed to check proof of payment', err);
+      res.status(500).send('Failed to check proof of payment');
     } else {
-      const fname = fnameResult[0].fname;
-      const email = fnameResult[0].email;
-      const addProof = `INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending')`;
-      connection.query(
-        addProof,
-        [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
-        (err, proofResult) => {
+      if (result.length > 0) {
+        // User ID and description already exist
+        res.sendStatus(400);
+      } else {
+        // Proceed with inserting the proof of payment
+        const refNum = req.body.refNum;
+        const amount = req.body.amount;
+        const imageData = req.body.imageData;
+        const currentDate = new Date().toISOString().slice(0, 10);
+        const currentTime = new Date().toTimeString().slice(0, 8);
+        const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        const getFname = 'SELECT fname, email FROM tbl_account_info WHERE account_info_id = ?';
+        connection.query(getFname, [userID], (err, fnameResult) => {
           if (err) {
-            console.log('Failed to insert proof of payment', err);
-            res.status(500).send('Failed to insert proof of payment');
+            console.log('Failed to get first name', err);
+            res.status(500).send('Failed to get first name');
           } else {
-            const insertedId = proofResult.insertId;
-            res.send({ insertedId });
+            const fname = fnameResult[0].fname;
+            const email = fnameResult[0].email;
+            const addProof = 'INSERT INTO tbl_proof_of_payment (account_info_id, email, name, description, reference_number, amount, image, date, time, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, \'Pending\')';
+            connection.query(
+              addProof,
+              [userID, email, fname, desc, refNum, amount, buffer, currentDate, currentTime],
+              (err, proofResult) => {
+                if (err) {
+                  console.log('Failed to insert proof of payment', err);
+                  res.status(500).send('Failed to insert proof of payment');
+                } else {
+                  const insertedId = proofResult.insertId;
+                  res.send({ insertedId });
+                }
+              }
+            );
           }
-        }
-      );
+        });
+      }
     }
   });
 });
 
 
 app.get('/gcash', (req, res) => {
-  const getGcashData = `select proof_of_payment_id, account_info_id, email, description, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment`;
+  const getGcashData = `select proof_of_payment_id, account_info_id, email, description, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment order by proof_of_payment_id desc`;
   connection.query(getGcashData, (err, result) => {
     if(err){
       console.log('Failed to fetch proof of payment', err);

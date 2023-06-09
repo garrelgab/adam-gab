@@ -82,19 +82,20 @@ const CustomerProofPayment = (props) => {
       imageData: selectedImage,
     })
     .then(response => {
-      alert('Thankyou, Please wait the administrator to confirm your payment.');
-      setReference('');
-      setAmount('');
-      setSelectedImage('');
-      setSelectedImage(null);
-      if(inputFileRef.current){
-        inputFileRef.current.value = '';
-      }
-      console.log(response);
-      fetchPaymentHistory();
+      // alert('Thankyou, Please wait the administrator to confirm your payment.');
+      // setReference('');
+      // setAmount('');
+      // setSelectedImage('');
+      // setSelectedImage(null);
+      // if(inputFileRef.current){
+      //   inputFileRef.current.value = '';
+      // }
+      // console.log(response.data);
+      // fetchPaymentHistory();
+      console.log(response)
     })
     .catch(error => {
-      alert(error.data);
+      // alert(error.data);
     })
   };
   const handleChangeAmount = (event) => {

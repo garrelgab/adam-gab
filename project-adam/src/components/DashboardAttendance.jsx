@@ -5,9 +5,6 @@ import WebCamm from './WebCamm';
 
 // import QrReader from 'react-qr-reader';
 const DashboardAttendance = () => {
-
-
-  
   const [rows, setRows] = useState([]);
   const rowHeight = 100;
   const columns = [
@@ -38,31 +35,11 @@ const DashboardAttendance = () => {
     });
   };
 
-  const handleQRScanner = () => {
-
-  };
-
-  // const handleScan = (data) => {
-  //   if (data) {
-  //     console.log('QR Code data:', data);
-  //     // Do something with the scanned data
-  //   }
-  // };
-  
-  // const handleError = (error) => {
-  //   console.error('QR Code scanning error:', error);
-  // };
-
-  // const startScan = () => {
-  //   if (webcamRef.current) {
-  //     webcamRef.current.video.play();
-  //   }
-  // };
-
   const [openWebModal, setOpenWebModal] = useState(false);
   
   const handleOpenWebModal = () => {
     setOpenWebModal(!openWebModal);
+    fetchData();
   };
   useEffect(() => {
     fetchData();
@@ -76,7 +53,7 @@ const DashboardAttendance = () => {
         <div className='hidden bg-white my-[50px] mx-auto w-[100%] md:h-[600px] md:flex rounded-md justify-center items-center'>
           <DataGrid rows={rows} columns={columns} className='text-center w-full' rowHeight={rowHeight} disableExtendRowFullWidth/>
         </div>
-        {openWebModal && <WebCamm onClose={handleOpenWebModal}/>}
+        {openWebModal && <WebCamm onClose={handleOpenWebModal} fetchData={fetchData}/>}
         {/* <QrReader
           delay={300} // Delay between scans in milliseconds
           onError={handleError}

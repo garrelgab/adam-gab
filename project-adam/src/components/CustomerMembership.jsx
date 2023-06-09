@@ -72,12 +72,24 @@ const CustomerMembership = (props) => {
           if(inputFileRef.current){
             inputFileRef.current.value = '';
           }
-          console.log(response);
+          console.log(response.data.message);
         //   fetchPaymentHistory();
         setFlexPayment(false);
         })
         .catch(error => {
-          alert(error.data);
+            if (error.response && error.response.status === 400) {
+                alert('You already send your payment, wait the admin to confirm your payment.');
+                setReference('');
+                //   setAmount('');
+                setSelectedImage('');
+                setSelectedImage(null);
+                if(inputFileRef.current){
+                    inputFileRef.current.value = '';
+                }
+                setFlexPayment(false);
+            } else {
+                alert('An error occurred during the proof of payment submission');
+            }
         })
     };
 
