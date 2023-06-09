@@ -551,12 +551,36 @@ app.get("/events", (req, res) => {
         title: `${event.name} - ${event.pax} Pax - ${event.status}`,
         start: `${event.start} ${event.time_start_formatted}`,
         end: `${event.start} ${event.time_end_formatted}`,
+        status: `${event.status}`,
         backgroundColor: event.status === 'Pending' ? 'red' : 'green'
       }));
       res.json(events);
     }
   });
 });
+
+app.get("/events-reservation", (req, res) => {
+  const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation where status IN ('Approved', 'Pending')";
+  connection.query(fetchEvents, (err, result) => {
+    if(err){
+      console.log("Error fetching events:", err);
+      res.send(err)
+    }
+    else{
+      const events = result.map((event) => ({
+        id: event.reservation_id,
+        title: `${event.name} - ${event.pax} Pax - ${event.status}`,
+        start: `${event.start} ${event.time_start_formatted}`,
+        end: `${event.start} ${event.time_end_formatted}`,
+        status: `${event.status}`,
+        backgroundColor: event.status === 'Pending' ? 'red' : 'green'
+      }));
+      res.json(events);
+    }
+  });
+});
+
+
 app.get("/events/approved", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation where status = 'Approved'";
   connection.query(fetchEvents, (err, result) => {

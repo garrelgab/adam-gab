@@ -3,11 +3,11 @@ import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import axios from 'axios';
-
+import CustomerReservationDetails from './CustomerReservationDetails';
 import UpdateReservation from './UpdateReservation';
 
 const DashboardReservation = () => {
-
+  const [modalOpenDetails, setModalOpenDetails] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [selectedEventStart, setSelectedEventStart] = useState(null);
@@ -19,11 +19,20 @@ const DashboardReservation = () => {
   const [events, setEvents] = useState([]);
 
   const handleSelectedEvent = (events) => {
-    setModalOpen(true);
-    setSelectedEvent(events.title);
-    setSelectedEventStart(events.start);
-    setSelectedEventEnd(events.end);
-    setReservationID(events.id);
+    
+    if(events.status === 'Approved') {
+      setModalOpenDetails(true);
+      setSelectedEvent(events.title);
+      setSelectedEventStart(events.start);
+      setSelectedEventEnd(events.end);
+      setReservationID(events.id);
+    } else {
+      setModalOpen(true);
+      setSelectedEvent(events.title);
+      setSelectedEventStart(events.start);
+      setSelectedEventEnd(events.end);
+      setReservationID(events.id);
+    }
   }
 
   const [pendingCount, setPendingCount] = useState(null);
@@ -51,21 +60,44 @@ const DashboardReservation = () => {
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/events/pending")
+    axios.get("http://localhost:3001/events-reservation")
     .then((response) => {
       setEvents(response.data);
     })
     .catch((err) => {
       console.log('Error fetching events:', err);
     });
-    fetchCounts();
   }, [events]);
+
+  // useEffect(() => {
+  //   axios.get("http://localhost:3001/events/pending")
+  //   .then((response) => {
+  //     setEvents(response.data);
+  //   })
+  //   .catch((err) => {
+  //     console.log('Error fetching events:', err);
+  //   });
+  //   fetchCounts();
+  // }, [events]);
   
   const views = {
     month: true,
     agenda: true,
   }
-
+  const getEventProp = (event, start, end, isSelected) => {
+    // Check if the event's start date is in the past
+    const isPastEvent = start < new Date();
+  
+    // Return custom style and behavior for past events
+    if (isPastEvent) {
+      return {
+        style: {
+          backgroundColor: 'lightgray',
+          cursor: 'default', // Make the event unclickable
+        },
+      };
+    }
+  };
   
   return (
     <div className='bg-[#d3d3d3] px-[50px] py-[90px] text-white'>
@@ -107,6 +139,7 @@ const DashboardReservation = () => {
           selectable
           events={events}
           onSelectEvent={handleSelectedEvent}
+          eventPropGetter={getEventProp}
           maxRows={Infinity}
           />
         ) : (
@@ -120,6 +153,7 @@ const DashboardReservation = () => {
           />
         )}
         {modalOpen && <UpdateReservation eventTitle={selectedEvent} reserveID={reservationID} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpen(false)}/>}
+        {modalOpenDetails && <CustomerReservationDetails eventTitle={selectedEvent} eventStart={selectedEventStart} eventEnd={selectedEventEnd} onClose={() => setModalOpenDetails(false)}/>}
       </div>
     </div>
   )
