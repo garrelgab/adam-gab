@@ -36,15 +36,7 @@ const CustomerNavbar = (props) => {
         };
     }
 
-    const handleLogout = () => {
-        axios.put('http://localhost:3001/update-attendance')
-        .then(response => {
-
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    };
+    
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const fetchAccountName = () => {
@@ -136,7 +128,7 @@ const CustomerNavbar = (props) => {
                     <li className='p-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'>Payment History</li>
                 </LinkRouter>
                 <LinkRouter to='/'>
-                    <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0 ease-in-out duration-300' onClick={handleLogout}>Logout</h1>
+                    <h1 className='p-6 hover:bg-gray-500 cursor-pointer hover:text-white font-bold left-0 ease-in-out duration-300'>Logout</h1>
                 </LinkRouter>
             </ul>
             

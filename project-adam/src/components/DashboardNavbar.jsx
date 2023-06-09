@@ -47,15 +47,6 @@ const DashboardNavbar = (props) => {
         setNavUser(!navUser);
         setNavSettings(false);
     }
-    const handleLogout = () => {
-        axios.put('http://localhost:3001/update-attendance')
-        .then(response => {
-
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    };
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const fetchAccountName = () => {
@@ -284,7 +275,7 @@ const DashboardNavbar = (props) => {
                     </LinkRouter>
                 )}
                 <LinkRouter to='/'>
-                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300' onClick={handleLogout}><h1 className='mx-[20px] font-bold'>Logout</h1></li>
+                    <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px] font-bold'>Logout</h1></li>
                 </LinkRouter>
             </ul>
             {/* <LinkRouter to='/'>
