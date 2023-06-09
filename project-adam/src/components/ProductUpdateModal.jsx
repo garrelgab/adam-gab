@@ -15,21 +15,6 @@ const ProductUpdateModal = (props) => {
             setQty(inputValue);
         }
     }; 
-    
-    const fetchStock = () => {
-        axios.get('http://localhost:3001/product-stock', {
-            params: {
-                prodID: prodID,
-            }
-        })
-        .then(response => {
-            setStock(response.data[0].stock);
-            setPrice(parseFloat(response.data[0].price));
-        })
-        .catch(error => {
-
-        })
-    }
     const handleConfirm = () => {
         if(!qty){
             alert('Please fill up the empty field.');
@@ -52,8 +37,21 @@ const ProductUpdateModal = (props) => {
         })
     }
     useEffect(() => {
-        fetchStock();
-    }, [])
+        const prodID = props.prodID;
+
+        axios.get('http://localhost:3001/product-stock', {
+            params: {
+                prodID: prodID,
+            }
+        })
+        .then(response => {
+            setStock(response.data[0].stock);
+            setPrice(parseFloat(response.data[0].price));
+        })
+        .catch(error => {
+
+        })
+    }, [props.prodID])
   return (
     <div className='fixed flex align-middle items-center justify-center py-[50px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
         <div className='text-gray-800 w-[300px] md:w-[400px] h-auto max-h-[600px] my-[10px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>

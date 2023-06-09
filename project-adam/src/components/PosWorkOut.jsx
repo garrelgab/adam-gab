@@ -1,20 +1,20 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import Select from 'react-select';
+// import Select from 'react-select';
 import { DataGrid } from '@mui/x-data-grid';
 const PosWorkOut = () => {
   const [customerName, setCustomerName] = useState('');
-  const options = [
-    { value: 'dailySession', label: 'Daily Session', price: '70.00' },
+  // const options = [
+    // { value: 'dailySession', label: 'Daily Session', price: '70.00' },
     // { value: 'monthlySession', label: 'Monthly Session', price: '700.00' },
     // { value: 'danceStudio', label: 'Dance Studio / 3hrs / per head', price: '70.00' }
-  ];
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [price, setPrice] = useState('');
-  const handleChange = (selectedOption) => {
-    setSelectedOption(selectedOption.label);
-    setPrice(selectedOption.price);
-  };
+  // ];
+  // const [selectedOption, setSelectedOption] = useState(null);
+  // const [price, setPrice] = useState('');
+  // const handleChange = (selectedOption) => {
+    // setSelectedOption(selectedOption.label);
+    // setPrice(selectedOption.price);
+  // };
 
   const [rows, setRows] = useState([]);
   const rowHeight = 100;
@@ -95,8 +95,8 @@ const PosWorkOut = () => {
     .catch(error => {
       console.log(error);
     })
-    setSelectedOption('');
-    setPrice('');
+    // setSelectedOption('');
+    // setPrice('');
     setCustomerName('')
   }
   return (

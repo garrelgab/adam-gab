@@ -52,13 +52,13 @@ const PosLocker = () => {
     setShowCalendar1(false);
   };
 
-  const handleChangeContactNo = (event) => {
-    const inputValue = event.target.value;
-    // Validate if the input is a non-negative number
-    if (!isNaN(inputValue) && Number(inputValue) >= 0) {
-      setContact(inputValue);
-    }
-  };
+  // const handleChangeContactNo = (event) => {
+  //   const inputValue = event.target.value;
+  //   // Validate if the input is a non-negative number
+  //   if (!isNaN(inputValue) && Number(inputValue) >= 0) {
+  //     setContact(inputValue);
+  //   }
+  // };
   const handleChangeAmount = (event) => {
     const inputValue = event.target.value;
     // Validate if the input is a non-negative number
@@ -105,7 +105,7 @@ const PosLocker = () => {
     .catch(error => {
         console.error(error);
     });
-    };
+  };
   const formatPrice = (price) => {
       return Number(price).toFixed(2);
   };
@@ -140,6 +140,27 @@ const PosLocker = () => {
   const minDate = new Date();
 
   useEffect(() => {
+    const fetchLocker = () => {
+      axios.get("http://localhost:3001/locker")
+      .then((response) => {
+          const rows = response.data.map(item => ({
+          id: item.locker_id,
+          name: item.name,
+          contact: item.contact_no,
+          key: item.key_no,
+          amount: formatPrice(item.amount),
+          start: item.start_date,
+          end: item.end_date,
+          totaldays: item.total_days,
+          date: item.date + " " + item.time,
+          }));
+          setRows(rows);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    };
+    
     fetchLocker();
     const endDate = new Date(selectedEndDate);
     endDate.setMonth(endDate.getMonth() + 1);

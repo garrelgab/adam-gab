@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import { Link as LinkScroll } from 'react-scroll/modules'
+import React, { useEffect } from 'react'
+// import { Link as LinkScroll } from 'react-scroll/modules'
 import axios from 'axios'
 const ServiceOffer = () => {
-    const [rows, setRows] = useState([]);
+    // const [rows, setRows] = useState([]);
     const fetchData = () => {
         axios.get('http://localhost:3001/service-offer')
         .then(response => {
-            setRows(response.data);
+            // setRows(response.data);
         })
         .catch(error => {
             console.log(error);

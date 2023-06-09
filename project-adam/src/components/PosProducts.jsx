@@ -239,41 +239,44 @@ const PosProducts = () => {
   const rowHeight = 100;
 
   useEffect(() => {
-    //Fetch Data Products
-    // const fetchData = () => {
-    //   axios.get("http://localhost:3001/pos-inventory")
-    //   .then((response) => {
-    //       const rows = response.data.map(item => ({
-    //       id: item.product_id,
-    //       name: item.product_name,
-    //       category: item.category,
-    //       price: formatPrice(item.price),
-    //       qty: item.stock,
-    //       }));
-    //       setRows(rows);
-    //   })
-    //   .catch(error => {
-    //       console.error(error);
-    //   });
-    // };
-    // const fetchOrder = () => {
-    //   axios.get("http://localhost:3001/orders-temp")
-    //   .then((response) => {
-    //     const rows1 = response.data.map(item => ({
-    //     id: item.product_id,
-    //     name: item.product_name,
-    //     category: item.category,
-    //     price: formatPrice(item.price),
-    //     qty: item.qty,
-    //     date: item.date,
-    //     time: item.time,
-    //     }));
-    //     setRows1(rows1);
-    //   })
-    //   .catch(error => {
-    //       console.error(error);
-    //   });
-    // };
+    const fetchData = () => {
+      axios.get("http://localhost:3001/pos-inventory")
+      .then((response) => {
+          const rows = response.data.map(item => ({
+          id: item.product_id,
+          name: item.product_name,
+          category: item.category,
+          price: formatPrice(item.price),
+          qty: item.stock,
+          }));
+          setRows(rows);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    };
+    const formatPrice = (price) => {
+      return Number(price).toFixed(2);
+    };
+    const fetchOrder = () => {
+      axios.get("http://localhost:3001/orders-temp")
+      .then((response) => {
+        const rows1 = response.data.map(item => ({
+        id: item.order_temp_id,
+        id1: item.product_id,
+        name: item.product_name,
+        category: item.category,
+        price: formatPrice(item.price),
+        qty: item.qty,
+        date: item.date,
+        time: item.time,
+        }));
+        setRows1(rows1);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    };
     fetchData();
     fetchOrder();
     fetchTotal();

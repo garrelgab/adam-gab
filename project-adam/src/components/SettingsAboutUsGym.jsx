@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import Select from 'react-select';
+// import Select from 'react-select';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
@@ -8,9 +8,9 @@ const SettingsAboutUsGym = () => {
   axios.defaults.withCredentials = true;
 
   const [description, setDescription] = useState(null);
-  const [options, setOptions] = useState([]);
-  const [selectOption, setSelectedOption] = useState(null);
-  const [selectOptionName, setSelectedOptionName] = useState(null);
+  // const [options, setOptions] = useState([]);
+  // const [selectOption, setSelectedOption] = useState(null);
+  // const [selectOptionName, setSelectedOptionName] = useState(null);
   
   const handleConfirm = () => {
     axios.post('http://localhost:3001/add-about', {

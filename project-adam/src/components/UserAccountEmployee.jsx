@@ -120,27 +120,7 @@ const UserAccountEmployee = (props) => {
   // const handleOpenModal = () => {
   //   setOpenModal(!openModal);
   // }
-  const fetchEmployee = () => {
-    axios.get('http://localhost:3001/employee-list')
-    .then(response => {
-      const rows = response.data.map(item => ({
-        id: item.account_info_id,
-        name: item.fname + " " + item.lname,
-        age: item.age,
-        gender: item.gender,
-        bday: item.bday,
-        email: item.email,
-        role: capitalizeFirstLetter(item.role),
-        date: item.date_created,
-        status: item.status,
-        // add more columns as needed
-      }));
-      setRows(rows);
-    })
-    .catch(error => {
-
-    })
-  }
+  
   // const handleAddRole = () => {
   //   if(!roleName){
   //     alert('Please fill up the empty field.');
@@ -167,7 +147,49 @@ const UserAccountEmployee = (props) => {
   //     console.log(error);
   //   })
   // };  
+  const fetchEmployee = () => {
+    axios.get('http://localhost:3001/employee-list')
+    .then(response => {
+      const rows = response.data.map(item => ({
+        id: item.account_info_id,
+        name: item.fname + " " + item.lname,
+        age: item.age,
+        gender: item.gender,
+        bday: item.bday,
+        email: item.email,
+        role: capitalizeFirstLetter(item.role),
+        date: item.date_created,
+        status: item.status,
+        // add more columns as needed
+      }));
+      setRows(rows);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
   useEffect(() => {
+    const fetchEmployee = () => {
+      axios.get('http://localhost:3001/employee-list')
+      .then(response => {
+        const rows = response.data.map(item => ({
+          id: item.account_info_id,
+          name: item.fname + " " + item.lname,
+          age: item.age,
+          gender: item.gender,
+          bday: item.bday,
+          email: item.email,
+          role: capitalizeFirstLetter(item.role),
+          date: item.date_created,
+          status: item.status,
+          // add more columns as needed
+        }));
+        setRows(rows);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
     fetchEmployee();
   },[]);
   const tabs = [

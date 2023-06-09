@@ -6,7 +6,7 @@ import axios from 'axios';
 import Select from 'react-select';
 
 const SettingsServiceOffer = (props) => {
-    const userID = props.id;
+    // const userID = props.id;
     const [rows, setRows] = useState([]);
     const columns = [
         {field: 'id', headerName: 'ID', width: 100},
