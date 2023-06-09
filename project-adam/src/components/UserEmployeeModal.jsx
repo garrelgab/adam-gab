@@ -89,7 +89,7 @@ const UserEmployeeModal = ({fetchEmployee, id}) => {
       setCPword('');
       return;
     }
-    axios.post('http://localhost:3001/api/insert-employee', {
+    axios.post('http://localhost:3001/insert-employee', {
       userFname: capitalizeFirstLetter(fname),
       userLname: capitalizeFirstLetter(lname),
       userAge: age,

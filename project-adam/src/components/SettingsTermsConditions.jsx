@@ -18,7 +18,7 @@ const SettingsTermsConditions = () => {
   },[]);
 
   const fetchOptions = () => {
-    axios.get('http://localhost:3001/api/option-terms')
+    axios.get('http://localhost:3001/option-terms')
     .then((response) => {
       setOptions(response.data);
     })
@@ -31,7 +31,7 @@ const SettingsTermsConditions = () => {
     setSelectedOptionName(selectedOption.label);
 
     if(selectedOption) {
-      axios.get('http://localhost:3001/api/desc-terms', {
+      axios.get('http://localhost:3001/desc-terms', {
         params: {
           descTermsID: selectedOption.value,
         }
@@ -50,12 +50,12 @@ const SettingsTermsConditions = () => {
       alert('Please fill out the empty field.');
       return;
     }
-    axios.put('http://localhost:3001/api/update-desc-terms', {
+    axios.put('http://localhost:3001/update-desc-terms', {
       TermsDescription: description,
       TermsID: selectOption,
     })
     .then(response => {
-      axios.get('http://localhost:3001/api/desc-terms', {
+      axios.get('http://localhost:3001/desc-terms', {
         params: {
           descTermsID: selectOption,
         }
@@ -84,7 +84,7 @@ const SettingsTermsConditions = () => {
       if(!editorContent){
           alert('Please fill up the empty field');
       }
-      axios.post('http://localhost:3001/api/add-terms', {
+      axios.post('http://localhost:3001/add-terms', {
           addTerms: name,
           addDescription: editorContent,
           addStatus: status,

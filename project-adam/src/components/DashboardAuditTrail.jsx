@@ -12,7 +12,7 @@ const DashboardAuditTrail = () => {
     ];
 
     const fetchAudit = () => {
-        axios.get('http://localhost:3001/api/audit')
+        axios.get('http://localhost:3001/audit')
         .then(response => {
           const rows = response.data.map(item => ({
               id: item.audit_id,

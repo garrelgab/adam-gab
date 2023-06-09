@@ -17,7 +17,7 @@ const ProductModal = (props) => {
             alert('Not enough stocks');
             return;
         }
-        axios.post('http://localhost:3001/api/add-orders-temp', {
+        axios.post('http://localhost:3001/add-orders-temp', {
             prodID: id,
             prodName: props.productName,
             prodCategory: props.productCategory,

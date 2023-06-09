@@ -50,7 +50,7 @@ const CustomerCalendar = (props) => {
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/events/approved")
+    axios.get("http://localhost:3001/events/approved")
     .then((response) => {
       setEvents(response.data);
     })

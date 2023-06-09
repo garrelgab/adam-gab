@@ -1,4 +1,3 @@
-const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const express = require('express');
 const cors = require('cors');
@@ -10,15 +9,16 @@ const moment = require('moment');
 const path = require('path');
 const app = express();
 const bcrypt = require('bcrypt');
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3001;
+const mysql = require('mysql');
 
-const connection = mysql.createPool({
+const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root', // this is the default username for XAMPP
   password: '', // this is the default password for XAMPP
   database: 'db_adamfitness', // replace with the name of your database
 });
-// const connection = mysql.createPool({
+// const connection = mysql.createConnection({
 //   host: 'localhost',
 //   user: 'u994941609_root', // this is the default username for XAMPP
 //   password: 'Password1', // this is the default password for XAMPP
@@ -29,6 +29,14 @@ const connection = mysql.createPool({
 //   user: 'u994941609_root', // this is the default username for XAMPP
 //   password: 'Password1', // this is the default password for XAMPP
 //   database: 'u994941609_db_adamfitness', // replace with the name of your database
+// });
+
+// connection.connect(function(err) {
+//   if (err) {
+//     console.error('Error connecting to MySQL database:', err);
+//     return;
+//   }
+//   console.log('Connected to MySQL database!');
 // });
 
 app.use(express.json());
@@ -59,6 +67,7 @@ app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
 });
 
+
 // app.use(express.static(path.join(__dirname, 'build')));
 
 // // Serve the index.html file for all other requests
@@ -66,9 +75,7 @@ app.get('/', (req, res)=>{
 //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 // });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+
 
 app.post("/login", (req, res) => {
   const userEmail = req.body.userEmail;
@@ -128,7 +135,7 @@ app.post("/login", (req, res) => {
 });
 
 
-app.post("/api/insert", (req, res) => {
+app.post("/insert", (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
   const userFname = req.body.userFname;
@@ -266,7 +273,7 @@ app.post("/api/insert", (req, res) => {
 });
 
 
-// app.post("/api/login", (req, res) => {
+// app.post("/login", (req, res) => {
 //   const userEmail = req.body.userEmail;
 //   const userPword = req.body.userPword;
 //   connection.query(
@@ -319,7 +326,7 @@ app.post("/api/insert", (req, res) => {
 //   );
 // });
 
-// app.post("/api/login", (req, res) => {
+// app.post("/login", (req, res) => {
 //   const userEmail = req.body.userEmail;
 //   const userPword = req.body.userPword;
 //   connection.query(
@@ -368,7 +375,7 @@ app.post("/api/insert", (req, res) => {
 // });
 
 
-app.get('/api/account-name', (req, res) => {
+app.get('/account-name', (req, res) => {
   const accID = req.query.accID;
   const accName = `select fname, lname from tbl_account_info where account_info_id = ?`;
   connection.query(accName, [accID], (err, result) => {
@@ -381,7 +388,7 @@ app.get('/api/account-name', (req, res) => {
 });
 
 
-app.get("/api/members", (req, res) => {
+app.get("/members", (req, res) => {
   // const members = "select * from tbl_account_info where role = 'customer'";
   connection.query("select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, DATE_FORMAT(date_created, '%M %d, %Y') as date_created, status from tbl_account_info where role = 'customer'", (err, result) => {
     if(err){
@@ -393,7 +400,7 @@ app.get("/api/members", (req, res) => {
   })
 });
 
-// app.get("/api/login", (req, res) => {
+// app.get("/login", (req, res) => {
 //   if(req.session.user) {
 //     res.send({loggedIn: true, user: req.session.user})
 //   }
@@ -404,7 +411,7 @@ app.get("/api/members", (req, res) => {
 
 
 
-// app.post("/api/reservation", (req, res) => {
+// app.post("/reservation", (req, res) => {
 //   const customerName = req.body.customerName;
 //   const customerStartTime = req.body.customerStartTime;
 //   const customerEndTime = req.body.customerEndTime;
@@ -546,7 +553,7 @@ app.post("/reservation", (req, res) => {
 });
 
 
-app.get("/api/events", (req, res) => {
+app.get("/events", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation";
   connection.query(fetchEvents, (err, result) => {
     if(err){
@@ -565,7 +572,7 @@ app.get("/api/events", (req, res) => {
     }
   });
 });
-app.get("/api/events/approved", (req, res) => {
+app.get("/events/approved", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted, pax from tbl_reservation where status = 'Approved'";
   connection.query(fetchEvents, (err, result) => {
     if(err){
@@ -584,7 +591,7 @@ app.get("/api/events/approved", (req, res) => {
   });
 });
 
-app.get("/api/events/pending", (req, res) => {
+app.get("/events/pending", (req, res) => {
   const fetchEvents = "select reservation_id, name, status, DATE_FORMAT(customer_date, '%M %d, %Y') as start, TIME_FORMAT(time_start, '%h:%i %p') as time_start_formatted, TIME_FORMAT(time_end, '%h:%i %p') as time_end_formatted from tbl_reservation where status = 'Pending'";
   connection.query(fetchEvents, (err, result) => {
     if(err){
@@ -604,7 +611,7 @@ app.get("/api/events/pending", (req, res) => {
   });
 });
 
-app.put('/api/approved', (req, res) => {
+app.put('/approved', (req, res) => {
   const reservationID = req.body.id;
   const reservationStatus = req.body.status;
   const approvedReservation = "update tbl_reservation set status = ? where reservation_id = ?";
@@ -617,7 +624,7 @@ app.put('/api/approved', (req, res) => {
   });
 });
 
-app.put('/api/hold', (req, res) => {
+app.put('/hold', (req, res) => {
   const proofID = req.body.proofID;
   const reservationStatus = req.body.reservationStatus;
   const accID = req.body.accID;
@@ -672,43 +679,51 @@ app.put('/api/hold', (req, res) => {
 });
 
 
-app.get('/api/members-count', (req, res) => {
+app.get('/members-count', (req, res) => {
   const countMembers = "select count(account_info_id) as count from tbl_account_info where role = 'customer'";
-  connection.query(countMembers, (err, result, fields) => {
-    if(err) throw err;
-    const count = result[0].count;
-    res.send({count});
+  connection.query(countMembers, (err, result) => {
+    if(err){
+      console.log(err);
+    } else {
+      res.send(result);
+    }
   });
 });
 
-app.get('/api/approved-count', (req, res) => {
+app.get('/approved-count', (req, res) => {
   const countPending = "select count(reservation_id) as count from tbl_reservation where status = 'Approved'";
-  connection.query(countPending, (err, result, fields) => {
-    if(err) throw err;
-    const count = result[0].count;
-    res.send({count});
+  connection.query(countPending, (err, result) => {
+    if(err){
+      console.log(err);
+    } else {
+      res.send(result);
+    }
   });
 });
 
-app.get('/api/pending-count', (req, res) => {
+app.get('/pending-count', (req, res) => {
   const countPending = "select count(reservation_id) as count from tbl_reservation where status = 'Pending'";
-  connection.query(countPending, (err, result, fields) => {
-    if(err) throw err;
-    const count = result[0].count;
-    res.send({count});
+  connection.query(countPending, (err, result) => {
+    if(err){
+      console.log(err);
+    } else {
+      res.send(result);
+    }
   });
 });
 
-app.get('/api/event-count', (req, res) => {
+app.get('/event-count', (req, res) => {
   const countEvent = "select count(reservation_id) as count from tbl_reservation";
-  connection.query(countEvent, (err, result, fields) => {
-    if(err) throw err;
-    const count = result[0].count;
-    res.send({count});
+  connection.query(countEvent, (err, result) => {
+    if(err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
   });
 });
 
-app.put('/api/customer-info', (req, res) => {
+app.put('/customer-info', (req, res) => {
   const customerFname = req.body.customerFname;
   const customerLname = req.body.customerLname;
   const customerID = req.body.customerID;
@@ -722,7 +737,7 @@ app.put('/api/customer-info', (req, res) => {
   });
 });
 
-app.get('/api/get-info', (req, res) => {
+app.get('/get-info', (req, res) => {
   const customerID = req.query.customerID;
   const getCustomerInfo = "select fname, lname from tbl_account_info where account_info_id = ?";
   connection.query(getCustomerInfo, [customerID], (err, result) => {
@@ -734,7 +749,7 @@ app.get('/api/get-info', (req, res) => {
   })
 });
 
-// app.put('/api/customer-pass', (req, res) => {
+// app.put('/customer-pass', (req, res) => {
 //   const customerPword = req.body.customerPword;
 //   const customerCPword = req.body.customerCPword;
 //   const customerID = req.body.customerID;
@@ -749,7 +764,7 @@ app.get('/api/get-info', (req, res) => {
 //   });
 // });
 
-// app.put('/api/customer-pass', (req, res) => {
+// app.put('/customer-pass', (req, res) => {
 //   const customerID = req.body.customerID;
 //   const currentPword = req.body.currentPword;
 //   const newPword = req.body.newPword;
@@ -782,7 +797,7 @@ app.get('/api/get-info', (req, res) => {
 //   });
 // });
 
-app.put('/api/customer-pass', (req, res) => {
+app.put('/customer-pass', (req, res) => {
   const customerID = req.body.customerID;
   const currentPword = req.body.currentPword;
   const newPword = req.body.newPword;
@@ -862,7 +877,7 @@ app.put('/api/customer-pass', (req, res) => {
 
 
 //FAQ Section
-app.post('/api/add-faq', (req, res) => {
+app.post('/add-faq', (req, res) => {
   const addFaq = req.body.addFaq;
   const addDescription = req.body.addDescription;
   const addStatus = req.body.addStatus;
@@ -877,7 +892,7 @@ app.post('/api/add-faq', (req, res) => {
   });
 });
 
-app.get('/api/option-faq', (req, res) => {
+app.get('/option-faq', (req, res) => {
   const optionFaq = "select faq_id, name from tbl_faq";
   connection.query(optionFaq, (err, results) => {
     if(err) {
@@ -893,7 +908,7 @@ app.get('/api/option-faq', (req, res) => {
   });
 });
 
-app.get('/api/desc-faq', (req, res) => {
+app.get('/desc-faq', (req, res) => {
   const descFaqID = req.query.descFaqID;
   const descFaq = "select description from tbl_faq where faq_id = ?";
   connection.query(descFaq, [descFaqID], (err, result) => {
@@ -906,7 +921,7 @@ app.get('/api/desc-faq', (req, res) => {
   });
 });
 
-app.put('/api/update-desc-faq', (req, res) => {
+app.put('/update-desc-faq', (req, res) => {
   const FaqDescription = req.body.FaqDescription;
   const FaqID = req.body.FaqID;
   const updateFaqDesc = "update tbl_faq set description = ? where faq_id = ?";
@@ -920,7 +935,7 @@ app.put('/api/update-desc-faq', (req, res) => {
   });
 });
 
-app.get('/api/faqs', (req, res) => {
+app.get('/faqs', (req, res) => {
   const selectFaq = "select faq_id, name, description from tbl_faq";
   connection.query(selectFaq, (err, result) => {
     if(err){
@@ -933,7 +948,7 @@ app.get('/api/faqs', (req, res) => {
 });
 
 //Privacy Policy Section
-app.post('/api/add-privacy', (req, res) => {
+app.post('/add-privacy', (req, res) => {
   const addPrivacy = req.body.addPrivacy;
   const addDescription = req.body.addDescription;
   const addStatus = req.body.addStatus;
@@ -948,7 +963,7 @@ app.post('/api/add-privacy', (req, res) => {
   });
 });
 
-app.get('/api/option-privacy', (req, res) => {
+app.get('/option-privacy', (req, res) => {
   const optionPrivacy = "select privacy_id, name from tbl_privacy";
   connection.query(optionPrivacy, (err, results) => {
     if(err) {
@@ -964,7 +979,7 @@ app.get('/api/option-privacy', (req, res) => {
   });
 });
 
-app.get('/api/desc-privacy', (req, res) => {
+app.get('/desc-privacy', (req, res) => {
   const descPrivacyID = req.query.descPrivacyID;
   const descPrivacy = "select description from tbl_privacy where privacy_id = ?";
   connection.query(descPrivacy, [descPrivacyID], (err, result) => {
@@ -977,7 +992,7 @@ app.get('/api/desc-privacy', (req, res) => {
   });
 });
 
-app.put('/api/update-desc-privacy', (req, res) => {
+app.put('/update-desc-privacy', (req, res) => {
   const PrivacyDescription = req.body.PrivacyDescription;
   const PrivacyID = req.body.PrivacyID;
   const updatePrivacyDesc = "update tbl_privacy set description = ? where privacy_id = ?";
@@ -991,7 +1006,7 @@ app.put('/api/update-desc-privacy', (req, res) => {
   });
 });
 
-app.get('/api/privacy-policy', (req, res) => {
+app.get('/privacy-policy', (req, res) => {
   const getPolicy = 'select * from tbl_privacy';
   connection.query(getPolicy, (err, result) => {
     if (err) {
@@ -1003,7 +1018,7 @@ app.get('/api/privacy-policy', (req, res) => {
 });
 
 //Terms and Condition Section
-app.post('/api/add-terms', (req, res) => {
+app.post('/add-terms', (req, res) => {
   const addTerms = req.body.addTerms;
   const addDescription = req.body.addDescription;
   const addStatus = req.body.addStatus;
@@ -1018,7 +1033,7 @@ app.post('/api/add-terms', (req, res) => {
   });
 });
 
-app.get('/api/option-terms', (req, res) => {
+app.get('/option-terms', (req, res) => {
   const optionTerms = "select terms_id, name from tbl_terms";
   connection.query(optionTerms, (err, results) => {
     if(err) {
@@ -1034,7 +1049,7 @@ app.get('/api/option-terms', (req, res) => {
   });
 });
 
-app.get('/api/desc-terms', (req, res) => {
+app.get('/desc-terms', (req, res) => {
   const descTermsID = req.query.descTermsID;
   const descTerms = "select description from tbl_terms where terms_id = ?";
   connection.query(descTerms, [descTermsID], (err, result) => {
@@ -1047,7 +1062,7 @@ app.get('/api/desc-terms', (req, res) => {
   });
 });
 
-app.put('/api/update-desc-terms', (req, res) => {
+app.put('/update-desc-terms', (req, res) => {
   const TermsDescription = req.body.TermsDescription;
   const TermsID = req.body.TermsID;
   const updateTermsDesc = "update tbl_terms set description = ? where terms_id = ?";
@@ -1061,7 +1076,7 @@ app.put('/api/update-desc-terms', (req, res) => {
   });
 });
 
-app.get('/api/terms', (req, res) => {
+app.get('/terms', (req, res) => {
   const getTerms = `select * from tbl_terms`;
   connection.query(getTerms, (err, result) => {
     if (err) {
@@ -1073,7 +1088,7 @@ app.get('/api/terms', (req, res) => {
 })
 
 //About Us (Gym Info) Section
-// app.post('/api/add-about', (req, res) => {
+// app.post('/add-about', (req, res) => {
 //   // const addAbout = req.body.addAbout;
 //   const addDescription = req.body.addDescription;
 //   const addStatus = req.body.addStatus;
@@ -1088,7 +1103,7 @@ app.get('/api/terms', (req, res) => {
 //   });
 // });
 
-app.post('/api/add-about', (req, res) => {
+app.post('/add-about', (req, res) => {
   const addDescription = req.body.addDescription;
   // const addStatus = req.body.addStatus;
   const selectAbout = "SELECT * FROM tbl_about";
@@ -1126,7 +1141,7 @@ app.post('/api/add-about', (req, res) => {
 });
 
 
-app.get('/api/option-about', (req, res) => {
+app.get('/option-about', (req, res) => {
   const optionAbout = "select about_id from tbl_about";
   connection.query(optionAbout, (err, results) => {
     if(err) {
@@ -1142,7 +1157,7 @@ app.get('/api/option-about', (req, res) => {
   });
 });
 
-// app.get('/api/desc-about', (req, res) => {
+// app.get('/desc-about', (req, res) => {
 //   const descAboutID = req.query.descAboutID;
 //   const descAbout = "select description from tbl_about where about_id = ?";
 //   connection.query(descAbout, [descAboutID], (err, result) => {
@@ -1155,7 +1170,7 @@ app.get('/api/option-about', (req, res) => {
 //   });
 // });
 
-app.get('/api/desc-about', (req, res) => {
+app.get('/desc-about', (req, res) => {
   const descAbout = 'select description from tbl_about';
   connection.query(descAbout, (err, result) => {
     if (err) {
@@ -1166,7 +1181,7 @@ app.get('/api/desc-about', (req, res) => {
   });
 });
 
-app.put('/api/update-desc-about', (req, res) => {
+app.put('/update-desc-about', (req, res) => {
   const AboutDescription = req.body.AboutDescription;
   const AboutID = req.body.AboutID;
   const updateAboutDesc = "update tbl_about set description = ? where about_id = ?";
@@ -1181,7 +1196,7 @@ app.put('/api/update-desc-about', (req, res) => {
 });
 
 //Service Offer
-app.post('/api/add-service-offer', (req, res) => {
+app.post('/add-service-offer', (req, res) => {
   const name = req.body.name;
   const desc = req.body.desc;
   const add = 'insert into tbl_service_offer (name, description) values (?, ?)';
@@ -1194,7 +1209,7 @@ app.post('/api/add-service-offer', (req, res) => {
   });
 });
 
-app.get('/api/service-offer', (req, res) => {
+app.get('/service-offer', (req, res) => {
   const get = 'select * from tbl_service_offer';
   connection.query(get, (err, result) => {
     if (err) {
@@ -1205,7 +1220,7 @@ app.get('/api/service-offer', (req, res) => {
   });
 });
 
-app.get('/api/option-service', (req, res) => {
+app.get('/option-service', (req, res) => {
   const optionPrivacy = "select service_offer_id, name from tbl_service_offer";
   connection.query(optionPrivacy, (err, results) => {
     if(err) {
@@ -1221,7 +1236,7 @@ app.get('/api/option-service', (req, res) => {
   });
 });
 
-app.get('/api/desc-service', (req, res) => {
+app.get('/desc-service', (req, res) => {
   const descServiceID = req.query.descServiceID;
   const descPrivacy = "select description from tbl_service_offer where service_offer_id = ?";
   connection.query(descPrivacy, [descServiceID], (err, result) => {
@@ -1234,7 +1249,7 @@ app.get('/api/desc-service', (req, res) => {
   });
 });
 
-app.put('/api/update-desc-service', (req, res) => {
+app.put('/update-desc-service', (req, res) => {
   const ServiceDescription = req.body.ServiceDescription;
   const serviceID = req.body.serviceID;
   const updateAboutDesc = "update tbl_service_offer set description = ? where service_offer_id = ?";
@@ -1249,7 +1264,7 @@ app.put('/api/update-desc-service', (req, res) => {
 });
 
 //Invetory Management
-app.get('/api/inventory', (req, res) => {
+app.get('/inventory', (req, res) => {
   const products = "select product_id, product_name, product_desc, category, price, stock,  DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, product_status from tbl_products order by product_id desc";
   connection.query(products, (err, result) => {
     if(err){
@@ -1261,7 +1276,7 @@ app.get('/api/inventory', (req, res) => {
   });
 });
 
-app.post('/api/product-check', (req, res) => {
+app.post('/product-check', (req, res) => {
   const prodName = req.body.prodName;
   const checkName = 'SELECT COUNT(*) as count FROM tbl_products WHERE product_name = ?';
   connection.query(checkName, [prodName], (err, result) => {
@@ -1275,7 +1290,7 @@ app.post('/api/product-check', (req, res) => {
   });
 });
 
-app.post('/api/add-products', (req, res) => {
+app.post('/add-products', (req, res) => {
   const prodName = req.body.prodName;
   const prodDesc = req.body.prodDesc;
   const prodCateg = req.body.prodCateg;
@@ -1296,7 +1311,7 @@ app.post('/api/add-products', (req, res) => {
   });
 });
 
-app.get('/api/option-inventory', (req, res) => {
+app.get('/option-inventory', (req, res) => {
   // const prodID = req.query.prodID;
   // const optionInventory = "select product_id, product_name, price from tbl_products where product_id = ?";
   const optionInventory = "select product_id, product_name from tbl_products";
@@ -1315,7 +1330,7 @@ app.get('/api/option-inventory', (req, res) => {
   });
 });
 
-app.get('/api/price-inventory', (req, res) => {
+app.get('/price-inventory', (req, res) => {
   const prodID = req.query.prodID;
   const prodPrice = "select product_name, product_desc, category, price from tbl_products where product_id = ?";
   connection.query(prodPrice, [prodID], (err, results) => {
@@ -1329,7 +1344,7 @@ app.get('/api/price-inventory', (req, res) => {
 });
 
 
-app.put('/api/update-inventory', (req, res) => {
+app.put('/update-inventory', (req, res) => {
   const prodID = req.body.prodID;
   const newProdPrice = req.body.newProdPrice;
   const newProdQty = req.body.newProdQty;
@@ -1347,7 +1362,7 @@ app.put('/api/update-inventory', (req, res) => {
   });
 });
 
-app.put('/api/update-prod-status', (req, res) => {
+app.put('/update-prod-status', (req, res) => {
   const prodID = req.body.prodID;
   const newProdStatus = req.body.newProdStatus;
 
@@ -1362,7 +1377,7 @@ app.put('/api/update-prod-status', (req, res) => {
   });
 });
 //POS
-app.get('/api/pos-inventory', (req, res) => {
+app.get('/pos-inventory', (req, res) => {
   const products = "select product_id, product_name, category, price, stock from tbl_products where stock > 5 and product_status = 'Show'";
   connection.query(products, (err, result) => {
     if(err){
@@ -1373,7 +1388,7 @@ app.get('/api/pos-inventory', (req, res) => {
     }
   });
 });
-app.post('/api/add-orders-temp', (req, res) => {
+app.post('/add-orders-temp', (req, res) => {
   const prodID = req.body.prodID;
   const prodName = req.body.prodName;
   const prodCategory = req.body.prodCategory;
@@ -1393,7 +1408,7 @@ app.post('/api/add-orders-temp', (req, res) => {
   });
 });
 
-app.get('/api/orders-temp', (req, res) => {
+app.get('/orders-temp', (req, res) => {
   const products = "select order_temp_id, product_id, product_name, category, price, qty, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_orders_temp";
   connection.query(products, (err, result) => {
     if(err){
@@ -1405,7 +1420,7 @@ app.get('/api/orders-temp', (req, res) => {
   });
 });
 
-app.get('/api/sum-price', (req, res) => {
+app.get('/sum-price', (req, res) => {
   const query = 'SELECT SUM(price) AS total FROM tbl_orders_temp';
   connection.query(query, (error, results) => {
     if (error) {
@@ -1418,7 +1433,7 @@ app.get('/api/sum-price', (req, res) => {
   });
 });
 
-app.put('/api/update-products', (req, res) => {
+app.put('/update-products', (req, res) => {
 
   const prodIDs = req.body.prodID;
   const quantities = req.body.prodQty;
@@ -1438,7 +1453,7 @@ app.put('/api/update-products', (req, res) => {
   res.send('Products updated successfully');
 });
 
-app.post('/api/add-orders', (req, res) => {
+app.post('/add-orders', (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const prodIDs = req.body.prodIDs;
   const prodNames = req.body.prodNames;
@@ -1460,7 +1475,7 @@ app.post('/api/add-orders', (req, res) => {
   res.send('Products updated successfully');
 });
 
-app.post('/api/add-sales', (req, res) => {
+app.post('/add-sales', (req, res) => {
   const orderNum = req.body.orderNum;
   const currentDate = new Date().toISOString().slice(0, 10);
   const total = req.body.total;
@@ -1479,7 +1494,7 @@ app.post('/api/add-sales', (req, res) => {
 
 
 
-app.delete('/api/clean-order-temp', (req, res) => {
+app.delete('/clean-order-temp', (req, res) => {
   const cleanTemp = "truncate table tbl_orders_temp";
   connection.query(cleanTemp, (err, result) => {
     if(err){
@@ -1491,7 +1506,7 @@ app.delete('/api/clean-order-temp', (req, res) => {
   });
 });
 
-app.get('/api/product-stock', (req, res) => {
+app.get('/product-stock', (req, res) => {
   const prodID = req.query.prodID;
   const stock = `select stock, price from tbl_products where product_id = ${prodID}`;
   connection.query(stock, (err, result) => {
@@ -1504,7 +1519,7 @@ app.get('/api/product-stock', (req, res) => {
   });
 });
 
-app.put('/api/update-order-qty', (req, res) => {
+app.put('/update-order-qty', (req, res) => {
   const prodID = req.body.prodID;
   const prodPrice = req.body.prodPrice;
   const prodQty = req.body.prodQty;
@@ -1519,7 +1534,7 @@ app.put('/api/update-order-qty', (req, res) => {
   });
 });
 
-app.delete('/api/void', (req, res) => {
+app.delete('/void', (req, res) => {
   const orderTempID = req.query.orderTempID;
   const voidItem = `delete from tbl_orders_temp where order_temp_id = '${orderTempID}'`;
   connection.query(voidItem, (err, result) => {
@@ -1533,7 +1548,7 @@ app.delete('/api/void', (req, res) => {
 });
 //Sales Report
 
-app.get('/api/fetch-total-sales', (req, res) => {
+app.get('/fetch-total-sales', (req, res) => {
   const totalSales = `select SUM(total) as total from tbl_sales_report`;
   connection.query(totalSales, (err, result) => {
     if (err) {
@@ -1545,7 +1560,7 @@ app.get('/api/fetch-total-sales', (req, res) => {
 });
 
 
-app.get('/api/fetch-total-sales-today', (req, res) => {
+app.get('/fetch-total-sales-today', (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const totalSales = `select SUM(total) as total from tbl_sales_report where date = '${currentDate}'`;
@@ -1558,7 +1573,7 @@ app.get('/api/fetch-total-sales-today', (req, res) => {
   });
 });
 
-app.get('/api/sales-report', (req, res) => {
+app.get('/sales-report', (req, res) => {
   const viewSales = "select sales_report_id, description, total, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, category from tbl_sales_report order by sales_report_id desc";
   connection.query(viewSales, (err, result) => {
     if(err){
@@ -1570,7 +1585,7 @@ app.get('/api/sales-report', (req, res) => {
   }); 
 });
 
-app.get('/api/filter-sales-report', (req, res) => {
+app.get('/filter-sales-report', (req, res) => {
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
 
@@ -1599,7 +1614,7 @@ app.get('/filter-sales-report-category', (req, res) => {
 
 
 //Sum Daily
-app.get('/api/daily-sales', (req, res) => {
+app.get('/daily-sales', (req, res) => {
   const dailySales = `SELECT sales_report_id, DATE_FORMAT(date, '%M %d, %Y') AS day, SUM(total) AS daily_total FROM tbl_sales_report GROUP BY DAY(date) order by sales_report_id desc`;
   connection.query(dailySales, (err, result) => {
     if(err){
@@ -1611,7 +1626,7 @@ app.get('/api/daily-sales', (req, res) => {
   });
 });
 //Weekly
-app.get('/api/weekly-sales', (req, res) => {
+app.get('/weekly-sales', (req, res) => {
   const weeklySales = `SELECT sales_report_id, YEAR(date) AS year, WEEK(date) AS week, SUM(total) AS weekly_total FROM tbl_sales_report GROUP BY YEAR(date), WEEK(date) order by sales_report_id desc`;
   connection.query(weeklySales, (err, result) => {
     if(err){
@@ -1623,7 +1638,7 @@ app.get('/api/weekly-sales', (req, res) => {
   });
 });
 //monthly
-app.get('/api/monthly-sales', (req, res) => {
+app.get('/monthly-sales', (req, res) => {
   const monthlySales = `SELECT sales_report_id, YEAR(date) AS year, MONTHNAME(date) AS month, SUM(total) AS monthly_total FROM tbl_sales_report GROUP BY YEAR(date), MONTH(date) order by sales_report_id desc`;
   connection.query(monthlySales, (err, result) => {
     if(err){
@@ -1636,7 +1651,7 @@ app.get('/api/monthly-sales', (req, res) => {
 });
 //yearly
 // 
-app.get('/api/yearly-sales', (req, res) => {
+app.get('/yearly-sales', (req, res) => {
   const yearlySales = `SELECT sales_report_id, YEAR(date) AS year, SUM(total) AS yearly_total FROM tbl_sales_report GROUP BY YEAR(date) order by sales_report_id desc`;
   connection.query(yearlySales, (err, result) => {
     if(err){
@@ -1651,7 +1666,7 @@ app.get('/api/yearly-sales', (req, res) => {
 
 
 //Workouts
-app.post('/api/add-workout', (req, res) => {
+app.post('/add-workout', (req, res) => {
   const name = req.body.name;
   // const type = req.body.type;
   // const price = req.body.price;
@@ -1682,7 +1697,7 @@ app.post('/api/add-workout', (req, res) => {
   });
 });
 
-app.get('/api/workouts', (req, res) => {
+app.get('/workouts', (req, res) => {
   const workouts = "select workout_id, name, type, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_workout order by workout_id desc";
   connection.query(workouts, (err, result) => {
     if(err){
@@ -1694,7 +1709,7 @@ app.get('/api/workouts', (req, res) => {
   });
 });
 
-app.post('/api/add-expenses', (req, res) => {
+app.post('/add-expenses', (req, res) => {
   const desc = req.body.desc;
   const price = req.body.price;
   const formattedPrice = Number(price).toFixed(2);
@@ -1712,7 +1727,7 @@ app.post('/api/add-expenses', (req, res) => {
   });
 });
 
-app.get('/api/expenses', (req, res) => {
+app.get('/expenses', (req, res) => {
   const workouts = "select expenses_id, description, price, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_expenses";
   connection.query(workouts, (err, result) => {
     if(err){
@@ -1725,7 +1740,7 @@ app.get('/api/expenses', (req, res) => {
 });
 
 //Locker
-// app.post('/api/add-locker', (req, res) => {
+// app.post('/add-locker', (req, res) => {
 //   const name = req.body.name;
 //   const contact = req.body.contact;
 //   const key = req.body.key;
@@ -1747,7 +1762,7 @@ app.get('/api/expenses', (req, res) => {
 //   });
 // });
 
-app.post('/api/add-locker', (req, res) => {
+app.post('/add-locker', (req, res) => {
   const name = req.body.name;
   const contact = req.body.contact;
   const key = req.body.key;
@@ -1794,7 +1809,7 @@ app.post('/api/add-locker', (req, res) => {
     }
   });
 });
-app.get('/api/locker', (req, res) => {
+app.get('/locker', (req, res) => {
   const getLocker = "select locker_id, name, contact_no, key_no, amount, DATE_FORMAT(start_date, '%M %d, %Y') as start_date, DATE_FORMAT(end_date, '%M %d, %Y') as end_date, total_days, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_locker order by locker_id desc";
   connection.query(getLocker, (err, result) => {
     if(err){
@@ -1806,7 +1821,7 @@ app.get('/api/locker', (req, res) => {
   });
 });
 
-app.get('/api/attendance', (req, res) => {
+app.get('/attendance', (req, res) => {
   const getAttendance = `
     SELECT
       attendance_id,
@@ -1834,7 +1849,7 @@ app.get('/api/attendance', (req, res) => {
 });
 
 
-app.put('/api/update-attendance', (req, res) => {
+app.put('/update-attendance', (req, res) => {
   const getLastInsertedId = 'SELECT attendance_id FROM tbl_attendance ORDER BY attendance_id DESC LIMIT 1';
   connection.query(getLastInsertedId, (err, result) => {
     if (err) {
@@ -1858,7 +1873,7 @@ app.put('/api/update-attendance', (req, res) => {
 })
 
 //Employee User
-// app.post('/api/add-employee', (req, res) => {
+// app.post('/add-employee', (req, res) => {
 //   const fname = req.body.fname;
 //   const lname = req.body.lname;
 //   const age = req.body.age;
@@ -1872,7 +1887,7 @@ app.put('/api/update-attendance', (req, res) => {
 
 // });
 
-// app.post("/api/insert-employee", (req, res) => {
+// app.post("/insert-employee", (req, res) => {
 //   const currentDate = new Date().toISOString().slice(0, 10);
 //   const currentTime = new Date().toTimeString().slice(0, 8);
 //   const userFname = req.body.userFname;
@@ -1930,7 +1945,7 @@ app.put('/api/update-attendance', (req, res) => {
 //   });
 // });
 
-app.post("/api/insert-employee", (req, res) => {
+app.post("/insert-employee", (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
   const userFname = req.body.userFname;
@@ -2026,7 +2041,7 @@ app.post("/api/insert-employee", (req, res) => {
 
 
 
-app.get('/api/employee-list', (req, res) => {
+app.get('/employee-list', (req, res) => {
   const employeeList = `select account_info_id, fname, lname, age, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, email, role, DATE_FORMAT(date_created, '%M %d, %Y') as date_created, status from tbl_account_info where role = 'staff' or role = 'cashier' order by account_info_id desc`;
   connection.query(employeeList, (err, result) => {
     if(err){
@@ -2038,7 +2053,7 @@ app.get('/api/employee-list', (req, res) => {
   });
 });
 
-app.put('/api/update-account-status', (req, res) => {
+app.put('/update-account-status', (req, res) => {
   const accID = req.body.accID;
   const status = req.body.status;
   const updateAcc = `update tbl_accounts set status = ? where account_id = ?`;
@@ -2058,7 +2073,7 @@ app.put('/api/update-account-status', (req, res) => {
   });
 });
 
-app.get('/api/audit', (req, res) => {
+app.get('/audit', (req, res) => {
   const audit = `select audit_id, action, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time from tbl_audit order by audit_id desc`;
   connection.query(audit, (err, result) => {
     if(err){
@@ -2070,7 +2085,7 @@ app.get('/api/audit', (req, res) => {
   });
 });
 
-// app.post('/api/add-health-guide', (req, res) => {
+// app.post('/add-health-guide', (req, res) => {
 //   const imageData = req.body.imageData;
 //   const name = req.body.name;
 //   const equipment = req.body.equipment;
@@ -2091,7 +2106,7 @@ app.get('/api/audit', (req, res) => {
 //   });
 // });
 
-app.post('/api/add-health-guide', (req, res) => {
+app.post('/add-health-guide', (req, res) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const currentTime = new Date().toTimeString().slice(0, 8);
   const imageData = req.body.imageData;
@@ -2133,7 +2148,7 @@ app.post('/api/add-health-guide', (req, res) => {
 });
 
 
-app.get('/api/health-guide', (req, res) => {
+app.get('/health-guide', (req, res) => {
   const getHealthGuide = 'select health_guide_id, name, equipment, instruction, instruction_image from tbl_health_guide';
   connection.query(getHealthGuide, (err, result) => {
     if(err){
@@ -2145,7 +2160,7 @@ app.get('/api/health-guide', (req, res) => {
   });
 });
 
-app.get('/api/health-guide-image', (req, res) => {
+app.get('/health-guide-image', (req, res) => {
   const healthID = req.query.healthID;
   const getHealthGuide = 'select instruction_image from tbl_health_guide where health_guide_id = ?';
   connection.query(getHealthGuide, [healthID], (err, result) => {
@@ -2158,7 +2173,7 @@ app.get('/api/health-guide-image', (req, res) => {
   });
 });
 
-app.post('/api/add-announcement', (req, res) => {
+app.post('/add-announcement', (req, res) => {
   const annTitle = req.body.annTitle;
   const annContent = req.body.annContent;
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -2195,7 +2210,7 @@ app.post('/api/add-announcement', (req, res) => {
   });
 });
 
-app.get('/api/announcement', (req, res) => {
+app.get('/announcement', (req, res) => {
   const announcement = `select announcement_id, title, ann_content, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_announcement order by announcement_id desc`;
   connection.query(announcement, (err, result) => {
     if(err){
@@ -2207,7 +2222,7 @@ app.get('/api/announcement', (req, res) => {
   });
 });
 
-// app.post('/api/add-proof-of-payment', (req, res) => {
+// app.post('/add-proof-of-payment', (req, res) => {
 //   const userID = req.body.userID;
 //   const refNum = req.body.refNum;
 //   const amount = req.body.amount;
@@ -2257,7 +2272,7 @@ app.get('/api/announcement', (req, res) => {
 
 
 // Original Code
-app.post('/api/add-proof-of-payment', (req, res) => {
+app.post('/add-proof-of-payment', (req, res) => {
   const userID = req.body.userID;
   const refNum = req.body.refNum;
   const amount = req.body.amount;
@@ -2295,7 +2310,7 @@ app.post('/api/add-proof-of-payment', (req, res) => {
 });
 
 
-app.get('/api/gcash', (req, res) => {
+app.get('/gcash', (req, res) => {
   const getGcashData = `select proof_of_payment_id, account_info_id, email, description, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment`;
   connection.query(getGcashData, (err, result) => {
     if(err){
@@ -2307,7 +2322,7 @@ app.get('/api/gcash', (req, res) => {
   });
 });
 
-app.get('/api/customer-payment-history', (req, res) => {
+app.get('/customer-payment-history', (req, res) => {
   const accID = req.query.accID;
   const getGcashData = `select proof_of_payment_id, account_info_id, email, name, reference_number, amount, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, image, status from tbl_proof_of_payment where account_info_id = ?`;
   connection.query(getGcashData, [accID], (err, result) => {
@@ -2320,7 +2335,7 @@ app.get('/api/customer-payment-history', (req, res) => {
   });
 });
 
-// app.post('/api/add-membership', (req, res) => {
+// app.post('/add-membership', (req, res) => {
 //   const accID = req.body.accID;
 //   const proofID = req.body.proofID;
 //   const amount = req.body.amount;
@@ -2398,7 +2413,7 @@ app.get('/api/customer-payment-history', (req, res) => {
 //     }
 //   });
 // });
-app.post('/api/add-membership', (req, res) => {
+app.post('/add-membership', (req, res) => {
   const accID = req.body.accID;
   const proofID = req.body.proofID;
   const amount = req.body.amount;
@@ -2521,7 +2536,7 @@ app.get('/membership', (req, res) => {
   });
 });
 
-app.get('/api/notification', (req, res) => {
+app.get('/notification', (req, res) => {
   const accID = req.query.accID;
   const fetchNotifData = `select notification_id, account_info_id, description, DATE_FORMAT(date, '%M %d, %Y') as date, DATE_FORMAT(time, '%h:%i:%s %p') as time, status from tbl_notification where account_info_id = ? order by notification_id desc`;
   connection.query(fetchNotifData, [accID], (err, result) => {
@@ -2533,7 +2548,7 @@ app.get('/api/notification', (req, res) => {
   })
 });
 
-app.get('/api/unread-notif', (req, res) => {
+app.get('/unread-notif', (req, res) => {
   const accID = req.query.accID;
   const fetchUnreadNotif = `select count(*) as count from tbl_notification where status = 'Unread' and account_info_id = ?`;
   connection.query(fetchUnreadNotif, [accID], (err, result) => {
@@ -2547,7 +2562,7 @@ app.get('/api/unread-notif', (req, res) => {
   });
 });
 
-app.put('/api/update-notif', (req, res) => {
+app.put('/update-notif', (req, res) => {
   const accID = req.body.accID;
   const updateNotif = `update tbl_notification set status = 'Read' where account_info_id = ?`;
   connection.query(updateNotif, [accID], (err, result) => {
@@ -2559,7 +2574,7 @@ app.put('/api/update-notif', (req, res) => {
   });
 });
 
-app.put('/api/access', (req, res) => {
+app.put('/access', (req, res) => {
   const accID = req.body.accID;
   const dashboard = req.body.dashboard;
   const reservation = req.body.reservation;
@@ -2583,7 +2598,7 @@ app.put('/api/access', (req, res) => {
   });
 });
 
-app.get('/api/modules', (req, res) => {
+app.get('/modules', (req, res) => {
   const accID = req.query.accID;
   const accessModule = 'select * from tbl_modules where account_info_id = ?';
   connection.query(accessModule, [accID], (err, result) => {
@@ -2595,7 +2610,7 @@ app.get('/api/modules', (req, res) => {
   });
 });
 
-app.get('/api/fetch-qr-code', (req, res) => {
+app.get('/fetch-qr-code', (req, res) => {
   const accID = req.query.accID;
   const fetchQR = `select qrcode, name from tbl_membership where account_info_id = ?`;
   connection.query(fetchQR, [accID], (err, result) => {
@@ -2646,5 +2661,11 @@ const autoUpdateData = () => {
 
 // Run the auto-update function once every day
 setInterval(autoUpdateData, 24 * 60 * 60 * 1000);
+
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
 
 module.exports = connection;

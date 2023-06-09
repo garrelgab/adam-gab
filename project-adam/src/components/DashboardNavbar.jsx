@@ -4,9 +4,9 @@ import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { Link as LinkRouter } from 'react-router-dom';
 const DashboardNavbar = (props) => {
-    function capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+    // function capitalizeFirstLetter(str) {
+    //     return str.charAt(0).toUpperCase() + str.slice(1);
+    // }
     const userID = props.id;
     const [nav, setNav] = useState(false);
     const [navSettings, setNavSettings] = useState(false);
@@ -48,7 +48,7 @@ const DashboardNavbar = (props) => {
         setNavSettings(false);
     }
     const handleLogout = () => {
-        axios.put('http://localhost:3001/api/update-attendance')
+        axios.put('http://localhost:3001/update-attendance')
         .then(response => {
 
         })
@@ -59,7 +59,7 @@ const DashboardNavbar = (props) => {
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const fetchAccountName = () => {
-        axios.get('http://localhost:3001/api/account-name', {
+        axios.get('http://localhost:3001/account-name', {
             params: {
                 accID: userID,
             }
@@ -85,7 +85,7 @@ const DashboardNavbar = (props) => {
     const [announcement, setAnnounce] = useState(false);
     const fetchAccessModule = () => {
         axios
-        .get('http://localhost:3001/api/modules', {
+        .get('http://localhost:3001/modules', {
             params: {
               accID: userID,
             },
@@ -161,7 +161,7 @@ const DashboardNavbar = (props) => {
                 <AiOutlineClose size={30} onClick={handleNav} className='cursor-pointer ml-[5%]'/>
             </div>
             <div className='mb-[20px] md:mb-[30px] justify-center items-center flex border-b border-gray-500 mx-[40px]'>
-                <h1 className='my-[30px] md:my-[40px] font-bold text-[20px] md:text-[30px]'>{capitalizeFirstLetter(fname)}</h1>
+                <h1 className='my-[30px] md:my-[40px] font-bold text-[20px] md:text-[30px]'>{fname}</h1>
             </div>
             <ul className=''>
                 {/* <LinkRouter to='/dashboard' state={userID} onClick={handleNav}>

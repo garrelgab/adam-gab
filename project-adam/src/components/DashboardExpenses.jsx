@@ -14,7 +14,7 @@ const DashboardExpenses = () => {
       ]
     useEffect(() => {
         const fetchData = () => {
-            axios.get("http://localhost:3001/api/expenses")
+            axios.get("http://localhost:3001/expenses")
             .then((response) => {
                 const rows = response.data.map(item => ({
                 id: item.expenses_id,
@@ -35,7 +35,7 @@ const DashboardExpenses = () => {
         fetchData();
     }, []);
     const fetchData = () => {
-        axios.get("http://localhost:3001/api/expenses")
+        axios.get("http://localhost:3001/expenses")
         .then((response) => {
             const rows = response.data.map(item => ({
             id: item.expenses_id,
@@ -58,7 +58,7 @@ const DashboardExpenses = () => {
             alert('Please fill up empty fields.');
             return;
         }
-        axios.post('http://localhost:3001/api/add-expenses', {
+        axios.post('http://localhost:3001/add-expenses', {
             desc: description,
             price: price,
         })

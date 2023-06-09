@@ -51,7 +51,7 @@ const DashboardSalesReport = () => {
 
     const fetchSales = () => {
       //Daily
-      axios.get("http://localhost:3001/api/daily-sales")
+      axios.get("http://localhost:3001/daily-sales")
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
@@ -67,7 +67,7 @@ const DashboardSalesReport = () => {
     };
     const fetchWeekly = () => {
       //Weekly
-      axios.get("http://localhost:3001/api/weekly-sales")
+      axios.get("http://localhost:3001/weekly-sales")
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
@@ -84,7 +84,7 @@ const DashboardSalesReport = () => {
     };
     const fetchMonthly = () => {
       //Monthly
-      axios.get("http://localhost:3001/api/monthly-sales")
+      axios.get("http://localhost:3001/monthly-sales")
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
@@ -101,7 +101,7 @@ const DashboardSalesReport = () => {
     };
     const fetchYearly = () => {
       //Yearly
-      axios.get("http://localhost:3001/api/yearly-sales")
+      axios.get("http://localhost:3001/yearly-sales")
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
@@ -117,7 +117,7 @@ const DashboardSalesReport = () => {
     };
 
     const fetchSalesReport = () => {
-      axios.get("http://localhost:3001/api/sales-report")
+      axios.get("http://localhost:3001/sales-report")
       .then((response) => {
         const rows = response.data.map(item => ({
           id: item.sales_report_id,
@@ -162,7 +162,7 @@ const DashboardSalesReport = () => {
 
     const fetchSalesReportByDateRange = (startDate, endDate) => {
       axios
-        .get("http://localhost:3001/api/filter-sales-report", {
+        .get("http://localhost:3001/filter-sales-report", {
           params: {
             startDate: startDate,
             endDate: endDate,

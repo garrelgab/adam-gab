@@ -19,7 +19,7 @@ const DashboardAttendance = () => {
     {field: 'date', headerName: 'Date', width: 200},
   ];
   const fetchData = () => {
-    axios.get("http://localhost:3001/api/attendance")
+    axios.get("http://localhost:3001/attendance")
     .then((response) => {
         const rows = response.data.map(item => ({
         id: item.attendance_id,

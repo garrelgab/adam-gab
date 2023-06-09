@@ -83,7 +83,7 @@ const DashboardGCash = () => {
 
     if(row.desc === 'Monthly Session')
     {
-      axios.post('http://localhost:3001/api/add-membership', {
+      axios.post('http://localhost:3001/add-membership', {
         accID: row.accountID,
         amount: row.amount,
         referenceNumber: row.refNum,
@@ -100,7 +100,7 @@ const DashboardGCash = () => {
     }
     else if(row.desc === 'Reservation Payment') {
       const status = 'Pending';
-      axios.put('http://localhost:3001/api/hold', {
+      axios.put('http://localhost:3001/hold', {
         proofID: row.id,
         reservationStatus: status,
         accID: row.accountID,
@@ -118,7 +118,7 @@ const DashboardGCash = () => {
     }
   };
   const fetchData = () => {
-    axios.get('http://localhost:3001/api/gcash')
+    axios.get('http://localhost:3001/gcash')
     .then(response => {
       const rows = response.data.map(item => ({
         id: item.proof_of_payment_id,

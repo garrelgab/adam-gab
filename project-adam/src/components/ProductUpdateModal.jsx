@@ -17,7 +17,7 @@ const ProductUpdateModal = (props) => {
     }; 
     
     const fetchStock = () => {
-        axios.get('http://localhost:3001/api/product-stock', {
+        axios.get('http://localhost:3001/product-stock', {
             params: {
                 prodID: prodID,
             }
@@ -39,7 +39,7 @@ const ProductUpdateModal = (props) => {
             alert('Not enough stocks');
             return;
         }
-        axios.put('http://localhost:3001/api/update-order-qty', {
+        axios.put('http://localhost:3001/update-order-qty', {
             prodID: prodID,
             prodQty: qty,
             prodPrice: price * qty,

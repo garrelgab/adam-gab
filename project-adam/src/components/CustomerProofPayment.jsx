@@ -22,7 +22,7 @@ const CustomerProofPayment = (props) => {
     {field: 'time', headerName: 'Time', flex: 1},
   ];
   const fetchPaymentHistory = () => {
-    axios.get('http://localhost:3001/api/customer-payment-history', {
+    axios.get('http://localhost:3001/customer-payment-history', {
       params: {
         accID: userID,
       }
@@ -74,7 +74,7 @@ const CustomerProofPayment = (props) => {
       alert('Please fill up the empty fields.');
       return;
     }
-    axios.post('http://localhost:3001/api/add-proof-of-payment', {
+    axios.post('http://localhost:3001/add-proof-of-payment', {
       userID: userID,
       desc: description,
       refNum: referenceNum,

@@ -44,7 +44,7 @@ const UserAccountCustomer = (props) => {
   const handleAccount = (id, status, name) => {
 
     if(status === 'Active'){
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
         accID: id,
         status: inactive,
       })
@@ -57,7 +57,7 @@ const UserAccountCustomer = (props) => {
         console.log(error);
       })
     } else {
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
           accID: id,
           status: active,
         })

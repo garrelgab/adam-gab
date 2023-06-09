@@ -42,7 +42,7 @@ const FAQs = () => {
     // { field: 'description', headerName: 'Description', width: 650 },
   ];
   const fetchOptions = () => {
-    axios.get('http://localhost:3001/api/option-faq')
+    axios.get('http://localhost:3001/option-faq')
     .then((response) => {
       setOptions(response.data);
     })
@@ -60,7 +60,7 @@ const FAQs = () => {
     setSelectedOptionName(selectedOption.label);
 
     if(selectedOption) {
-      axios.get('http://localhost:3001/api/desc-faq', {
+      axios.get('http://localhost:3001/desc-faq', {
         params: {
           descFaqID: selectedOption.value,
         }
@@ -79,12 +79,12 @@ const FAQs = () => {
       alert('Please fill out the empty field.');
       return;
     }
-    axios.put('http://localhost:3001/api/update-desc-faq', {
+    axios.put('http://localhost:3001/update-desc-faq', {
       FaqDescription: description,
       FaqID: selectOption,
     })
     .then(response => {
-      axios.get('http://localhost:3001/api/desc-faq', {
+      axios.get('http://localhost:3001/desc-faq', {
         params: {
           descFaqID: selectOption,
         }
@@ -114,7 +114,7 @@ const FAQs = () => {
     if(!editorContent){
         alert('Please fill up the empty field');
     }
-    axios.post('http://localhost:3001/api/add-faq', {
+    axios.post('http://localhost:3001/add-faq', {
         addFaq: name,
         addDescription: editorContent,
         addStatus: status,
@@ -140,7 +140,7 @@ const FAQs = () => {
   }
 
   const fetchData = () => {
-    axios.get("http://localhost:3001/api/faqs")
+    axios.get("http://localhost:3001/faqs")
     .then(response => {
         const rows = response.data.map(item => ({
         id: item.faq_id,

@@ -38,7 +38,7 @@ const InventoryAddProducts = () => {
     }, []);
 
     const fetchData = () => {
-        axios.get("http://localhost:3001/api/inventory")
+        axios.get("http://localhost:3001/inventory")
         .then((response) => {
             const rows = response.data.map(item => ({
             id: item.product_id,
@@ -65,7 +65,7 @@ const InventoryAddProducts = () => {
           alert('Please fill up all fields');
           return;
         }
-        axios.post('http://localhost:3001/api/product-check', {
+        axios.post('http://localhost:3001/product-check', {
             prodName: productName,
         })
         .then((response) => {
@@ -73,7 +73,7 @@ const InventoryAddProducts = () => {
         if (isTaken) {
             alert('Product name already exists');
         } else {
-            axios.post('http://localhost:3001/api/add-products', {
+            axios.post('http://localhost:3001/add-products', {
                 prodName: productName,
                 prodDesc: productDesc,
                 prodCateg: selectedOption,

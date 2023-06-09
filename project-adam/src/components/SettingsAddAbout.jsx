@@ -18,7 +18,7 @@ const SettingsAddAbout = (props) => {
         if(!editorContent){
             alert('Please fill up the empty field');
         }
-        axios.post('http://localhost:3001/api/add-about', {
+        axios.post('http://localhost:3001/add-about', {
             addAbout: name,
             addDescription: editorContent,
             addStatus: status,

@@ -7,55 +7,11 @@ import axios from 'axios'
 const Login = (props) => {
 
     let navigate = useNavigate();
-    // const location = useLocation();
-
     axios.defaults.withCredentials = true;
-
     const [email, setEmail] = useState('');
     const [pword, setPword] = useState('');
     const [loginStatus, setLoginStatus] = useState('');
-    // const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    // const userLogin = () => {
-
-    //     if(!email){
-    //         alert('Please fill out the empty field.');
-    //         return;
-    //     }
-    //     if(!pword){
-    //         alert('Please fill out the empty field.');
-    //         return;
-    //     }
-    //     Axios.post("http://localhost:3001/api/login", {
-    //         userEmail: email,
-    //         userPword: pword,
-    //     })
-    //     .then((response) => {
-    //         console.log(response);
-    //         if(response.data.message) {
-    //             setLoginStatus(response.data.message);
-    //         } else
-    //         {
-    //             if(response.data.role === 'admin'){
-    //                 // setIsLoggedIn(true);
-    //                 const id = response.data.account_id;
-    //                 console.log(id);
-    //                 navigate('/dashboard', { replace: true, state: id});
-    //                 props.setTrigger(false);
-    //             }
-    //             else{
-    //                 // setIsLoggedIn(true);
-    //                 const id = response.data.account_id;
-    //                 console.log(id);
-    //                 navigate('/customer', { replace: true, state: id});
-    //                 props.setTrigger(false);
-    //             }
-                
-    //         }
-    //     })
-    //     setEmail('');
-    //     setPword('');
-    // };
+    
     const userLogin = () => {
       if (!email) {
         alert('Please fill out the empty field.');
@@ -70,7 +26,7 @@ const Login = (props) => {
         userPword: pword,
       })
         .then((response) => {
-          console.log(response.data); // Add this line for debugging
+          // console.log(response.data); // Add this line for debugging
           if (response.data.message) {
             setLoginStatus(response.data.message);
           } else {

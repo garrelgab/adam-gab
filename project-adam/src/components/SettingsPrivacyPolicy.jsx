@@ -18,7 +18,7 @@ const SettingsPrivacyPolicy = () => {
     setSelectedOptionName(selectedOption.label);
 
     if(selectedOption) {
-      axios.get('http://localhost:3001/api/desc-privacy', {
+      axios.get('http://localhost:3001/desc-privacy', {
         params: {
           descPrivacyID: selectedOption.value,
         }
@@ -37,12 +37,12 @@ const SettingsPrivacyPolicy = () => {
       alert('Please fill out the empty field.');
       return;
     }
-    axios.put('http://localhost:3001/api/update-desc-privacy', {
+    axios.put('http://localhost:3001/update-desc-privacy', {
       PrivacyDescription: description,
       PrivacyID: selectOption,
     })
     .then(response => {
-      axios.get('http://localhost:3001/api/desc-privacy', {
+      axios.get('http://localhost:3001/desc-privacy', {
         params: {
           descPrivacyID: selectOption,
         }
@@ -71,7 +71,7 @@ const SettingsPrivacyPolicy = () => {
     if(!editorContent){
         alert('Please fill up the empty field');
     }
-    axios.post('http://localhost:3001/api/add-privacy', {
+    axios.post('http://localhost:3001/add-privacy', {
         addPrivacy: name,
         addDescription: editorContent,
         addStatus: status,
@@ -119,7 +119,7 @@ const SettingsPrivacyPolicy = () => {
     }
   ];
   useEffect(() => {
-    axios.get('http://localhost:3001/api/option-privacy')
+    axios.get('http://localhost:3001/option-privacy')
     .then((response) => {
       setOptions(response.data);
     })

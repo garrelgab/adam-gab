@@ -96,7 +96,7 @@ const CustomerHealthTips = () => {
     return `data:${mimeType};base64,${base64String}`;
   };
   // const fetchHealthGuide = () => {
-  //   axios.get('http://localhost:3001/api/health-guide')
+  //   axios.get('http://localhost:3001/health-guide')
   //   .then(response => {
   //     const rows = response.data.map(item => ({
   //         id: item.health_guide_id,
@@ -112,7 +112,7 @@ const CustomerHealthTips = () => {
   //   });
   // };
   const fetchHealthGuide = () => {
-    axios.get('http://localhost:3001/api/health-guide')
+    axios.get('http://localhost:3001/health-guide')
       .then(response => {
         const rows = response.data.map(async item => {
           const row = {
@@ -125,7 +125,7 @@ const CustomerHealthTips = () => {
   
           if (item.instruction_image) {
             try {
-              const imageResponse = await axios.get('http://localhost:3001/api/health-guide-image', {
+              const imageResponse = await axios.get('http://localhost:3001/health-guide-image', {
                 params: { healthID: item.health_guide_id }
               });
               const imageData = imageResponse.data[0].instruction_image;

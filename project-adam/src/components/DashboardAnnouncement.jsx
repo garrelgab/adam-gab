@@ -37,7 +37,7 @@ const DashboardAnnouncement = (props) => {
     ];
 
     const fetchAnnouncementData = () => {
-        axios.get('http://localhost:3001/api/announcement')
+        axios.get('http://localhost:3001/announcement')
         .then(response => {
             const rows = response.data.map(item => ({
                 id: item.announcement_id,
@@ -53,7 +53,7 @@ const DashboardAnnouncement = (props) => {
         })
     };
     const handleAddAnnouncement = () => {
-        axios.post('http://localhost:3001/api/add-announcement', {
+        axios.post('http://localhost:3001/add-announcement', {
             annTitle: capitalizeFirstLetter(annTitle),
             annContent: capitalizeFirstLetter(editorContent),
             accID: userID,

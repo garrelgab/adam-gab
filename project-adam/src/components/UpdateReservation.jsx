@@ -8,7 +8,7 @@ const UpdateReservation = (props) => {
     const reservationID = props.reserveID;
     const reservationStatus = 'Approved';
     const handleUpdateReservation = () => {
-        axios.put('http://localhost:3001/api/approved', {
+        axios.put('http://localhost:3001/approved', {
             status: reservationStatus, 
             id: reservationID,
         })

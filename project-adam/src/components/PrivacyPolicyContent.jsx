@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 const PrivacyPolicyContent = () => {
   const [privacy, setPrivacy] = useState([]);
   const fetchPrivacy = () => {
-    axios.get('http://localhost:3001/api/privacy-policy')
+    axios.get('http://localhost:3001/privacy-policy')
     .then(response => {
       setPrivacy(response.data);
     })

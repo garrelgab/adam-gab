@@ -31,24 +31,27 @@ const DashboardReservation = () => {
   const [approvedCount, setApprovedCount] = useState(null);
 
   const fetchCounts = () => {
-    fetch('http://localhost:3001/api/pending-count')
-    .then(response => response.json())
-    .then(data => setPendingCount(data.count))
+    axios.get('http://localhost:3001/pending-count')
+    .then(response => {
+      setPendingCount(response.data[0].count);
+    })
     .catch(error => console.log(error));
 
-    fetch('http://localhost:3001/api/event-count')
-    .then(response => response.json())
-    .then(data => setEventCount(data.count))
+    axios.get('http://localhost:3001/event-count')
+    .then(response => {
+      setEventCount(response.data[0].count);
+    })
     .catch(error => console.log(error));
 
-    fetch('http://localhost:3001/api/approved-count')
-    .then(response => response.json())
-    .then(data => setApprovedCount(data.count))
+    axios.get('http://localhost:3001/approved-count')
+    .then(response =>  {
+      setApprovedCount(response.data[0].count);
+    })
     .catch(error => console.log(error));
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/events/pending")
+    axios.get("http://localhost:3001/events/pending")
     .then((response) => {
       setEvents(response.data);
     })

@@ -219,7 +219,7 @@ const CreateAccount = (props) => {
             alert('Please check the terms and conditions.');
             return;
         }
-        Axios.post("http://localhost:3001/api/insert", {
+        Axios.post("http://localhost:3001/insert", {
             userFname: capitalizeFirstLetter(fname),
             userLname: capitalizeFirstLetter(lname),
             userAge: age,
@@ -318,9 +318,9 @@ const CreateAccount = (props) => {
                 <form className='md:flex md:flex-col-3'>
                     <div className='mt-[100px] md:mt-[10px] max-w-[350px] md:max-w-[100%] mx-auto'>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">First Name</label>
-                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='First Name' value={fname} onChange={handleInputChangeFirstName} required/>
+                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='First Name' value={fname} onChange={(e) => setFname(e.target.value)} required/>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
-                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={handleInputChangeLastName} required/>
+                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={(e) => setLname(e.target.value)} required/>
                         {/* <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label> */}
                         {/* <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md cursor-default focus:outline-none" placeholder={age ? age : 'Age'} value={age} readOnly required/> */}
                     </div>

@@ -87,7 +87,7 @@ const PosLocker = () => {
   }
 
   const fetchLocker = () => {
-    axios.get("http://localhost:3001/api/locker")
+    axios.get("http://localhost:3001/locker")
     .then((response) => {
         const rows = response.data.map(item => ({
         id: item.locker_id,
@@ -114,7 +114,7 @@ const PosLocker = () => {
       alert('Please fill up the empty field.');
       return;
     }
-    axios.post('http://localhost:3001/api/add-locker', {
+    axios.post('http://localhost:3001/add-locker', {
       name: customerName,
       contact: contact,
       key: selectOption,

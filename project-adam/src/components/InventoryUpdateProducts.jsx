@@ -80,7 +80,7 @@ const InventoryUpdateProducts = () => {
   ]
 
   const fetchData = () => {
-    axios.get("http://localhost:3001/api/inventory")
+    axios.get("http://localhost:3001/inventory")
     .then((response) => {
         const rows = response.data.map(item => ({
         id: item.product_id,
@@ -115,7 +115,7 @@ const InventoryUpdateProducts = () => {
     // alert(`Button clicked for row with id ${id}`);
     // alert(`Button clicked for row with id ${name}`);
     if(status === 'Archived'){
-      axios.put('http://localhost:3001/api/update-prod-status', {
+      axios.put('http://localhost:3001/update-prod-status', {
       prodID: id,
       newProdStatus: show,
       })
@@ -128,7 +128,7 @@ const InventoryUpdateProducts = () => {
       })
     }
     else{
-      axios.put('http://localhost:3001/api/update-prod-status', {
+      axios.put('http://localhost:3001/update-prod-status', {
       prodID: id,
       newProdStatus: archived,
       })
@@ -146,7 +146,7 @@ const InventoryUpdateProducts = () => {
     // alert(`Button clicked for row with id ${id}`);
     setAction(!action);
     setProdID(id);
-    axios.get('http://localhost:3001/api/price-inventory', {
+    axios.get('http://localhost:3001/price-inventory', {
       params: {
         prodID: id,
       }
@@ -175,7 +175,7 @@ const InventoryUpdateProducts = () => {
       return;
     }
     
-    axios.put('http://localhost:3001/api/update-inventory', {
+    axios.put('http://localhost:3001/update-inventory', {
         prodID: prodID,
         newProdPrice: productPrice,
         newProdQty: productQty,
@@ -199,7 +199,7 @@ const InventoryUpdateProducts = () => {
 
 
   const fetchOptions = () => {
-    axios.get('http://localhost:3001/api/option-inventory')
+    axios.get('http://localhost:3001/option-inventory')
     .then((response) => {
       setOptions(response.data);
     })
@@ -212,7 +212,7 @@ const InventoryUpdateProducts = () => {
   //   setSelectedOption(selectedOption.value);
   //   setSelectedOptionName(selectedOption.label)
   //   if(selectedOption){
-  //     axios.get('http://localhost:3001/api/price-inventory', {
+  //     axios.get('http://localhost:3001/price-inventory', {
   //       params: {
   //         prodID: selectedOption.value,
   //       }

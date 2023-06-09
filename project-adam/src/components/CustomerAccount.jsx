@@ -10,7 +10,7 @@ const CustomerAccount = (props) => {
   const [modalImageData, setModalImageData] = useState(null);
   const [name, setName] = useState(null);
     const fetchQRCode = () => {
-        axios.get('http://localhost:3001/api/fetch-qr-code', {
+        axios.get('http://localhost:3001/fetch-qr-code', {
             params: {
                 accID: userID,
             }

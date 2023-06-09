@@ -4,7 +4,7 @@ import axios from 'axios'
 const Company = () => {
     const [description, setDescription] = useState('');
     const fetchData = () => {
-        axios.get('http://localhost:3001/api/desc-about')
+        axios.get('http://localhost:3001/desc-about')
         .then(response => {
             const plainText = response.data[0].description.replace(/<\/?[^>]+(>|$)/g, '');
             setDescription(plainText);

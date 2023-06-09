@@ -30,7 +30,7 @@ const CustomerPersonalInformation = (props) => {
     }
 
     const handleUpdateCustomerInfo = () => {
-        axios.put('http://localhost:3001/api/customer-info', {
+        axios.put('http://localhost:3001/customer-info', {
             customerFname: fname,
             customerLname: lname,
             customerID: props.id,
@@ -48,7 +48,7 @@ const CustomerPersonalInformation = (props) => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/get-info', {
+        axios.get('http://localhost:3001/get-info', {
             params: {
                 customerID: props.id,
             }

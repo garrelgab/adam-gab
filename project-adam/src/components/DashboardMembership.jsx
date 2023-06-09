@@ -45,7 +45,7 @@ const DashboardMembership = () => {
   const[rows, setRows] = useState([]);
 
   const fetchCustomerUser = () => {
-    Axios.get("http://localhost:3001/api/members")
+    Axios.get("http://localhost:3001/members")
     .then((response) => {
       const rows = response.data.map(item => ({
         id: item.account_info_id,
@@ -75,7 +75,7 @@ const DashboardMembership = () => {
 
     // alert(`${status}`);
     if(status === 'Active'){
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
         accID: id,
         status: inactive,
       })
@@ -88,7 +88,7 @@ const DashboardMembership = () => {
         console.log(error);
       })
     } else {
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
           accID: id,
           status: active,
         })

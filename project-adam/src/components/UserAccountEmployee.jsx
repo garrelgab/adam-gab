@@ -89,7 +89,7 @@ const UserAccountEmployee = (props) => {
   const handleAccount = (id, status, name) => {
 
     if(status === 'Active'){
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
         accID: id,
         status: inactive,
       })
@@ -102,7 +102,7 @@ const UserAccountEmployee = (props) => {
         console.log(error);
       })
     } else {
-      axios.put('http://localhost:3001/api/update-account-status', {
+      axios.put('http://localhost:3001/update-account-status', {
           accID: id,
           status: active,
         })
@@ -121,7 +121,7 @@ const UserAccountEmployee = (props) => {
   //   setOpenModal(!openModal);
   // }
   const fetchEmployee = () => {
-    axios.get('http://localhost:3001/api/employee-list')
+    axios.get('http://localhost:3001/employee-list')
     .then(response => {
       const rows = response.data.map(item => ({
         id: item.account_info_id,
@@ -146,7 +146,7 @@ const UserAccountEmployee = (props) => {
   //     alert('Please fill up the empty field.');
   //     return;
   //   }
-  //   axios.post('http://localhost:3001/api/add-role', {
+  //   axios.post('http://localhost:3001/add-role', {
   //     roleName: roleName,
   //     dashboard: dashboard,
   //     reservation: reservation,

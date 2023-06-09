@@ -51,7 +51,7 @@ const AddReservation = (props) => {
   //     alert('Reservation duration cannot exceed 3 hours.');
   //     return;
   //   }  
-  //   axios.post("http://localhost:3001/api/reservation", {
+  //   axios.post("http://localhost:3001/reservation", {
   //     // customerName: name,
   //     customerID: id,
   //     noPax: pax,

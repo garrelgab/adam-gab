@@ -28,7 +28,7 @@ const DashboardContent = () => {
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/api/events")
+    axios.get("http://localhost:3001/events")
     .then((response) => {
       setEvents(response.data);
     })
@@ -40,34 +40,42 @@ const DashboardContent = () => {
   const [membersCount, setMembersCount] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/members-count')
-      .then(response => response.json())
-      .then(data => setMembersCount(data.count))
+    axios.get('http://localhost:3001/members-count')
+      .then(response => {
+        setMembersCount(response.data[0].count);
+        // console.log(response);
+      })
+      // .then(data => (data.count))
       .catch(error => console.log(error));
   }, []);
 
   const [pendingCount, setPendingCount] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/pending-count')
-      .then(response => response.json())
-      .then(data => setPendingCount(data.count))
+    axios.get('http://localhost:3001/pending-count')
+      .then(response => {
+        setPendingCount(response.data[0].count);
+        // console.log(response);
+      })
+      // .then(data => setPendingCount(data.count))
       .catch(error => console.log(error));
   }, []);
 
   const [eventCount, setEventCount] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/event-count')
-      .then(response => response.json())
-      .then(data => setEventCount(data.count))
+    axios.get('http://localhost:3001/event-count')
+      .then(response => {
+        setEventCount(response.data[0].count);
+        // console.log(response);
+      })
       .catch(error => console.log(error));
   }, []);
 
   const [totalSales, setTotalSales] = useState(null);
 
   const fetchSumSales = () => {
-    axios.get('http://localhost:3001/api/fetch-total-sales')
+    axios.get('http://localhost:3001/fetch-total-sales')
     .then(response => {
       setTotalSales(formatPrice(response.data[0].total));
     })
@@ -79,7 +87,7 @@ const DashboardContent = () => {
   const [totalSalesToday, setTotalSalesToday] = useState(null);
 
   const fetchSumSalesToday = () => {
-    axios.get('http://localhost:3001/api/fetch-total-sales-today')
+    axios.get('http://localhost:3001/fetch-total-sales-today')
     .then(response => {
       setTotalSalesToday(formatPrice(response.data[0].total));
     })
@@ -124,37 +132,37 @@ const DashboardContent = () => {
   const [lineGraphData, setLineGraphData] = useState(null);
 
   const fetchSalesLineGraph = () => {
-    axios
-      .get('http://localhost:3001/api/sales-report')
-      .then(response => {
-        const salesData = response.data;
+    // axios
+    //   .get('http://localhost:3001/sales-report')
+    //   .then(response => {
+    //     const salesData = response.data;
 
-        // Process the sales data and convert it to the desired format
-        const updatedLineGraphData = {
-          labels: [],
-          datasets: [
-            {
-              label: 'Sales',
-              data: [],
-              borderColor: 'rgba(75,192,192,1)',
-              backgroundColor: 'rgba(75,192,192,0.4)',
-            },
-          ],
-        };
+    //     // Process the sales data and convert it to the desired format
+    //     const updatedLineGraphData = {
+    //       labels: [],
+    //       datasets: [
+    //         {
+    //           label: 'Sales',
+    //           data: [],
+    //           borderColor: 'rgba(75,192,192,1)',
+    //           backgroundColor: 'rgba(75,192,192,0.4)',
+    //         },
+    //       ],
+    //     };
 
-        // Iterate over the sales data and populate the updatedLineGraphData
-        salesData.forEach((item) => {
-          updatedLineGraphData.labels.push(item.date);
-          updatedLineGraphData.datasets[0].data.push(item.total);
-        });
+    //     // Iterate over the sales data and populate the updatedLineGraphData
+    //     salesData.forEach((item) => {
+    //       updatedLineGraphData.labels.push(item.date);
+    //       updatedLineGraphData.datasets[0].data.push(item.total);
+    //     });
 
-        if (updatedLineGraphData.labels.length > 0 && updatedLineGraphData.datasets[0].data.length > 0) {
-          setLineGraphData(updatedLineGraphData);
-        }
-      })
-      .catch(error => {
-        console.log('Failed to fetch sales report', error);
-      });
+    //     if (updatedLineGraphData.labels.length > 0 && updatedLineGraphData.datasets[0].data.length > 0) {
+    //       setLineGraphData(updatedLineGraphData);
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log('Failed to fetch sales report', error);
+    //   });
   };
   function getWeekFromDate(dateString) {
     const date = new Date(dateString);
@@ -166,7 +174,7 @@ const DashboardContent = () => {
 
   // const fetchSalesLineGraph = () => {
   //   axios
-  //     .get('http://localhost:3001/api/sales-report')
+  //     .get('http://localhost:3001/sales-report')
   //     .then(response => {
   //       const salesData = response.data;
   
@@ -223,7 +231,7 @@ const DashboardContent = () => {
   };
   // const fetchSalesLineGraph = () => {
   //   axios
-  //     .get('http://localhost:3001/api/sales-report')
+  //     .get('http://localhost:3001/sales-report')
   //     .then(response => {
   //       const salesData = response.data;
   
@@ -278,39 +286,39 @@ const DashboardContent = () => {
 
   const [barGraphData, setBarGraphData] = useState(null);
   const fetchSalesBarGraph = () => {
-    axios
-      .get('http://localhost:3001/api/sales-report')
-      .then(response => {
-        const salesData = response.data;
+    // axios
+    //   .get('http://localhost:3001/sales-report')
+    //   .then(response => {
+    //     const salesData = response.data;
 
-        // Process the sales data and convert it to the desired format
-        const updatedBarGraphData = {
-          labels: [],
-          datasets: [
-            {
-              label: 'Sales',
-              data: [],
-              backgroundColor: [],
-              hoverBackgroundColor: [],
-            },
-          ],
-        };
+    //     // Process the sales data and convert it to the desired format
+    //     const updatedBarGraphData = {
+    //       labels: [],
+    //       datasets: [
+    //         {
+    //           label: 'Sales',
+    //           data: [],
+    //           backgroundColor: [],
+    //           hoverBackgroundColor: [],
+    //         },
+    //       ],
+    //     };
 
-        // Iterate over the sales data and populate the updatedBarGraphData
-        salesData.forEach((item) => {
-          updatedBarGraphData.labels.push(item.category);
-          updatedBarGraphData.datasets[0].data.push(item.total);
-          updatedBarGraphData.datasets[0].backgroundColor.push('rgba(75,192,192,0.4)');
-          updatedBarGraphData.datasets[0].hoverBackgroundColor.push('rgba(75,192,192,1)');
-        });
+    //     // Iterate over the sales data and populate the updatedBarGraphData
+    //     salesData.forEach((item) => {
+    //       updatedBarGraphData.labels.push(item.category);
+    //       updatedBarGraphData.datasets[0].data.push(item.total);
+    //       updatedBarGraphData.datasets[0].backgroundColor.push('rgba(75,192,192,0.4)');
+    //       updatedBarGraphData.datasets[0].hoverBackgroundColor.push('rgba(75,192,192,1)');
+    //     });
 
-        if (updatedBarGraphData.labels.length > 0 && updatedBarGraphData.datasets[0].data.length > 0) {
-          setBarGraphData(updatedBarGraphData);
-        }
-      })
-      .catch(error => {
-        console.log('Failed to fetch sales report', error);
-      });
+    //     if (updatedBarGraphData.labels.length > 0 && updatedBarGraphData.datasets[0].data.length > 0) {
+    //       setBarGraphData(updatedBarGraphData);
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log('Failed to fetch sales report', error);
+    //   });
   };
   
   

@@ -4,7 +4,7 @@ import axios from 'axios'
 const ServiceOffer = () => {
     const [rows, setRows] = useState([]);
     const fetchData = () => {
-        axios.get('http://localhost:3001/api/service-offer')
+        axios.get('https://adamfitness.me/service-offer')
         .then(response => {
             setRows(response.data);
         })

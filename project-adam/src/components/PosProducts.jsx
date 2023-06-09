@@ -16,7 +16,7 @@ const PosProducts = () => {
   
 
   const fetchData = () => {
-    axios.get("http://localhost:3001/api/pos-inventory")
+    axios.get("http://localhost:3001/pos-inventory")
     .then((response) => {
         const rows = response.data.map(item => ({
         id: item.product_id,
@@ -117,7 +117,7 @@ const PosProducts = () => {
     setProdUpdateCategory(category);
   }
   const handleDelete = (id) => {
-    axios.delete("http://localhost:3001/api/void", {
+    axios.delete("http://localhost:3001/void", {
       params: {
         orderTempID: id,
       }
@@ -131,7 +131,7 @@ const PosProducts = () => {
     })
   }
   const fetchOrder = () => {
-    axios.get("http://localhost:3001/api/orders-temp")
+    axios.get("http://localhost:3001/orders-temp")
     .then((response) => {
       const rows1 = response.data.map(item => ({
       id: item.order_temp_id,
@@ -151,7 +151,7 @@ const PosProducts = () => {
   };
   const [total, setTotal] = useState(0);
   const fetchTotal = () => {
-    fetch('http://localhost:3001/api/sum-price')
+    fetch('http://localhost:3001/sum-price')
       .then(response => response.json())
       .then(data => {
         setTotal(data.total);
@@ -186,12 +186,12 @@ const PosProducts = () => {
 
     console.log(qty);
     console.log(ids);
-    axios.put('http://localhost:3001/api/update-products', {
+    axios.put('http://localhost:3001/update-products', {
       prodQty: qty,
       prodID: ids,
     })
     .then(response => {
-      axios.post('http://localhost:3001/api/add-orders', {
+      axios.post('http://localhost:3001/add-orders', {
         prodIDs: ids,
         prodNames: names,
         prodPrice: prices,
@@ -199,12 +199,12 @@ const PosProducts = () => {
         orderNum: randomNumbers,
       })
       .then(response => {
-        axios.post('http://localhost:3001/api/add-sales', {
+        axios.post('http://localhost:3001/add-sales', {
           orderNum: randomNumbers,
           total: total,
         })
         .then(response => {
-          axios.delete('http://localhost:3001/api/clean-order-temp')
+          axios.delete('http://localhost:3001/clean-order-temp')
             .then(response => {
               setChange(tendAmount- total);
               setTotal(0)
@@ -241,7 +241,7 @@ const PosProducts = () => {
   useEffect(() => {
     //Fetch Data Products
     // const fetchData = () => {
-    //   axios.get("http://localhost:3001/api/pos-inventory")
+    //   axios.get("http://localhost:3001/pos-inventory")
     //   .then((response) => {
     //       const rows = response.data.map(item => ({
     //       id: item.product_id,
@@ -257,7 +257,7 @@ const PosProducts = () => {
     //   });
     // };
     // const fetchOrder = () => {
-    //   axios.get("http://localhost:3001/api/orders-temp")
+    //   axios.get("http://localhost:3001/orders-temp")
     //   .then((response) => {
     //     const rows1 = response.data.map(item => ({
     //     id: item.product_id,

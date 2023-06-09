@@ -35,7 +35,7 @@ const CustomerAnnouncement = (props) => {
     ];
 
     const fetchAnnouncementData = () => {
-        axios.get('http://localhost:3001/api/announcement')
+        axios.get('http://localhost:3001/announcement')
         .then(response => {
             const rows = response.data.map(item => ({
                 id: item.announcement_id,
@@ -61,7 +61,7 @@ const CustomerAnnouncement = (props) => {
     ];
     
     const fetchNotificationData = () => {
-        axios.get('http://localhost:3001/api/notification', {
+        axios.get('http://localhost:3001/notification', {
             params: {
                 accID: userID,
             }
@@ -86,7 +86,7 @@ const CustomerAnnouncement = (props) => {
 
     const fetchUnreadNotifications = async () => {
         try {
-          const response = await axios.get('http://localhost:3001/api/unread-notif', {
+          const response = await axios.get('http://localhost:3001/unread-notif', {
             params: {
                 accID: userID,
             }
@@ -108,7 +108,7 @@ const CustomerAnnouncement = (props) => {
     return '';
     };
     const handleUpdateNotif = () => {
-        axios.put('http://localhost:3001/api/update-notif', {
+        axios.put('http://localhost:3001/update-notif', {
             accID: userID,
         })
         .then(response => {

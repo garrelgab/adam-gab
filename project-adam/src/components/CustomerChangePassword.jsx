@@ -20,7 +20,7 @@ const CustomerChangePassword = (props) => {
     }
 
     axios
-      .put('http://localhost:3001/api/customer-pass', {
+      .put('http://localhost:3001/customer-pass', {
         customerID: props.id,
         currentPword: currentPword,
         newPword: newPword,
@@ -53,7 +53,7 @@ const CustomerChangePassword = (props) => {
   //     return;
   //   }
 
-  //   axios.put('http://localhost:3001/api/customer-pass', {
+  //   axios.put('http://localhost:3001/customer-pass', {
   //     customerPword: pword,
   //     customerCPword: cpword,
   //     customerID: props.id,

@@ -19,7 +19,7 @@ const SettingsAddPrivacy = (props) => {
         if(!editorContent){
             alert('Please fill up the empty field');
         }
-        axios.post('http://localhost:3001/api/add-privacy', {
+        axios.post('http://localhost:3001/add-privacy', {
             addPrivacy: name,
             addDescription: editorContent,
             addStatus: status,

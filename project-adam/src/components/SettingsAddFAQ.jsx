@@ -16,7 +16,7 @@ const SettingsAddFAQ = (props) => {
     if(!editorContent){
         alert('Please fill up the empty field');
     }
-    axios.post('http://localhost:3001/api/add-faq', {
+    axios.post('http://localhost:3001/add-faq', {
         addFaq: name,
         addDescription: editorContent,
         addStatus: status,

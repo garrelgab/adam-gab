@@ -91,7 +91,7 @@ const DashboardHealthTips = (props) => {
         return `data:image/png;base64,${base64String}`;
     };
     // const fetchHealthGuide = () => {
-    //     axios.get('http://localhost:3001/api/health-guide')
+    //     axios.get('http://localhost:3001/health-guide')
     //       .then(response => {
     //         const rows = response.data.map(item => ({
     //             id: item.health_guide_id,
@@ -108,7 +108,7 @@ const DashboardHealthTips = (props) => {
     // };
 
     const fetchHealthGuide = () => {
-      axios.get('http://localhost:3001/api/health-guide')
+      axios.get('http://localhost:3001/health-guide')
         .then(response => {
           const rows = response.data.map(async item => {
             const row = {
@@ -121,7 +121,7 @@ const DashboardHealthTips = (props) => {
     
             if (item.instruction_image) {
               try {
-                const imageResponse = await axios.get('http://localhost:3001/api/health-guide-image', {
+                const imageResponse = await axios.get('http://localhost:3001/health-guide-image', {
                   params: { healthID: item.health_guide_id }
                 });
                 const imageData = imageResponse.data[0].instruction_image;
@@ -175,7 +175,7 @@ const DashboardHealthTips = (props) => {
             alert('Please fill up the empty field.');
             return;
         }
-        axios.post('http://localhost:3001/api/add-health-guide', { 
+        axios.post('http://localhost:3001/add-health-guide', { 
             imageData: selectedImage,
             name: name,
             equipment: equipment,

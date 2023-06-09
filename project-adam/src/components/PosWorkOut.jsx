@@ -29,7 +29,7 @@ const PosWorkOut = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      axios.get("http://localhost:3001/api/workouts")
+      axios.get("http://localhost:3001/workouts")
       .then((response) => {
           const rows = response.data.map(item => ({
           id: item.workout_id,
@@ -53,7 +53,7 @@ const PosWorkOut = () => {
     fetchData();
   }, []);
   const fetchData = () => {
-    axios.get("http://localhost:3001/api/workouts")
+    axios.get("http://localhost:3001/workouts")
     .then((response) => {
         const rows = response.data.map(item => ({
         id: item.workout_id,
@@ -78,12 +78,12 @@ const PosWorkOut = () => {
       alert('Please fill up the empty fields.');
       return;
     }
-    // axios.post('http://localhost:3001/api/add-workout', {
+    // axios.post('http://localhost:3001/add-workout', {
     //   name: customerName,
     //   type: selectedOption,
     //   price: price,
     // })
-    axios.post('http://localhost:3001/api/add-workout', {
+    axios.post('http://localhost:3001/add-workout', {
       name: customerName,
       // type: selectedOption,
       // price: price,

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 const TermsAndConditionContent = () => {
   const [terms, setTerms] = useState([]);
   const fetchTermsAndConditions = () => {
-    axios.get('http://localhost:3001/api/terms')
+    axios.get('http://localhost:3001/terms')
     .then(response => {
       setTerms(response.data)
     })

@@ -19,7 +19,7 @@ const EmployeeAccess = (props) => {
     const id = props.id;
     const fetchAccessModule = () => {
         axios
-        .get('http://localhost:3001/api/modules', {
+        .get('http://localhost:3001/modules', {
             params: {
               accID: id,
             },
@@ -77,7 +77,7 @@ const EmployeeAccess = (props) => {
     };
       
     const handleConfirm = () => {
-        axios.put('http://localhost:3001/api/access', {
+        axios.put('http://localhost:3001/access', {
             accID: id,
             dashboard: dashboard,
             reservation: reservation,

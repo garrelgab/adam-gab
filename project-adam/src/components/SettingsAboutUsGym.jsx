@@ -13,7 +13,7 @@ const SettingsAboutUsGym = () => {
   const [selectOptionName, setSelectedOptionName] = useState(null);
   
   const handleConfirm = () => {
-    axios.post('http://localhost:3001/api/add-about', {
+    axios.post('http://localhost:3001/add-about', {
       addDescription: description,
     })
     .then(response => {
@@ -25,7 +25,7 @@ const SettingsAboutUsGym = () => {
   };
 
   const fetchData = () => {
-    axios.get('http://localhost:3001/api/desc-about')
+    axios.get('http://localhost:3001/desc-about')
     .then(response => {
       setDescription(response.data[0].description);
     })
@@ -37,7 +37,7 @@ const SettingsAboutUsGym = () => {
     fetchData();
   }, []);
   // useEffect(() => {
-  //   axios.get('http://localhost:3001/api/option-about')
+  //   axios.get('http://localhost:3001/option-about')
   //   .then((response) => {
   //     setOptions(response.data);
   //   })
@@ -51,7 +51,7 @@ const SettingsAboutUsGym = () => {
   //   setSelectedOptionName(selectedOption.label);
 
   //   if(selectedOption) {
-  //     axios.get('http://localhost:3001/api/desc-about', {
+  //     axios.get('http://localhost:3001/desc-about', {
   //       params: {
   //         descAboutID: selectedOption.value,
   //       }
@@ -70,12 +70,12 @@ const SettingsAboutUsGym = () => {
   //     alert('Please fill out the empty field.');
   //     return;
   //   }
-  //   axios.put('http://localhost:3001/api/update-desc-about', {
+  //   axios.put('http://localhost:3001/update-desc-about', {
   //     AboutDescription: description,
   //     AboutID: selectOption,
   //   })
   //   .then(response => {
-  //     axios.get('http://localhost:3001/api/desc-about', {
+  //     axios.get('http://localhost:3001/desc-about', {
   //       params: {
   //         descAboutID: selectOption,
   //       }

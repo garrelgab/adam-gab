@@ -17,7 +17,7 @@ const SettingsServiceOffer = (props) => {
     const [name, setName] = useState('');
 
     const fetchData = () => {
-        axios.get('http://localhost:3001/api/service-offer')
+        axios.get('http://localhost:3001/service-offer')
         .then(response => {
             const rows = response.data.map(item => ({
                 id: item.service_offer_id,
@@ -31,7 +31,7 @@ const SettingsServiceOffer = (props) => {
         });
     }
     const handleAddServiceOffer = () => {
-        axios.post('http://localhost:3001/api/add-service-offer', {
+        axios.post('http://localhost:3001/add-service-offer', {
             name: name,
             desc: editorContent,
         })
@@ -57,7 +57,7 @@ const SettingsServiceOffer = (props) => {
         setSelectedOptionName(selectedOption.label);
     
         if(selectedOption) {
-          axios.get('http://localhost:3001/api/desc-service', {
+          axios.get('http://localhost:3001/desc-service', {
             params: {
                 descServiceID: selectedOption.value,
             }
@@ -72,7 +72,7 @@ const SettingsServiceOffer = (props) => {
     };
 
     const fetchOption = () => {
-        axios.get('http://localhost:3001/api/option-service')
+        axios.get('http://localhost:3001/option-service')
         .then((response) => {
         setOptions(response.data);
         })
@@ -86,12 +86,12 @@ const SettingsServiceOffer = (props) => {
           alert('Please fill out the empty field.');
           return;
         }
-        axios.put('http://localhost:3001/api/update-desc-service', {
+        axios.put('http://localhost:3001/update-desc-service', {
             ServiceDescription: description,
             serviceID: selectOption,
         })
         .then(response => {
-          axios.get('http://localhost:3001/api/desc-service', {
+          axios.get('http://localhost:3001/desc-service', {
             params: {
                 descServiceID: selectOption,
             }

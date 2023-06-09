@@ -5,7 +5,7 @@ const HomeFAQsContent = () => {
 
   const [faqs, setFaqs] = useState([]);
   const fetchFaqs = () => {
-    axios.get('http://localhost:3001/api/faqs')
+    axios.get('http://localhost:3001/faqs')
     .then(response => {
       setFaqs(response.data);
     })
