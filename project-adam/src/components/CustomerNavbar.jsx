@@ -37,7 +37,7 @@ const CustomerNavbar = (props) => {
     }
 
     const handleLogout = () => {
-        axios.put('https://adamfitness.me/update-attendance')
+        axios.put('http://localhost:3001/update-attendance')
         .then(response => {
 
         })
@@ -48,7 +48,7 @@ const CustomerNavbar = (props) => {
     const [fname, setFname] = useState('');
     const [lname, setLname] = useState('');
     const fetchAccountName = () => {
-        axios.get('https://adamfitness.me/account-name', {
+        axios.get('http://localhost:3001/account-name', {
             params: {
                 accID: userID,
             }
@@ -64,7 +64,7 @@ const CustomerNavbar = (props) => {
     const [unreadNotifications, setUnreadNotifications] = useState(0);
     const fetchUnreadNotifications = async () => {
         try {
-          const response = await axios.get('https://adamfitness.me/unread-notif', {
+          const response = await axios.get('http://localhost:3001/unread-notif', {
             params: {
                 accID: userID,
             }
