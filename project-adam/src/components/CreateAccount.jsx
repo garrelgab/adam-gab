@@ -321,8 +321,8 @@ const CreateAccount = (props) => {
                         <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='First Name' value={fname} onChange={(e) => setFname(e.target.value)} required/>
                         <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Last Name</label>
                         <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md focus:outline-none" placeholder='Last Name' value={lname} onChange={(e) => setLname(e.target.value)} required/>
-                        {/* <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label> */}
-                        {/* <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md cursor-default focus:outline-none" placeholder={age ? age : 'Age'} value={age} readOnly required/> */}
+                        <label className="block mb-1 text-md md:text-lg mx-auto text-left font-light ">Age</label>
+                        <input type="text" className="shadow-lg block w-[350px] p-4 text-gray-900 rounded-lg bg-gray-50 sm:text-md cursor-default focus:outline-none" placeholder={age ? age : 'Age'} value={age} readOnly required/>
                     </div>
 
                     <div className='mt-[10px] md:mt-[10px] max-w-[350px] mx-auto'>

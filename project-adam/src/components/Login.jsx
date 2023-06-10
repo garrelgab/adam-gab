@@ -21,7 +21,8 @@ const Login = (props) => {
         alert('Please fill out the empty field.');
         return;
       }
-      axios.post("http://localhost:3001/login", {
+      axios.post(`http://localhost:3001/login`, {
+      // axios.post(`${process.env.API_URL}/login`, {
         userEmail: email,
         userPword: pword,
       })
@@ -72,7 +73,7 @@ const Login = (props) => {
             </div>
             <div className='mt-[50px] md:mt-[20px] text-center'>
                 <button className='shadow-lg w-[350px] p-3 text-xl font-bold rounded-xl text-[#1ca350] hover:text-white bg-white hover:bg-gray-500 ease-in-out duration-300' onClick={userLogin}>Login</button>
-                <h1 className="block mb-1 text-l md:text-l text-center font-bold text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-white">Forget Password?</h1>
+                <h1 className="block mb-1 text-l md:text-l text-center font-bold text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-white">Forgot Password?</h1>
                 <LinkRouter to="/signup" onClick={() => props.setTrigger(false)}>
                     <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-bold rounded-xl bg-white text-[#1ca350] hover:text-white hover:bg-gray-500 md:mb-[50px] ease-in-out duration-300'>Create Account</button>
                 </LinkRouter>

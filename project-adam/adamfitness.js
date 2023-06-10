@@ -10,6 +10,7 @@ const path = require('path');
 const app = express();
 const bcrypt = require('bcrypt');
 const port = process.env.PORT || 3001;
+const apiUrl = process.env.PUBLIC_URL;
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
@@ -42,7 +43,7 @@ const connection = mysql.createConnection({
 app.use(express.json());
 
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: `http://localhost:3000`,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
@@ -736,19 +737,27 @@ app.put('/customer-info', (req, res) => {
   const customerFname = req.body.customerFname;
   const customerLname = req.body.customerLname;
   const customerID = req.body.customerID;
-  const updateInfo = "update tbl_account_info set fname = ?, lname = ? where account_info_id = ?";
-  connection.query(updateInfo, [customerFname, customerLname, customerID], (err, result) => {
+  const customerEmail = req.body.customerEmail;
+  const updateInfo = "update tbl_account_info set fname = ?, lname = ?, email = ? where account_info_id = ?";
+  connection.query(updateInfo, [customerFname, customerLname, customerEmail, customerID], (err, result) => {
     if (err) {
       console.log("Error updating personal information:", err);
     } else {
-      res.send("Personal Information Updated Successfully!");
+      const updateAcc = `update tbl_accounts set email = ? where account_id = ?`;
+      connection.query(updateAcc, [customerEmail, customerID], (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(results);
+        }        
+      });
     }
   });
 });
 
 app.get('/get-info', (req, res) => {
   const customerID = req.query.customerID;
-  const getCustomerInfo = "select fname, lname from tbl_account_info where account_info_id = ?";
+  const getCustomerInfo = "select fname, lname, gender, DATE_FORMAT(bday, '%M %d, %Y') as bday, age, email from tbl_account_info where account_info_id = ?";
   connection.query(getCustomerInfo, [customerID], (err, result) => {
     if (err) {
       console.log("Error fetching personal information:", err);
@@ -2737,6 +2746,7 @@ setInterval(autoUpdateData, 24 * 60 * 60 * 1000);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`${apiUrl}`);
 });
 
 

@@ -10,7 +10,7 @@ const WebCamm = (props) => {
     const currentTime = new Date().toTimeString().slice(0, 8);
     const handleScan = (data) => {
         if (data) {
-            console.log('QR Code data:', data);
+            // console.log('QR Code data:', data);
             // Do something with the scanned data
             const lines = data.text.split('\n');
             let membershipID;
