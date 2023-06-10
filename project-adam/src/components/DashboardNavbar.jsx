@@ -252,6 +252,9 @@ const DashboardNavbar = (props) => {
                         <LinkRouter to='/dashboard/membership' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Membership</h1></li>
                         </LinkRouter>
+                        <LinkRouter to='/dashboard/customer-service' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[35px]'>Customer Service</h1></li>
+                        </LinkRouter>
                     </ul>
                 )}
                 {audit && (

@@ -22,6 +22,7 @@ import DashboardMembershipModule from './DashboardMembershipModule'
 // import SettingsAboutUs from './SettingsAboutUs'
 import SettingsAboutUsGym from './SettingsAboutUsGym'
 import SettingsServiceOffer from './SettingsServiceOffer'
+import DashboardCustomerService from './DashboardCustomerService'
 // import UserAccountCustomer from './UserAccountCustomer'
 const Dashboard = () => {
   const location = useLocation();
@@ -46,6 +47,7 @@ const Dashboard = () => {
           <Route path='/employee' element={<UserAccountEmployee id={id}/>}/>
           {/* <Route path='/customer' element={<UserAccountCustomer/>}/> */}
           <Route path='/customer' element={<DashboardMembership/>}/>
+          <Route path='/customer-service' element={<DashboardCustomerService/>}/>
           <Route path='/audit' element={<DashboardAuditTrail/>}/>
           <Route path='/health-tips' element={<DashboardHealthTips id={id}/>}/>
           <Route path='/announcement' element={<DashboardAnnouncement id={id}/>}/>

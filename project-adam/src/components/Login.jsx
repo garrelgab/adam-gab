@@ -3,6 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai'
 import { Link as LinkRouter } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import ForgotPassword from './ForgotPassword'
 
 const Login = (props) => {
 
@@ -50,8 +51,12 @@ const Login = (props) => {
           console.error('Failed to login', error);
         });
     };
-      
 
+    const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);
+
+    const handleForgotPassword = () => {
+      setOpenForgotPasswordModal(!openForgotPasswordModal);
+    };
   return (props.trigger) ? (
     <div className='fixed flex align-middle justify-center pt-[20px] top-0 left-0 w-[100%] h-[100%] bg-modal'>
         <div className='text-black md:text-black shadow-md bg-[#1ca350] max-h-[670px] md:max-h-[600px] w-[400px] md:w-[500px] rounded-xl'>
@@ -73,7 +78,8 @@ const Login = (props) => {
             </div>
             <div className='mt-[50px] md:mt-[20px] text-center'>
                 <button className='shadow-lg w-[350px] p-3 text-xl font-bold rounded-xl text-[#1ca350] hover:text-white bg-white hover:bg-gray-500 ease-in-out duration-300' onClick={userLogin}>Login</button>
-                <h1 className="block mb-1 text-l md:text-l text-center font-bold text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-white">Forgot Password?</h1>
+                <h1 className="block mb-1 text-l md:text-l text-center font-bold text-white cursor-pointer mt-[0px] border border-t-transparent border-r-transparent border-l-transparent p-4 border-b-white" onClick={handleForgotPassword}>Forgot Password?</h1>
+                {openForgotPasswordModal && <ForgotPassword setTrigger={handleForgotPassword}/>}
                 <LinkRouter to="/signup" onClick={() => props.setTrigger(false)}>
                     <button className='shadow-lg mt-[30px] w-[350px] p-3 text-xl font-bold rounded-xl bg-white text-[#1ca350] hover:text-white hover:bg-gray-500 md:mb-[50px] ease-in-out duration-300'>Create Account</button>
                 </LinkRouter>

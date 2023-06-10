@@ -2703,6 +2703,172 @@ app.get('/fetch-qr-code', (req, res) => {
   });
 });
 
+// app.put('/customer-service', (req, res) => {
+//   const customerID = req.body.customerID;
+//   const newPword = req.body.newPword;
+//   const confirmPword = req.body.confirmPword;
+//   const email = req.body.email;
+//   bcrypt.hash(newPword, 10, (err, hashNewPword) => {
+//     if (err) {
+//       console.log("Error hashing new password:", err);
+//       res.sendStatus(500);
+//       return;
+//     }
+
+//     bcrypt.hash(confirmPword, 10, (err, hashConfirmPword) => {
+//       if (err) {
+//         console.log("Error hashing confirm password:", err);
+//         res.sendStatus(500);
+//         return;
+//       }
+
+//       // Update the password in tbl_account_info and tbl_accounts
+//       const updatePassQuery = "UPDATE tbl_account_info SET pword = ?, cpword = ? WHERE account_info_id = ?";
+//       connection.query(updatePassQuery, [hashNewPword, hashConfirmPword, customerID], (err, result) => {
+//         if (err) {
+//           console.log("Error updating password:", err);
+//           res.sendStatus(500);
+//           return;
+//         }
+
+//         const updateAccountPassQuery = "UPDATE tbl_accounts SET password = ? WHERE account_id = ?";
+//         connection.query(updateAccountPassQuery, [hashNewPword, customerID], (err, result) => {
+//           if (err) {
+//             console.log("Error updating account password:", err);
+//             res.sendStatus(500);
+//             return;
+//           }
+
+//           res.sendStatus(200);
+//         });
+//       });
+//     });
+//   });
+// });
+
+app.post('/add-customer-service', (req, res) => {
+  const email = req.body.email;
+  const contact = req.body.contact;
+  const currentDate = new Date().toISOString().slice(0, 10);
+
+  const checkEmailQuery = "SELECT * FROM tbl_accounts JOIN tbl_account_info ON tbl_accounts.account_id = tbl_account_info.account_info_id WHERE tbl_accounts.email = ?";
+  connection.query(checkEmailQuery, [email], (err, result) => {
+    if (err) {
+      console.log("Error checking email:", err);
+      res.sendStatus(500);
+      return;
+    }
+
+    if (result.length === 0) {
+      // Email does not exist
+      res.status(400).json({ message: "Email not found." });
+      return;
+    }
+
+    const checkCustomerServiceQuery = "SELECT * FROM tbl_customer_service WHERE email = ?";
+    connection.query(checkCustomerServiceQuery, [email], (err, serviceResult) => {
+      if (err) {
+        console.log("Error checking customer service:", err);
+        res.sendStatus(500);
+        return;
+      }
+
+      if (serviceResult.length > 0) {
+        // Email already exists in tbl_customer_service
+        res.status(400).json({ message: "Email already exists in customer service." });
+        return;
+      }
+
+      const addCustomerServiceQuery = "INSERT INTO tbl_customer_service (email, contact_no, date, status) VALUES (?, ?, ?, 'Pending')";
+      const addCustomerServiceValues = [email, contact, currentDate];
+
+      connection.query(addCustomerServiceQuery, addCustomerServiceValues, (err, addResult) => {
+        if (err) {
+          console.log('Failed to add customer service', err);
+          res.sendStatus(500);
+          return;
+        }
+
+        res.send(addResult);
+      });
+    });
+  });
+});
+
+app.get('/customer-service', (req, res) => {
+  const customerService = `select customer_service_id, email, contact_no, DATE_FORMAT(date, '%M %d, %Y') as date, status from tbl_customer_service`;
+  connection.query(customerService, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch customer service', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+
+app.put('/update-customer-service', (req, res) => {
+  const customerID = req.body.customerID;
+  const newPword = req.body.newPword;
+  const confirmPword = req.body.confirmPword;
+  const email = req.body.email;
+
+  // Check if the email exists in both tables
+  const checkEmailQuery = "SELECT * FROM tbl_accounts JOIN tbl_account_info ON tbl_accounts.account_id = tbl_account_info.account_info_id WHERE tbl_accounts.email = ?";
+  connection.query(checkEmailQuery, [email], (err, result) => {
+    if (err) {
+      console.log("Error checking email:", err);
+      res.sendStatus(500);
+      return;
+    }
+
+    if (result.length === 0) {
+      // Email does not exist
+      res.status(400).json({ message: "Email not found." });
+      return;
+    }
+
+    // Email exists, proceed with updating the password
+    bcrypt.hash(newPword, 10, (err, hashNewPword) => {
+      if (err) {
+        console.log("Error hashing new password:", err);
+        res.sendStatus(500);
+        return;
+      }
+
+      bcrypt.hash(confirmPword, 10, (err, hashConfirmPword) => {
+        if (err) {
+          console.log("Error hashing confirm password:", err);
+          res.sendStatus(500);
+          return;
+        }
+
+        // Update the password in tbl_account_info and tbl_accounts
+        const updatePassQuery = "UPDATE tbl_account_info SET pword = ?, cpword = ? WHERE account_info_id = ?";
+        connection.query(updatePassQuery, [hashNewPword, hashConfirmPword, customerID], (err, result) => {
+          if (err) {
+            console.log("Error updating password:", err);
+            res.sendStatus(500);
+            return;
+          }
+
+          const updateAccountPassQuery = "UPDATE tbl_accounts SET password = ? WHERE account_id = ?";
+          connection.query(updateAccountPassQuery, [hashNewPword, customerID], (err, result) => {
+            if (err) {
+              console.log("Error updating account password:", err);
+              res.sendStatus(500);
+              return;
+            }
+
+            res.sendStatus(200);
+          });
+        });
+      });
+    });
+  });
+});
+
+
 
 const autoInsertData = () => {
   const currentDate = new Date();
