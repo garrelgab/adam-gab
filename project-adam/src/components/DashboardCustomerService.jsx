@@ -63,7 +63,7 @@ const DashboardCustomerService = () => {
   return (
     <div className='mx-[50px] mt-[90px]'>
         <h1 className='text-[30px] md:text-[35px] font-extrabold text-[#1ca350]'>Customer Service</h1>
-        {/* <h1 className='md:text-[25px] mt-[30px] font-extrabold text-[#1ca350]'>Proof of Payment</h1> */}
+        <h1 className='md:text-[25px] mt-[30px] font-extrabold text-[#1ca350]'>Reset Password</h1>
         <div className='w-[100%] mt-[30px] h-[700px] bg-white rounded-md'>
             <DataGrid rows={rows} columns={columns} />
         </div>
