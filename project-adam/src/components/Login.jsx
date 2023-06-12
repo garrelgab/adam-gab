@@ -4,7 +4,6 @@ import { Link as LinkRouter } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import ForgotPassword from './ForgotPassword'
-
 const Login = (props) => {
 
     let navigate = useNavigate();
@@ -13,6 +12,40 @@ const Login = (props) => {
     const [pword, setPword] = useState('');
     const [loginStatus, setLoginStatus] = useState('');
     
+    // const userLogin = () => {
+    //   if (!email) {
+    //     alert('Please fill out the empty field.');
+    //     return;
+    //   }
+    //   if (!pword) {
+    //     alert('Please fill out the empty field.');
+    //     return;
+    //   }
+    //   axios.post('https://adamfitness.me/api.php', {
+    //     userEmail: email,
+    //     userPassword: pword,
+    //   })
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     if (response.data.role === 'customer') {
+    //       const id = response.data.account_id;
+    //       navigate('/customer', { replace: true, state: id });
+    //       props.setTrigger(false);
+    //     } else if(response.data.role === 'admin') {
+    //       const id = response.data.account_id;
+    //       navigate('/dashboard', { replace: true, state: id });
+    //       props.setTrigger(false);
+    //     }else{
+    //       setLoginStatus(response.data.message);
+    //     }
+    //     setEmail('');
+    //     setPword('');
+    //   })
+    //   .catch((error) => {
+    //     console.error('Failed to login', error);
+    //   });
+    // };
+
     const userLogin = () => {
       if (!email) {
         alert('Please fill out the empty field.');
@@ -22,34 +55,37 @@ const Login = (props) => {
         alert('Please fill out the empty field.');
         return;
       }
-      axios.post(`http://localhost:3001/login`, {
-      // axios.post(`${process.env.API_URL}/login`, {
+      axios.post("http://localhost:3001/login", {
         userEmail: email,
-        userPword: pword,
+        userPassword: pword,
       })
-        .then((response) => {
-          // console.log(response.data); // Add this line for debugging
-          if (response.data.message) {
-            setLoginStatus(response.data.message);
+      .then((response) => {
+        // console.log(response);
+        if(response.data.message) {
+          // console.log('aaaa',response);
+          setLoginStatus(response.data.message);
+        } else {
+          if (response.data[0].role === 'customer') {
+            const id = response.data[0].account_id;
+            navigate('/customer', { replace: true, state: id });
+            setEmail('');
+            setPword('');
+            props.setTrigger(false);
+          } else if(response.data[0].role === 'admin') {
+            const id = response.data[0].account_id;
+            navigate('/dashboard', { replace: true, state: id });
+            setEmail('');
+            setPword('');
+            props.setTrigger(false);
           } else {
-            if (response.data[0].role === 'customer') {
-              const id = response.data[0].account_id;
-              // console.log(id);
-              navigate('/customer', { replace: true, state: id });
-              props.setTrigger(false);
-            } else {
-              const id = response.data[0].account_id;
-              // console.log(id);
-              navigate('/dashboard', { replace: true, state: id });
-              props.setTrigger(false);
-            }
+            console.log('zxzc',response);
+            setLoginStatus(response.data.message);
           }
-          setEmail('');
-          setPword('');
-        })
-        .catch((error) => {
-          console.error('Failed to login', error);
-        });
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to login', error);
+      });
     };
 
     const [openForgotPasswordModal, setOpenForgotPasswordModal] = useState(false);

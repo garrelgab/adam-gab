@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 const DashboardAuditTrail = () => {
-    const [rows, setRows] = useState('');
+    const [rows, setRows] = useState([]);
     const rowHeight = 50;
     const columns = [
         {field: 'id', headerName: 'ID', width: 100},

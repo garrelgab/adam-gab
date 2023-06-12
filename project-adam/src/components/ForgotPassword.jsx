@@ -25,7 +25,7 @@ const ForgotPassword = (props) => {
                 alert('You already send your request, wait the admin to response your request.');
                 setEmail('');
                 setContact('');
-                props.setTrigger(false)
+                props.setTrigger(false);
             } else {
                 alert('An error occurred during the proof of payment submission');
                 console.log(error);

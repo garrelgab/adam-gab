@@ -1,6 +1,6 @@
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const express = require('express');
-const cors = require('cors');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
@@ -13,6 +13,18 @@ const port = process.env.PORT || 3001;
 const apiUrl = process.env.PUBLIC_URL;
 const mysql = require('mysql');
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+const port1 = 80;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+  console.log(`${apiUrl}`);
+});
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root', // this is the default username for XAMPP
@@ -43,44 +55,26 @@ const connection = mysql.createConnection({
 app.use(express.json());
 
 app.use(cors({
-  origin: `http://localhost:3000`,
+  origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
-
-// app.use(cors());
 
 app.use(cookieParser())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}))
 
-// app.use(session({
-//   key: 'account_id',
-//   secret: 'hey',
-//   resave: false,
-//   saveUninitialized: false,
-//   cookie: {
-//     expires: 60 * 60
-//   }
-// }));
-
 app.get('/', (req, res)=>{
   res.send(`Server running on Port: ${port}`);
 });
 
-
-// app.use(express.static(path.join(__dirname, 'build')));
-
-// // Serve the index.html file for all other requests
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
-// });
-
-
+app.get('/test', (req, res) => {
+  res.send('Test Route');
+});
 
 app.post("/login", (req, res) => {
   const userEmail = req.body.userEmail;
-  const userPword = req.body.userPword;
+  const userPassword = req.body.userPassword;
   connection.query(
     "SELECT * FROM tbl_accounts WHERE email = ? AND status = 'Active'",
     [userEmail],
@@ -89,7 +83,7 @@ app.post("/login", (req, res) => {
         res.send({ err: err });
       } else if (result.length > 0) {
         const hashedPassword = result[0].password;
-        bcrypt.compare(userPword, hashedPassword, (err, isMatch) => {
+        bcrypt.compare(userPassword, hashedPassword, (err, isMatch) => {
           if (err) {
             res.send({ err: err });
           } else if (isMatch) {
@@ -1120,6 +1114,152 @@ app.get('/terms', (req, res) => {
 //     }
 //   });
 // });
+
+app.post('/add-location', (req, res) => {
+  const locationLink = req.body.locationLink;
+  const selectLocation = "SELECT * FROM tbl_location";
+  const insertLocation = "INSERT INTO tbl_location (location_link) VALUES (?)";
+  const updateLocation = "UPDATE tbl_location SET location_link = ?";
+
+  connection.query(selectLocation, (err, rows) => {
+    if (err) {
+      console.log("Failed to fetch data from tbl_about", err);
+      res.sendStatus(500);
+    } else {
+      if (rows.length === 0) {
+        // No existing data, insert new record
+        connection.query(insertLocation, [locationLink], (err, result) => {
+          if (err) {
+            console.log("Failed to insert business location", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Added.');
+          }
+        });
+      } else {
+        // Existing data, update the record
+        connection.query(updateLocation, [locationLink], (err, result) => {
+          if (err) {
+            console.log("Failed to update business location", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Updated.');
+          }
+        });
+      }
+    }
+  });
+});
+
+app.get('/location', (req, res) => {
+  const getLocation = 'select * from tbl_location';
+  connection.query(getLocation, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch location', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.post('/add-business-hour', (req, res) => {
+  const businessStart = req.body.businessStart;
+  const businessEnd = req.body.businessEnd;
+
+  const selectHours = "SELECT * FROM tbl_business_hours";
+  const insertHours = "INSERT INTO tbl_business_hours (start_time, end_time) VALUES (?, ?)";
+  const updateHours = "UPDATE tbl_business_hours SET start_time = ?, end_time = ?";
+
+  connection.query(selectHours, (err, rows) => {
+    if (err) {
+      console.log("Failed to fetch data from tbl_about", err);
+      res.sendStatus(500);
+    } else {
+      if (rows.length === 0) {
+        // No existing data, insert new record
+        connection.query(insertHours, [businessStart, businessEnd], (err, result) => {
+          if (err) {
+            console.log("Failed to insert business hour", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Added.');
+          }
+        });
+      } else {
+        // Existing data, update the record
+        connection.query(updateHours, [businessStart, businessEnd], (err, result) => {
+          if (err) {
+            console.log("Failed to update business hour", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Updated.');
+          }
+        });
+      }
+    }
+  });
+});
+
+
+app.get('/business-hour', (req, res) => {
+  const getHours = `select DATE_FORMAT(start_time, '%h:%i %p') as start_time, DATE_FORMAT(end_time, '%h:%i %p') as end_time from tbl_business_hours`
+  connection.query(getHours, (err, result) => {
+    if (err) {
+      console.log('failed to fetch business hour',err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.post('/add-fb', (req, res) => {
+  const addFacebookName = req.body.addFacebookName;
+  const addFacebookLink = req.body.addFacebookLink;
+  // const addStatus = req.body.addStatus;
+  const selectFacebook = "SELECT * FROM tbl_facebook";
+  const insertFacebook = "INSERT INTO tbl_facebook (name, link) VALUES (?, ?)";
+  const updateFacebook = "UPDATE tbl_facebook SET name = ?, link = ?";
+
+  connection.query(selectFacebook, (err, rows) => {
+    if (err) {
+      console.log("Failed to fetch data from tbl_about", err);
+      res.sendStatus(500);
+    } else {
+      if (rows.length === 0) {
+        // No existing data, insert new record
+        connection.query(insertFacebook, [addFacebookName, addFacebookLink], (err, result) => {
+          if (err) {
+            console.log("Failed to insert Facebook Details", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Added.');
+          }
+        });
+      } else {
+        // Existing data, update the record
+        connection.query(updateFacebook, [addFacebookName, addFacebookLink], (err, result) => {
+          if (err) {
+            console.log("Failed to update FacebookDetails", err);
+            res.sendStatus(500);
+          } else {
+            res.send('Successfully Updated.');
+          }
+        });
+      }
+    }
+  });
+});
+
+app.get('/facebook', (req, res) => {
+  const getData = `select * from tbl_facebook`;
+  connection.query(getData, (err, result) => {
+    if (err) {
+      console.log('Failed to fetch facebook data', err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 
 app.post('/add-about', (req, res) => {
   const addDescription = req.body.addDescription;
@@ -2909,10 +3049,14 @@ const autoUpdateData = () => {
 // Run the auto-update function once every day
 setInterval(autoUpdateData, 24 * 60 * 60 * 1000);
 
+// const port1 = ;
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-  console.log(`${apiUrl}`);
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Serve the index.html file for all other requests
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 

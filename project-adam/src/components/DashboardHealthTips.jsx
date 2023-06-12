@@ -19,7 +19,7 @@ const DashboardHealthTips = (props) => {
     const [modalImageData, setModalImageData] = useState(null);  
     const userID = props.id;
     const [rows, setRows] = useState([]);
-    const [imageSrc, setImageSrc] = useState('');
+    const [imageSrc, setImageSrc] = useState([]);
     const renderInstructionCell = (params) => {
         const instructionText = params.value
         .replace(/<[^>]+>/g, '') // Remove HTML tags
@@ -90,64 +90,63 @@ const DashboardHealthTips = (props) => {
         const base64String = Buffer.from(buffer).toString('base64');
         return `data:image/png;base64,${base64String}`;
     };
-    // const fetchHealthGuide = () => {
-    //     axios.get('http://localhost:3001/health-guide')
-    //       .then(response => {
-    //         const rows = response.data.map(item => ({
-    //             id: item.health_guide_id,
-    //             name: item.name,
-    //             equipment: item.equipment,
-    //             instruction: item.instruction.replace(/<\/?p>/g, ''),
-    //             image: item.instruction_image ? bufferToBase64(Buffer.from(item.instruction_image)) : null,
-    //         }));
-    //         setRows(rows);
-    //     })
-    //     .catch(error => {
-    //     console.log(error);
-    //     });
-    // };
-
     const fetchHealthGuide = () => {
       axios.get('http://localhost:3001/health-guide')
         .then(response => {
-          const rows = response.data.map(async item => {
-            const row = {
+          const rows = response.data.map(item => ({
               id: item.health_guide_id,
               name: item.name,
               equipment: item.equipment,
               instruction: item.instruction.replace(/<\/?p>/g, ''),
-              image: null, // Initially set the image as null
-            };
-    
-            if (item.instruction_image) {
-              try {
-                const imageResponse = await axios.get('http://localhost:3001/health-guide-image', {
-                  params: { healthID: item.health_guide_id }
-                });
-                const imageData = imageResponse.data[0].instruction_image;
-                row.image = bufferToBase64(Buffer.from(imageData));
-                setImageSrc(row.image)
-              } catch (error) {
-                console.log('Failed to fetch image for health guide', error);
-              }
-            }
-    
-            return row;
-          });
-    
-          Promise.all(rows)
-            .then(completedRows => {
-              setRows(completedRows);
-            })
-            .catch(error => {
-              console.log('Failed to fetch health guide rows', error);
-            });
-        })
-        .catch(error => {
-          console.log('Failed to fetch health guide', error);
-        });
+              image: item.instruction_image ? setImageSrc(bufferToBase64(Buffer.from(item.instruction_image))) : null,
+          }));
+          setRows(rows);
+      })
+      .catch(error => {
+      console.log(error);
+      });
     };
-      
+
+    // const fetchHealthGuide = () => {
+    //   axios.get('http://localhost:3001/health-guide')
+    //     .then(response => {
+    //       const rows = response.data.map(async item => {
+    //         const row = {
+    //           id: item.health_guide_id,
+    //           name: item.name,
+    //           equipment: item.equipment,
+    //           instruction: item.instruction.replace(/<\/?p>/g, ''),
+    //           image: null, // Initially set the image as null
+    //         };
+    
+    //         if (item.instruction_image) {
+    //           try {
+    //             const imageResponse = await axios.get('http://localhost:3001/health-guide-image', {
+    //               params: { healthID: item.health_guide_id }
+    //             });
+    //             const imageData = imageResponse.data[0].instruction_image;
+    //             row.image = bufferToBase64(Buffer.from(imageData));
+    //             setImageSrc(row.image)
+    //           } catch (error) {
+    //             console.log('Failed to fetch image for health guide', error);
+    //           }
+    //         }
+    
+    //         return row;
+    //       });
+    
+    //       Promise.all(rows)
+    //         .then(completedRows => {
+    //           setRows(completedRows);
+    //         })
+    //         .catch(error => {
+    //           console.log('Failed to fetch health guide rows', error);
+    //         });
+    //     })
+    //     .catch(error => {
+    //       console.log('Failed to fetch health guide', error);
+    //     });
+    // };
     
     const handleImageUpload = (event) => {
         const file = event.target.files[0];

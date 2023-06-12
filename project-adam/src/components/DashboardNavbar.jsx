@@ -37,6 +37,7 @@ const DashboardNavbar = (props) => {
     const handleNavSettings = () => {
         setNavSettings(!navSettings);
         setNavUser(false);
+        setWebNav(false);
     };
 
     const [webNav, setWebNav] = useState(false);
@@ -205,19 +206,26 @@ const DashboardNavbar = (props) => {
                         </LinkRouter>
                         <div className={!webNav ? 'flex justify-between items-center hover:bg-gray-500 hover:text-white cursor-pointer ease-in-out duration-300' : 'flex justify-between items-center text-white bg-[#1ca350] cursor-pointer ease-in-out duration-300'} onClick={handleWebNav}>
                         
-                            <li className='p-4 md:py-6'><h1 className='mx-[35px]'>Website</h1></li>
+                            <li className='p-4 md:py-6'><h1 className='mx-[35px]'>General Settings Set-Up</h1></li>
                             <div className='mr-[30px] md:mr-[20px]'>
                                 {!webNav ? <SlArrowDown className='md:text-[15px]'/> : <SlArrowUp className='md:text-[15px]'/>}
                             </div>  
                         </div>
                     </div>
-                    
                 )}
                 { webNav && (
                     <ul className='ease-in-out duration-300'>
-                        
+                        <LinkRouter to='/dashboard/about-us' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>About Us</h1></li>
+                        </LinkRouter>
+                        <LinkRouter to='/dashboard/facebook' state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Facebook</h1></li>
+                        </LinkRouter>
                         <LinkRouter to='/dashboard/faq' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>FAQ's</h1></li>
+                        </LinkRouter>
+                        <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
+                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[45px]'>Health Tips</h1></li>
                         </LinkRouter>
                         <LinkRouter to='/dashboard/privacy-policy' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Privacy Policy</h1></li>
@@ -225,12 +233,11 @@ const DashboardNavbar = (props) => {
                         <LinkRouter to='/dashboard/terms-of-use' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Terms and Conditions</h1></li>
                         </LinkRouter>
-                        <LinkRouter to='/dashboard/about-us' state={userID} onClick={handleNav}>
-                            <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>About Us</h1></li>
-                        </LinkRouter>
-                        <LinkRouter to='/dashboard/service-offer' state={userID} onClick={handleNav}>
+                        
+                        {/* <LinkRouter to='/dashboard/service-offer' state={userID} onClick={handleNav}>
                             <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='ml-[45px]'>Service Offers</h1></li>
-                        </LinkRouter>
+                        </LinkRouter> */}
+                        
                     </ul>
                     )}
                 {userAccount && (
@@ -267,11 +274,11 @@ const DashboardNavbar = (props) => {
                         <li className='hidden md:flex p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Attendance Log</h1></li>
                     </LinkRouter>
                 )}
-                {healthGuide && (
+                {/* {healthGuide && (
                     <LinkRouter to="/dashboard/health-tips" state={userID} onClick={handleNav}>
                         <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Health Guide</h1></li>
                     </LinkRouter>
-                )}
+                )} */}
                 {announcement && (
                     <LinkRouter to="/dashboard/announcement" state={userID} onClick={handleNav}>
                         <li className='p-4 md:py-6 hover:text-white hover:bg-gray-500 cursor-pointer ease-in-out duration-300'><h1 className='mx-[20px]'>Announcement</h1></li>

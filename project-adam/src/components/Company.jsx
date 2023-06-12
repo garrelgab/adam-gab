@@ -10,7 +10,7 @@ const Company = () => {
             setDescription(plainText);
         })
         .catch(error => {
-          console.log(error);
+        //   console.log(error);
         })
     };
     useEffect(() => {
@@ -20,7 +20,7 @@ const Company = () => {
     <div className='bg-[#d3d3d3] py-[50px] md:py-[100px] text-justify border-gray-500 text-white shadow-md' id='company'>
         <div className='mx-auto max-w-[1240px]'>
             <div className='mx-[30px] text-black'>
-                <h1 className='flex justify-center text-[40px] md:text-[40px] font-extrabold text-[#1ca350] mb-[30px]'>About Us</h1>
+                <h1 className='flex justify-center text-[40px] md:text-[40px] font-extrabold text-[#1ca350] mb-[30px]'>{description ? description : ''}</h1>
                 <div className='text-center'>
                     <p>{description}</p>
                 </div>
