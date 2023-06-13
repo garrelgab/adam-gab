@@ -2,6 +2,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import axios from 'axios';
+import ChangePasswordModal from './ChangePasswordModal';
 const DashboardCustomerService = () => {
     const [rows, setRows] = useState([]);
     const columns = [
@@ -37,9 +38,12 @@ const DashboardCustomerService = () => {
             }
         },
     ]
-
-    const handleReset = () => {
-
+    const [passModal, setPassModal] = useState(false); 
+    const [email, setEmail] = useState('');
+    const handleReset = (row) => {
+      setPassModal(!passModal);
+      setEmail(row.email);
+      fetchCustomerService();
     };
 
     const fetchCustomerService = () => {
@@ -67,6 +71,7 @@ const DashboardCustomerService = () => {
         <div className='w-[100%] mt-[30px] h-[700px] bg-white rounded-md'>
             <DataGrid rows={rows} columns={columns} />
         </div>
+        {passModal && <ChangePasswordModal onClose={handleReset} Email={email} fetchCustomerService={fetchCustomerService}/>}
     </div>
   )
 }

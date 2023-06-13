@@ -41,7 +41,7 @@ const ProductModal = (props) => {
     };
   return (
     <div className='fixed flex align-middle items-center justify-center py-[50px] top-0 left-0 w-[100%] h-[100%] bg-modal z-50'>
-        <div className='text-gray-800 w-[300px] md:w-[400px] h-auto max-h-[600px] my-[10px] z-50 bg-[#93F4D3] rounded-md shadow-xl'>
+        <div className='text-gray-800 w-[300px] md:w-[400px] h-auto max-h-[600px] my-[10px] z-50 bg-[#1ca350] rounded-md shadow-xl'>
             <button className='ml-[80%] mt-[5%]' onClick={props.onClose}>
                 <AiOutlineClose size={25}/>
             </button>

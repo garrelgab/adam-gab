@@ -3049,7 +3049,86 @@ const autoUpdateData = () => {
 // Run the auto-update function once every day
 setInterval(autoUpdateData, 24 * 60 * 60 * 1000);
 
-// const port1 = ;
+
+// app.put('update-customer-pass', (req, res) => {
+//   const newPass = req.body.newPass;
+//   const confirmNewPass = req.body.confirmNewPass;
+//   const customerEmail = req.body.customerEmail;
+  
+//   const checkEmail = `select * from tbl_account_info where email = ?`;
+//   connection.query(checkEmail, [customerEmail], (err, result) => {
+//     if (err) {
+//       console.log('Failed to check email', err);
+//     } else {
+//       const updatePassword = `update tbl_account_info set pword = ?, cpword = ? where email = ?`;
+//       connection.query(updatePassword, [newPass, confirmNewPass, customerEmail], (err, accountInfoResult1) => {
+//         if (err) {
+//           console.log('Failed to update customer password', err);
+//         } else {
+//           const updateAccountPassword = `update tbl_accounts set password = ?`;
+//           connection.query(updateAccountPassword, [newPass], (err, accountResult) => {
+//             if (err) {
+//               console.log('Failed to update customer password.', err);
+//             } else {
+//               res.send(result);
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
+// });
+
+app.put('/update-customer-pass', (req, res) => {
+  const newPass = req.body.newPass;
+  const confirmNewPass = req.body.confirmNewPass;
+  const customerEmail = req.body.customerEmail;
+  
+  const checkEmail = `SELECT * FROM tbl_accounts WHERE email = ?`;
+  connection.query(checkEmail, [customerEmail], (err, result) => {
+    if (err) {
+      console.log('Failed to check email', err);
+      // Handle the error appropriately
+      res.status(500).send('Failed to check email');
+    } else {
+      if (result.length > 0) {
+        const accountId = result[0].account_id; // Retrieve the account_id from the result
+
+        bcrypt.hash(newPass, 10, (err, hashedPassword) => {
+          if (err) {
+            console.log('Failed to hash the new password', err);
+            // Handle the error appropriately
+            res.status(500).send('Failed to hash the new password');
+          } else {
+            const updatePassword = `UPDATE tbl_account_info SET pword = ?, cpword = ? WHERE account_info_id = ?`;
+            connection.query(updatePassword, [hashedPassword, hashedPassword, accountId], (err, accountInfoResult1) => {
+              if (err) {
+                console.log('Failed to update customer password', err);
+                // Handle the error appropriately
+                res.status(500).send('Failed to update customer password');
+              } else {
+                const updateAccountPassword = `UPDATE tbl_accounts SET password = ? WHERE account_id = ?`;
+                connection.query(updateAccountPassword, [hashedPassword, accountId], (err, accountResult) => {
+                  if (err) {
+                    console.log('Failed to update customer password', err);
+                    // Handle the error appropriately
+                    res.status(500).send('Failed to update customer password');
+                  } else {
+                    res.send(result);
+                  }
+                });
+              }
+            });
+          }
+        });
+      } else {
+        // No matching email found
+        res.status(404).send('Email not found');
+      }
+    }
+  });
+});
+
 
 
 app.use(express.static(path.join(__dirname, 'build')));

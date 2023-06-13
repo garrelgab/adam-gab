@@ -32,7 +32,7 @@ const DashboardHealthTips = (props) => {
       return <div style={{ whiteSpace: 'pre-wrap', overflow: 'auto', maxHeight:250}}>{instructionText}</div>;
     };
     const columns = [
-        // {field: 'id', headerName: 'ID', width: 100},
+        {field: 'id', headerName: 'ID', width: 100},
         {field: 'name', headerName: 'Type of Workout', width: 250},
         {
             field: 'equipment',
@@ -90,22 +90,23 @@ const DashboardHealthTips = (props) => {
         const base64String = Buffer.from(buffer).toString('base64');
         return `data:image/png;base64,${base64String}`;
     };
-    const fetchHealthGuide = () => {
-      axios.get('http://localhost:3001/health-guide')
-        .then(response => {
-          const rows = response.data.map(item => ({
-              id: item.health_guide_id,
-              name: item.name,
-              equipment: item.equipment,
-              instruction: item.instruction.replace(/<\/?p>/g, ''),
-              image: item.instruction_image ? setImageSrc(bufferToBase64(Buffer.from(item.instruction_image))) : null,
-          }));
-          setRows(rows);
-      })
-      .catch(error => {
-      console.log(error);
-      });
-    };
+    // const fetchHealthGuide = () => {
+    //   axios.get('http://localhost:3001/health-guide')
+    //     .then(response => {
+    //       const rows = response.data.map(item => ({
+    //           id: item.health_guide_id,
+    //           name: item.name,
+    //           equipment: item.equipment,
+    //           instruction: item.instruction.replace(/<\/?p>/g, ''),
+    //           image: item.instruction_image ? setImageSrc(bufferToBase64(Buffer.from(item.instruction_image))) : null,
+    //       }));
+    //       setRows(rows);
+    //       console.log(bufferToBase64(Buffer.from(response.data[0].instruction_image)));
+    //   })
+    //   .catch(error => {
+    //   console.log(error);
+    //   });
+    // };
 
     // const fetchHealthGuide = () => {
     //   axios.get('http://localhost:3001/health-guide')
@@ -147,6 +148,45 @@ const DashboardHealthTips = (props) => {
     //       console.log('Failed to fetch health guide', error);
     //     });
     // };
+    const fetchHealthGuide = () => {
+      axios
+        .get('http://localhost:3001/health-guide')
+        .then(async response => {
+          const rows = [];
+    
+          for (const item of response.data) {
+            const row = {
+              id: item.health_guide_id,
+              name: item.name,
+              equipment: item.equipment,
+              instruction: item.instruction.replace(/<\/?p>/g, ''),
+              image: null, // Initially set the image as null
+            };
+            console.log(`${item.health_guide_id}`);
+    
+            if (item.instruction_image && item.instruction_image.length > 0) {
+              try {
+                const imageResponse = await axios.get(`http://localhost:3001/health-guide-image/${item.health_guide_id}`);
+                const imageData = imageResponse.data;
+                const base64Image = await bufferToBase64(Buffer.from(imageData));
+                row.image = base64Image;
+              } catch (error) {
+                console.log('Failed to fetch image for health guide', error);
+              }
+            }
+            rows.push(row);
+          }
+    
+          setRows(rows);
+        })
+        .catch(error => {
+          console.log('Failed to fetch health guide', error);
+        });
+    };
+    
+    
+    
+    
     
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
