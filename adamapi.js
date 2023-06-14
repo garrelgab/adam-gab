@@ -9,7 +9,7 @@ const moment = require('moment');
 const path = require('path');
 const app = express();
 const bcrypt = require('bcrypt');
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5050;
 const apiUrl = process.env.PUBLIC_URL;
 const mysql = require('mysql');
 
