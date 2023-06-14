@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const fs = require('fs');
 const qrcode = require('qrcode');
 const moment = require('moment');
 const path = require('path');
