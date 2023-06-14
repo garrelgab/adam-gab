@@ -52,7 +52,11 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "node adamapi.js"
+    "start": "node adamapi.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "dev": "node adamapi.js",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
