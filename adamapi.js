@@ -13,14 +13,13 @@ const port = process.env.PORT || 3001;
 const apiUrl = process.env.PUBLIC_URL;
 const mysql = require('mysql');
 
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   res.header("Access-Control-Allow-Headers", "Content-Type");
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   next();
-// });
-const port1 = 80;
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 // const connection = mysql.createConnection({
 //   host: 'localhost',
@@ -37,7 +36,7 @@ const port1 = 80;
 const connection = mysql.createPool({
   host: 'srv608.hstgr.io',
   user: 'u994941609_root', // this is the default username for XAMPP
-  password: 'Password1', // this is the default password for XAMPP
+  password: '8U5oGzb!B', // this is the default password for XAMPP
   database: 'u994941609_db_adamfitness', // replace with the name of your database
 });
 
@@ -73,8 +72,8 @@ app.post("/login", (req, res) => {
   const userEmail = req.body.userEmail;
   const userPassword = req.body.userPassword;
   connection.query(
-    "SELECT * FROM tbl_accounts WHERE email = ? password = ? AND status = 'Active'",
-    [userEmail, userPassword],
+    "SELECT * FROM tbl_accounts WHERE email = ? AND status = 'Active'",
+    [userEmail],
     (err, result) => {
       if (err) {
         res.send({ err: err });
@@ -3128,12 +3127,12 @@ app.put('/update-customer-pass', (req, res) => {
 
 
 
-app.use(express.static(path.join(__dirname, 'build')));
+// app.use(express.static(path.join(__dirname, 'build')));
 
-// Serve the index.html file for all other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// // Serve the index.html file for all other requests
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 
 
 app.listen(port, () => {

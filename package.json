@@ -55,7 +55,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "dev": "node api/index.js",
+    "dev": "node adamapi.js",
     "eject": "react-scripts eject",
     "vercel-build": "node adamapi.js"
   },
