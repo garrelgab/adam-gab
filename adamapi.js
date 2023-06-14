@@ -68,7 +68,7 @@ app.get('/test', (req, res) => {
   res.send('Test Route');
 });
 
-app.post("/login", (req, res) => {
+app.post("/logins", (req, res) => {
   const userEmail = req.body.userEmail;
   const userPassword = req.body.userPassword;
   connection.query(
