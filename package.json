@@ -56,8 +56,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "dev": "node adamapi.js",
-    "eject": "react-scripts eject",
-    "vercel-build": "node adamapi.js"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
