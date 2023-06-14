@@ -52,11 +52,12 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "nodemon adamfitness.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "dev": "nodemon adamfitness.js",
-    "eject": "react-scripts eject"
+    "dev": "node api/index.js",
+    "eject": "react-scripts eject",
+    "vercel-build": "node adamapi.js"
   },
   "eslintConfig": {
     "extends": [
